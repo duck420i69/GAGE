@@ -10,17 +10,14 @@
     <Filter Include="Source\Core">
       <UniqueIdentifier>{6e143c4b-bc82-44c0-83ec-1c40eb48a61d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Miscs">
+      <UniqueIdentifier>{ecc79f96-3019-4f16-842b-ad9e7b2f98f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="window.cpp">
       <Filter>Source\Window</Filter>
     </ClCompile>
@@ -33,13 +30,22 @@
     <ClCompile Include="logger.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
+    <ClCompile Include="clock.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source\Miscs</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Source\Miscs</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Source\Miscs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
       <Filter>Source\Window</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>Source</Filter>
     </ClInclude>
     <ClInclude Include="core_engine.h">
       <Filter>Source\Core</Filter>
@@ -50,8 +56,14 @@
     <ClInclude Include="logger.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
+    <ClInclude Include="clock.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Source\Miscs</Filter>
+    </ClInclude>
     <ClInclude Include="common.h">
-      <Filter>Source</Filter>
+      <Filter>Source\Miscs</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

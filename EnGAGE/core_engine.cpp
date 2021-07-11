@@ -4,7 +4,7 @@
 #include "core_engine.h"
 
 CoreEngine::CoreEngine(SharedRef<ICoreEngine> coreEngine, U16 width, U16 height, StringRef title) :
-	mCoreEngine(coreEngine)
+	mCoreEngine(coreEngine), mClock()
 {
 	Logger::info("Engine created !");
 	Window::createWindow(width, height, title);
@@ -20,11 +20,15 @@ CoreEngine::~CoreEngine()
 
 void CoreEngine::run()
 {
+
 	while (!Window::shouldClose())
 	{
-		mCoreEngine->update(0.0f);
+		mClock.tick();
+
+		mCoreEngine->update(mClock.getDelta());
 		mCoreEngine->render();
 		Window::swapBuffers();
 		Window::pollEvents();
+
 	}
 }

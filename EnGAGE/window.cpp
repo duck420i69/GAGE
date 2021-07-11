@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "window.h"
 
+#include <glad/glad.h>
+
 GLFWwindow* Window::sWindow = nullptr;
 U16			Window::sWidth = 0, Window::sHeight = 0;
 String		Window::sTitle = "";
@@ -23,6 +25,13 @@ void Window::createWindow(U16 width, U16 height, StringRef title) noexcept
     }
 
     glfwMakeContextCurrent(sWindow);
+    glfwSwapInterval(1);
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        glfwTerminate();
+        assert(!"Failed to initialize OpenGL context !");
+    }
+    
 }
 
 bool Window::shouldClose() noexcept

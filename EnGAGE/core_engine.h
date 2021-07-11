@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pch.h"
+#include "clock.h"
 
 class ICoreEngine
 {
@@ -14,6 +15,7 @@ public:
 class CoreEngine
 {
 	Shared<ICoreEngine> mCoreEngine;
+	Clock				mClock;
 public:
 	CoreEngine(SharedRef<ICoreEngine> coreEngine, U16 width, U16 height, StringRef title);
 	~CoreEngine();
