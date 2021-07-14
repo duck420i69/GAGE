@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "window.h"
 
-#include <glad/glad.h>
 
 GLFWwindow* Window::sWindow = nullptr;
 U16			Window::sWidth = 0, Window::sHeight = 0;
@@ -16,6 +15,12 @@ void Window::createWindow(U16 width, U16 height, StringRef title) noexcept
         assert(!"Failed to init glfw !");
     }
 
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#ifndef NDEBUG
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
+#endif // !NDEBUG
     
     sWindow = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
     if (!sWindow)
@@ -26,11 +31,8 @@ void Window::createWindow(U16 width, U16 height, StringRef title) noexcept
 
     glfwMakeContextCurrent(sWindow);
     glfwSwapInterval(1);
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        glfwTerminate();
-        assert(!"Failed to initialize OpenGL context !");
-    }
+
+
     
 }
 

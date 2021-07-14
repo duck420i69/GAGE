@@ -13,9 +13,15 @@
     <Filter Include="Source\Miscs">
       <UniqueIdentifier>{ecc79f96-3019-4f16-842b-ad9e7b2f98f6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Data">
+      <UniqueIdentifier>{a1c34f52-e631-4f00-bd40-3bae99f051e0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram.cd" />
+    <None Include="Engine.cd" />
+    <None Include="ECS.cd">
+      <Filter>Source\Data</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="window.cpp">
@@ -42,6 +48,12 @@
     <ClCompile Include="glad.c">
       <Filter>Source\Miscs</Filter>
     </ClCompile>
+    <ClCompile Include="opengl.cpp">
+      <Filter>Source\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="ecs.cpp">
+      <Filter>Source\Data</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window.h">
@@ -64,6 +76,36 @@
     </ClInclude>
     <ClInclude Include="common.h">
       <Filter>Source\Miscs</Filter>
+    </ClInclude>
+    <ClInclude Include="opengl.h">
+      <Filter>Source\Window</Filter>
+    </ClInclude>
+    <ClInclude Include="entity.h">
+      <Filter>Source\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="components.h">
+      <Filter>Source\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="signature.h">
+      <Filter>Source\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="entity_manager.h">
+      <Filter>Source\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="component_array.h">
+      <Filter>Source\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="component_manager.h">
+      <Filter>Source\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="system_manager.h">
+      <Filter>Source\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="system.h">
+      <Filter>Source\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="ecs.h">
+      <Filter>Source\Data</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
