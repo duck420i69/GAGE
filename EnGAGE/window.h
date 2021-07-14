@@ -17,6 +17,8 @@ public:
 	static void swapBuffers() noexcept;
 	static void pollEvents() noexcept;
 
+	static GLFWwindow* getWindow();
+
 	/* Tăt của sổ */
 	static void shutdown() noexcept;
 };

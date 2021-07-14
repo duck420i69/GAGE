@@ -51,6 +51,11 @@ void Window::pollEvents() noexcept
     glfwPollEvents();
 }
 
+GLFWwindow* Window::getWindow()
+{
+    return sWindow;
+}
+
 void Window::shutdown() noexcept
 {
     glfwDestroyWindow(sWindow);
