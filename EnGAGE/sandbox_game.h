@@ -5,7 +5,6 @@
 class SandboxGame : public ICoreEngine
 {
 	void init() override;
-	void update(Real delta) override;
-	void render() override;
+	void update(float delta) override;
 	void shutdown() override;
 };

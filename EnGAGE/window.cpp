@@ -3,11 +3,11 @@
 
 
 GLFWwindow* Window::sWindow = nullptr;
-U16			Window::sWidth = 0, Window::sHeight = 0;
-String		Window::sTitle = "";
+uint16_t	Window::sWidth = 0, Window::sHeight = 0;
+std::string	Window::sTitle = "";
 
 
-void Window::createWindow(U16 width, U16 height, StringRef title) noexcept
+void Window::createWindow(uint16_t width, uint16_t height, const std::string& title) noexcept
 {
     Logger::info("Creating window(width: {}, height: {}, title: {})", width, height, title);
     if (!glfwInit())

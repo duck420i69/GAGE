@@ -3,4 +3,4 @@
 #include "spdlog/sinks/stdout_color_sinks.h"
 
 
-Shared<spdlog::logger> Logger::sLogger = spdlog::stdout_color_mt("EnGAGE");
+std::shared_ptr<spdlog::logger> Logger::sLogger = spdlog::stdout_color_mt("EnGAGE");

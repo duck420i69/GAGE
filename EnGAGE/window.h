@@ -1,17 +1,16 @@
 ﻿#pragma once
 
-#include "GLFW/glfw3.h"
-#include "pch.h"
+#include <GLFW/glfw3.h>
 
 /* Quản lý cửa sổ (Window) */
 class Window
 {
 	static GLFWwindow*	sWindow;
-	static U16			sWidth, sHeight;
-	static String		sTitle;
+	static uint16_t		sWidth, sHeight;
+	static std::string	sTitle;
 public:
 	/* Khởi tạo cửa sổ */
-	static void createWindow(U16 width, U16 height, StringRef title) noexcept;
+	static void createWindow(uint16_t width, uint16_t height, const std::string& title) noexcept;
 
 	static bool shouldClose() noexcept;
 	static void swapBuffers() noexcept;

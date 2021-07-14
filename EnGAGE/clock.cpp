@@ -15,7 +15,7 @@ Clock::Clock() noexcept :
 void Clock::tick() noexcept
 {
 	mStartTime = high_resolution_clock::now();
-	duration<Real, milli> ms = mStartTime - mPrevTime;
+	duration<float, milli> ms = mStartTime - mPrevTime;
 	mPrevTime = mStartTime;
 	mDelta = ms.count();
 

@@ -1,11 +1,10 @@
 #pragma once
 
 #include "spdlog/logger.h"
-#include "common.h"
 
 class Logger
 {
-	static Shared<spdlog::logger> sLogger;
+	static std::shared_ptr<spdlog::logger> sLogger;
 public:
 	template<typename Str, typename... Args>
 	static void info(Str str, Args&&... message)

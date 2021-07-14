@@ -1,17 +1,21 @@
 #pragma once
 
-#include "common.h"
 
 #include <glm/vec3.hpp>
 #include <glm/gtc/quaternion.hpp>
 
-using ComponentType = U8;
+using ComponentType = uint8_t;
 
-constexpr U32 MAX_COMPONENTS = 16;
+constexpr uint32_t MAX_COMPONENTS = 16;
 
-struct Transform
+struct TransformComponent
 {
 	glm::vec3 position;
 	glm::quat rotation;
-	Real	  scale;
+	float	  scale;
+};
+
+struct MeshComponent
+{
+	uint32_t vao, vertex_count;
 };

@@ -7,8 +7,6 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
-#define TO_NAME(x) #x
-
 void Opengl::init()
 {
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -30,9 +28,9 @@ void Opengl::clear()
 }
 
 
-void Opengl::messageCallback(U32 source, U32 type, U32 id, U32 severity, U32 length, const char* message, const void* userParam)
+void Opengl::messageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, uint32_t length, const char* message, const void* userParam)
 {
-    String sourceName, typeName;
+    std::string sourceName, typeName;
 
     switch (source)
     {
@@ -103,5 +101,3 @@ void Opengl::messageCallback(U32 source, U32 type, U32 id, U32 severity, U32 len
         break;
     }
 }
-
-#undef TO_NAME

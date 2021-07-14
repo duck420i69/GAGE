@@ -1,6 +1,5 @@
 #pragma once
 
-#include "common.h"
 #include "logger.h"
 
 
@@ -12,9 +11,9 @@
 
 class ComponentManager
 {
-	UnorderedMap<const char*, ComponentType>			mComponentTypes;
-	UnorderedMap<const char*, Shared<IComponentArray>>	mComponentArrays;
-	ComponentType										mNextComponentType;
+	std::unordered_map<const char*, ComponentType>						mComponentTypes;
+	std::unordered_map<const char*, std::shared_ptr<IComponentArray>>	mComponentArrays;
+	ComponentType														mNextComponentType;
 public:
 	ComponentManager() :
 		mComponentTypes(),
@@ -31,7 +30,7 @@ public:
 
 		//Thêm vào map
 		mComponentTypes.insert({ typeName, mNextComponentType });
-		mComponentArrays.insert({ typeName, makeShared<ComponentArray<T>>() });
+		mComponentArrays.insert({ typeName, std::make_shared<ComponentArray<T>>() });
 
 		mNextComponentType++;
 	}
@@ -73,10 +72,10 @@ public:
 	}
 private:
 	template<typename T>
-	Shared<ComponentArray<T>> getComponentArray()
+	std::shared_ptr<ComponentArray<T>> getComponentArray()
 	{
 		const char* typeName = typeid(T).name();
 		assert(mComponentTypes.find(typeName) != mComponentTypes.end() && "Component not registered before use.");
-		return sharedStaticCast<ComponentArray<T>>(mComponentArrays[typeName]);
+		return std::static_pointer_cast<ComponentArray<T>>(mComponentArrays[typeName]);
 	}
 };

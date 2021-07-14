@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include "common.h"
 #include "logger.h"
 
 #include "entity.h"
@@ -10,9 +9,9 @@
 
 class EntityManager
 {
-	U32								mLivingEnttiyCount;
-	Queue<Entity>					mAvailableEntities;
-	Arr<Signature, MAX_ENTITIES>	mSignatures;
+	uint32_t								mLivingEnttiyCount;
+	std::queue<Entity>						mAvailableEntities;
+	std::array<Signature, MAX_ENTITIES>		mSignatures;
 public:
 	EntityManager() :
 		mLivingEnttiyCount(0),

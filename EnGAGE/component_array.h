@@ -1,7 +1,5 @@
 ﻿#pragma once
 
-#include "common.h"
-
 #include "entity.h"
 #include "logger.h"
 
@@ -16,16 +14,16 @@ public:
 template<typename T>
 class ComponentArray : public IComponentArray
 {
-	Arr<T, MAX_ENTITIES>		mArray;
-	UnorderedMap<Entity, U64>	mEntityToIndex;
-	UnorderedMap<U64, Entity>   mIndexToEntity;
-	U64							mSize;
+	std::array<T, MAX_ENTITIES>				mArray;
+	std::unordered_map<Entity, uint64_t>	mEntityToIndex;
+	std::unordered_map<uint64_t, Entity>	mIndexToEntity;
+	uint64_t								mSize;
 public:
 	ComponentArray() :
 		mArray(),
 		mEntityToIndex(),
 		mIndexToEntity(),
-		mSize(0)
+		mSize(0u)
 	{}
 
 	void insertData(Entity e, T component)
@@ -34,7 +32,7 @@ public:
 		
 
 		//Thêm component vào cuối map và cập nhập 2 map
-		U64 newIndex = mSize;
+		uint64_t newIndex = mSize;
 		mEntityToIndex[e] = newIndex;
 		mIndexToEntity[newIndex] = e;
 		mArray[newIndex] = component;
@@ -46,8 +44,8 @@ public:
 		assert(mEntityToIndex.find(e) != mEntityToIndex.end() && "Removing non-existent component.");
 		
 		//Copy đầu cuối của mảng vào chỗ cần xóa
-		U64 indexOfRemovedEntity = mEntityToIndex[e];
-		U64 indexOfLastElement = mSize - 1;
+		uint64_t indexOfRemovedEntity = mEntityToIndex[e];
+		uint64_t indexOfLastElement = mSize - 1;
 		mArray[indexOfRemovedEntity] = mArray[indexOfLastElement];
 
 		//Cập nhập lại hai máp

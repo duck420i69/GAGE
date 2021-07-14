@@ -1,7 +1,6 @@
 #pragma once
 
-#include "common.h"
 
-using Entity = U32;
+using Entity = uint32_t;
 
-constexpr U32 MAX_ENTITIES = 5000;
+constexpr uint32_t MAX_ENTITIES = 5000;

@@ -1,25 +1,24 @@
 #pragma once
 
-#include "common.h"
 #include "component_manager.h"
 #include "entity_manager.h"
 #include "system_manager.h"
 
 class ECS
 {
-	static Shared<ECS> sInstance;
+	static std::shared_ptr<ECS> sInstance;
 
-	Unique<ComponentManager> mComponentManager;
-	Unique<EntityManager> mEntityManager;
-	Unique<SystemManager> mSystemManager;
+	std::unique_ptr<ComponentManager> mComponentManager;
+	std::unique_ptr<EntityManager> mEntityManager;
+	std::unique_ptr<SystemManager> mSystemManager;
 public:
-	static Shared<ECS> getInstance();
+	static ECS& getInstance();
 
 	void init()
 	{
-		mComponentManager = makeUnique<ComponentManager>();
-		mEntityManager = makeUnique<EntityManager>();
-		mSystemManager = makeUnique<SystemManager>();
+		mComponentManager = std::make_unique<ComponentManager>();
+		mEntityManager = std::make_unique<EntityManager>();
+		mSystemManager = std::make_unique<SystemManager>();
 	}
 
 	//Entity
@@ -79,7 +78,7 @@ public:
 
 	// System
 	template<typename T>
-	Shared<T> registerSystem()
+	std::shared_ptr<T> registerSystem()
 	{
 		return mSystemManager->registerSystem<T>();
 	}

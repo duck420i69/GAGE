@@ -8,7 +8,7 @@
 int main(void)
 {
 	
-	CoreEngine engine(makeShared<SandboxGame>(), 1600, 900, "Hello world");
+	CoreEngine engine(std::make_shared<SandboxGame>(), 1600, 900, "Hello world");
 
 	engine.run(); 
 }

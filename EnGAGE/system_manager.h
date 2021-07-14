@@ -1,25 +1,24 @@
 #pragma once
 
-#include "common.h"
 #include "signature.h"
 #include "system.h"
 
 class SystemManager
 {
-	UnorderedMap<const char*, Signature>		mSignatures;
-	UnorderedMap<const char*, Shared<System>>	mSystems;
+	std::unordered_map<const char*, Signature>					mSignatures;
+	std::unordered_map<const char*, std::shared_ptr<System>>	mSystems;
 public:
 	SystemManager() :
 		mSignatures(),
 		mSystems() {}
 
 	template<typename T>
-	Shared<System> registerSystem()
+	std::shared_ptr<T> registerSystem()
 	{
 		const char* typeName = typeid(T).name();
 		assert(mSystems.find(typeName) == mSystems.end() && "Registering system more than once.");
 
-		auto ptr = makeShared<T>();
+		auto ptr = std::make_shared<T>();
 		mSystems.insert({ typeName, ptr });
 		return ptr;
 	}

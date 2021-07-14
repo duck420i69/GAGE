@@ -1,14 +1,13 @@
 #include "pch.h"
 #include "ecs.h"
 
-Shared<ECS> ECS::sInstance;
+std::shared_ptr<ECS> ECS::sInstance;
 
-Shared<ECS> ECS::getInstance()
+ECS& ECS::getInstance()
 {
 	if (!sInstance)
 	{
-		sInstance = makeShared<ECS>();
-		sInstance->init();
+		sInstance = std::make_shared<ECS>();
 	}
-	return sInstance;
+	return *sInstance;
 }
