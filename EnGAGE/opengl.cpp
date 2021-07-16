@@ -7,28 +7,38 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 
-void Opengl::init()
+#include "window.h"
+
+void Opengl::init() noexcept
 {
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         glfwTerminate();
         assert(!"Failed to initialize OpenGL context !");
     }
-#ifndef NDEBUG
-    glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback((GLDEBUGPROC) Opengl::messageCallback, nullptr);
-#endif // !NDEBUG
+#   ifndef NDEBUG
+        glEnable(GL_DEBUG_OUTPUT);
+        glDebugMessageCallback((GLDEBUGPROC) Opengl::messageCallback, nullptr);
+#   endif // !NDEBUG
 
 }
 
-void Opengl::clear()
+void Opengl::clear() noexcept
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glViewport(0, 0, Window::getWidth(), Window::getHeight());
 }
 
 
-void Opengl::messageCallback(uint32_t source, uint32_t type, uint32_t id, uint32_t severity, uint32_t length, const char* message, const void* userParam)
+void Opengl::messageCallback(
+    uint32_t source,
+    uint32_t type,
+    uint32_t id,
+    uint32_t severity,
+    uint32_t length,
+    const char* message,
+    const void* userParam ) noexcept
 {
     std::string sourceName, typeName;
 
@@ -95,9 +105,6 @@ void Opengl::messageCallback(uint32_t source, uint32_t type, uint32_t id, uint32
         break;
     case GL_DEBUG_SEVERITY_LOW:
         Logger::warn("[Opengl] From: {}\n type: {}\n infoID: {}\n message: {}", sourceName, typeName, id, message);
-        break;
-    case GL_DEBUG_SEVERITY_NOTIFICATION:
-        Logger::info("[Opengl] From: {}\n type: {}\n infoID: {}\n message: {}", sourceName, typeName, id, message);
         break;
     }
 }

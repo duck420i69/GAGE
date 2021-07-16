@@ -13,7 +13,7 @@ class EntityManager
 	std::queue<Entity>						mAvailableEntities;
 	std::array<Signature, MAX_ENTITIES>		mSignatures;
 public:
-	EntityManager() :
+	EntityManager() noexcept :
 		mLivingEnttiyCount(0),
 		mAvailableEntities(),
 		mSignatures() 
@@ -24,7 +24,7 @@ public:
 		}
 	}
 
-	Entity createEntity()
+	Entity createEntity() noexcept
 	{
 		assert(mLivingEnttiyCount < MAX_ENTITIES && "Too many entities in existence.");
 
@@ -37,7 +37,7 @@ public:
 		return e;
 	}
 
-	void destroyEntity(Entity e)
+	void destroyEntity(Entity e) noexcept
 	{
 		assert(e < MAX_ENTITIES && "Entity out of range.");
 		Logger::info("Entity destroyed(id: {}).", e);
@@ -49,13 +49,13 @@ public:
 		mLivingEnttiyCount--;
 	}
 
-	void setSignature(Signature s, Entity e)
+	void setSignature(Signature s, Entity e) noexcept
 	{
 		assert(e < MAX_ENTITIES && "Entity out of range.");
 		mSignatures[e] = s;
 	}
 
-	const Signature& getSignature(Entity e) const
+	const Signature& getSignature(Entity e) const noexcept
 	{
 		assert(e < MAX_ENTITIES && "Entity out of range.");
 		return mSignatures[e];

@@ -12,22 +12,39 @@ class ECS
 	std::unique_ptr<EntityManager> mEntityManager;
 	std::unique_ptr<SystemManager> mSystemManager;
 public:
-	static ECS& getInstance();
+	static ECS& getInstance() noexcept;
 
-	void init()
+	void init() noexcept
 	{
-		mComponentManager = std::make_unique<ComponentManager>();
-		mEntityManager = std::make_unique<EntityManager>();
-		mSystemManager = std::make_unique<SystemManager>();
+		try
+		{
+			mComponentManager = std::make_unique<ComponentManager>();
+			mEntityManager = std::make_unique<EntityManager>();
+			mSystemManager = std::make_unique<SystemManager>();
+		}
+		catch (std::bad_alloc& e)
+		{
+			Logger::error("Exception thrown: {}", e.what());
+		}
+	}
+
+	//Creation
+
+	Entity constructEntity(NameComponent name, TransformComponent transform) noexcept
+	{
+		Entity e = createEntity();
+		addComponent<NameComponent>(e, name);
+		addComponent<TransformComponent>(e, transform);
+		return e;
 	}
 
 	//Entity
-	Entity createEntity()
+	Entity createEntity() noexcept
 	{
 		return mEntityManager->createEntity();
 	}
 
-	void destroyEntity(Entity e)
+	void destroyEntity(Entity e) noexcept
 	{
 		mEntityManager->destroyEntity(e);
 		mComponentManager->entityDestroyed(e);
@@ -36,13 +53,13 @@ public:
 
 	//Component
 	template<typename T>
-	void registerComponent()
+	void registerComponent() noexcept
 	{
 		mComponentManager->registerComponent<T>();
 	}
 
 	template<typename T>
-	void addComponent(Entity e, T component)
+	void addComponent(Entity e, T component) noexcept
 	{
 		mComponentManager->addComponent<T>(e, component);
 
@@ -54,7 +71,7 @@ public:
 	}
 
 	template<typename T>
-	void removeComponent(Entity e)
+	void removeComponent(Entity e) noexcept
 	{
 		mComponentManager->removeComponent<T>(e);
 
@@ -65,26 +82,26 @@ public:
 		mSystemManager->entitySignatureChanged(e, signature);
 	}
 	template<typename T>
-	T& getComponent(Entity entity)
+	T& getComponent(Entity entity) noexcept
 	{
 		return mComponentManager->getComponent<T>(entity);
 	}
 
 	template<typename T>
-	ComponentType getComponentType()
+	ComponentType getComponentType() noexcept
 	{
 		return mComponentManager->getComponentType<T>();
 	}
 
 	// System
 	template<typename T>
-	std::shared_ptr<T> registerSystem()
+	std::shared_ptr<T> registerSystem() noexcept
 	{
 		return mSystemManager->registerSystem<T>();
 	}
 
 	template<typename T>
-	void setSystemSignature(Signature signature)
+	void setSystemSignature(Signature signature) noexcept
 	{
 		mSystemManager->setSignature<T>(signature);
 	}

@@ -19,15 +19,15 @@
     <Filter Include="Source\Miscs\Imgui">
       <UniqueIdentifier>{3178eb2f-360c-4c59-9687-3c6fba001c43}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Camera">
-      <UniqueIdentifier>{768d61c2-618a-4344-ba22-ff4f7c48face}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Render">
       <UniqueIdentifier>{429f43ac-bf93-41b8-b987-3893a6ee4567}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Engine.cd" />
+    <Filter Include="Source\Inspector">
+      <UniqueIdentifier>{bcd98b7a-240b-49cd-9d2a-56745ce17036}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Camera">
+      <UniqueIdentifier>{b9102414-88b0-432f-8e37-5face50fdc1a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="window.cpp">
@@ -86,6 +86,42 @@
     </ClCompile>
     <ClCompile Include="render_system.cpp">
       <Filter>Source\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="inspector_system.cpp">
+      <Filter>Source\Inspector</Filter>
+    </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="performance_report.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>Source\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="loader.cpp">
+      <Filter>Source\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="shader.cpp">
+      <Filter>Source\Data</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\GraphEditor.cpp">
+      <Filter>Source\Miscs\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\ImCurveEdit.cpp">
+      <Filter>Source\Miscs\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\ImGradient.cpp">
+      <Filter>Source\Miscs\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\ImGuizmo.cpp">
+      <Filter>Source\Miscs\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\ImSequencer.cpp">
+      <Filter>Source\Miscs\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_gizmo_context.cpp">
+      <Filter>Source\Window</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +202,45 @@
     </ClInclude>
     <ClInclude Include="render_system.h">
       <Filter>Source\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="inspector_system.h">
+      <Filter>Source\Inspector</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="performance_report.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>Source\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="loader.h">
+      <Filter>Source\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.h">
+      <Filter>Source\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\GraphEditor.h">
+      <Filter>Source\Miscs\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\ImCurveEdit.h">
+      <Filter>Source\Miscs\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\ImGradient.h">
+      <Filter>Source\Miscs\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\ImGuizmo.h">
+      <Filter>Source\Miscs\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\ImSequencer.h">
+      <Filter>Source\Miscs\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\ImZoomSlider.h">
+      <Filter>Source\Miscs\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_gizmo_context.h">
+      <Filter>Source\Window</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

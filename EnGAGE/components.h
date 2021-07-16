@@ -8,6 +8,11 @@ using ComponentType = uint8_t;
 
 constexpr uint32_t MAX_COMPONENTS = 16;
 
+struct NameComponent
+{
+	std::string name;
+};
+
 struct TransformComponent
 {
 	glm::vec3 position;
@@ -17,5 +22,5 @@ struct TransformComponent
 
 struct MeshComponent
 {
-	uint32_t vao, vertex_count;
+	uint32_t vao, vbo, vertex_count;
 };

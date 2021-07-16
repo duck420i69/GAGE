@@ -7,8 +7,8 @@
 class IComponentArray
 {
 public:
-	virtual void entityDestroyed(Entity e) = 0;
-	virtual ~IComponentArray() = default;
+	virtual void entityDestroyed(Entity e) noexcept = 0;
+	virtual ~IComponentArray() noexcept = default;
 };
 
 template<typename T>
@@ -19,14 +19,14 @@ class ComponentArray : public IComponentArray
 	std::unordered_map<uint64_t, Entity>	mIndexToEntity;
 	uint64_t								mSize;
 public:
-	ComponentArray() :
+	ComponentArray() noexcept :
 		mArray(),
 		mEntityToIndex(),
 		mIndexToEntity(),
 		mSize(0u)
 	{}
 
-	void insertData(Entity e, T component)
+	void insertData(Entity e, T component) noexcept
 	{
 		assert(mEntityToIndex.find(e) == mEntityToIndex.end() && "Component added to same entity more than once.");
 		
@@ -39,7 +39,7 @@ public:
 		mSize++;
 	}
 
-	void removeData(Entity e)
+	void removeData(Entity e) noexcept
 	{
 		assert(mEntityToIndex.find(e) != mEntityToIndex.end() && "Removing non-existent component.");
 		
@@ -58,7 +58,7 @@ public:
 		mSize--;
 	}
 
-	T& getData(Entity e)
+	T& getData(Entity e) noexcept
 	{
 		assert(mEntityToIndex.find(e) != mEntityToIndex.end() && "Retrieving non-existent component.");
 		
@@ -66,7 +66,7 @@ public:
 		return mArray[mEntityToIndex[e]];
 	}
 
-	void entityDestroyed(Entity e) override
+	void entityDestroyed(Entity e) noexcept override
 	{
 		if (mEntityToIndex.find(e) != mEntityToIndex.end())
 		{

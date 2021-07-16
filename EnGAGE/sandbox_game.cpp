@@ -4,13 +4,15 @@
 #include "imgui/imgui.h"
 
 #include "ecs.h"
+#include "input.h"
+#include "loader.h"
 
 #include <glad/glad.h>
 
-Entity test;
-uint32_t vao, vbo;
+static Entity test;
+static MeshComponent mesh;
 
-void SandboxGame::init()
+void SandboxGame::init() noexcept
 {
 	std::vector<float> vertex_data =
 	{
@@ -19,36 +21,36 @@ void SandboxGame::init()
 		0.5f, 0.5f, 0.0f,
 	};
 
-	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &vbo);
-	glBindVertexArray(vao);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, vertex_data.size() * sizeof(float), vertex_data.data(), GL_STATIC_DRAW);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	mesh = Loader::loadMesh(vertex_data);
+	
 
 	auto& ecs = ECS::getInstance();
-	test = ecs.createEntity();
+	test = ecs.constructEntity({"Test entity"}, {
+		glm::vec3{0, 0, 0}, glm::quat{1, 0, 0, 0}, 1
+	});
 
-	ecs.addComponent(test, TransformComponent{
-		{0, 0, 0}, {0, 0, 0, 1}, 1
-	});
-	ecs.addComponent(test, MeshComponent
-	{
-		vao, 3
-	});
+	ecs.addComponent(test, mesh);
 }
 
-void SandboxGame::update(float delta)
+void SandboxGame::update(float delta) noexcept
+{
+
+}
+
+void SandboxGame::processCamera(Camera& camera, float delta) noexcept
+{
+	if (Input::isKeyDown(Input::KEY_S))
+	{
+		camera.getPosition().z += delta * 0.1f;
+	}
+	if (Input::isKeyDown(Input::KEY_W))
+	{
+		camera.getPosition().z -= delta * 0.1f;
+	}
+}
+
+
+void SandboxGame::shutdown() noexcept
 {
 	
-}
-
-
-void SandboxGame::shutdown()
-{
-	glDeleteVertexArrays(1, &vao);
-	glDeleteBuffers(1, &vbo);
 }

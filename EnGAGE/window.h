@@ -16,7 +16,9 @@ public:
 	static void swapBuffers() noexcept;
 	static void pollEvents() noexcept;
 
-	static GLFWwindow* getWindow();
+	static GLFWwindow* getWindow() noexcept;
+	static uint16_t getWidth() noexcept;
+	static uint16_t getHeight() noexcept;
 
 	/* Tăt của sổ */
 	static void shutdown() noexcept;

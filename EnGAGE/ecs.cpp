@@ -3,11 +3,18 @@
 
 std::shared_ptr<ECS> ECS::sInstance;
 
-ECS& ECS::getInstance()
+ECS& ECS::getInstance() noexcept
 {
 	if (!sInstance)
 	{
-		sInstance = std::make_shared<ECS>();
+		try
+		{
+			sInstance = std::make_shared<ECS>();
+		}
+		catch (std::bad_alloc& e)
+		{
+			Logger::error("Exception thrown: {}", e.what());
+		}
 	}
 	return *sInstance;
 }

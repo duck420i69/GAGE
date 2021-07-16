@@ -5,8 +5,8 @@ struct GLFWwindow;
 class ImguiContext
 {
 public:
-	static void init(GLFWwindow* window);
-	static void prepare();
-	static void render();
-	static void shutdown();
+	static void init(GLFWwindow* window) noexcept;
+	static void prepare() noexcept;
+	static void render() noexcept;
+	static void shutdown() noexcept;
 };

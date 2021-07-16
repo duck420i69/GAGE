@@ -15,14 +15,14 @@ class ComponentManager
 	std::unordered_map<const char*, std::shared_ptr<IComponentArray>>	mComponentArrays;
 	ComponentType														mNextComponentType;
 public:
-	ComponentManager() :
+	ComponentManager()  noexcept :
 		mComponentTypes(),
 		mComponentArrays(),
 		mNextComponentType(0)
 	{}
 
 	template<typename T>
-	void registerComponent()
+	void registerComponent() noexcept
 	{
 		const char* typeName = typeid(T).name();
 		assert(mComponentTypes.find(typeName) == mComponentTypes.end() && "Registering component type more than once.");
@@ -30,13 +30,20 @@ public:
 
 		//Thêm vào map
 		mComponentTypes.insert({ typeName, mNextComponentType });
-		mComponentArrays.insert({ typeName, std::make_shared<ComponentArray<T>>() });
+		try
+		{
+			mComponentArrays.insert({ typeName, std::make_shared<ComponentArray<T>>() });
+		}
+		catch (std::bad_alloc& e)
+		{
+			Logger::error("Exception thrown: {}", e.what());
+		}
 
 		mNextComponentType++;
 	}
 
 	template<typename T>
-	ComponentType getComponentType()
+	ComponentType getComponentType() noexcept
 	{
 		const char* typeName = typeid(T).name();
 		assert(mComponentTypes.find(typeName) != mComponentTypes.end() && "Component not registered before use.");
@@ -44,25 +51,25 @@ public:
 		return mComponentTypes[typeName];
 	}
 	template<typename T>
-	void addComponent(Entity e, T component)
+	void addComponent(Entity e, T component) noexcept
 	{
 		Logger::info("Adding component.(Entity: {}, type: {})", e, typeid(T).name());
 		getComponentArray<T>()->insertData(e, component);
 	}
 	template<typename T>
-	void removeComponent(Entity e)
+	void removeComponent(Entity e) noexcept
 	{
 		Logger::info("Removing component.(Entity: {}, type: {})", e, typeid(T).name());
 		getComponentArray<T>()->removeData(e);
 	}
 
 	template<typename T>
-	T& getComponent(Entity e)
+	T& getComponent(Entity e) noexcept
 	{
 		return getComponentArray<T>()->getData(e);
 	}
 
-	void entityDestroyed(Entity e)
+	void entityDestroyed(Entity e) noexcept
 	{
 		for (const auto& pair : mComponentArrays)
 		{
@@ -72,7 +79,7 @@ public:
 	}
 private:
 	template<typename T>
-	std::shared_ptr<ComponentArray<T>> getComponentArray()
+	std::shared_ptr<ComponentArray<T>> getComponentArray() noexcept
 	{
 		const char* typeName = typeid(T).name();
 		assert(mComponentTypes.find(typeName) != mComponentTypes.end() && "Component not registered before use.");
