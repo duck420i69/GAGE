@@ -1,15 +1,22 @@
 #pragma once
 
-#include <chrono>
 
-class Clock
+class TClock
 {
-	std::chrono::high_resolution_clock::time_point mStartTime, mPrevTime;
-	float mDelta;
+	float mPrevTime, mDelta;
 public:
-	Clock()		noexcept;
+	~TClock() noexcept = default;
+	TClock(const TClock& other) noexcept = delete;
+	TClock& operator=(const TClock& other) noexcept = delete;
 
+	void init() noexcept;
 	void tick() noexcept;
 
-	inline const float& getDelta() const noexcept { return mDelta; }
+	inline float getDelta() const noexcept { return mDelta; }
+private:
+	TClock() noexcept;
+public:
+	static TClock& get() noexcept;
 };
+
+static TClock& Clock = TClock::get();

@@ -1,6 +1,7 @@
 #include "pch.h"
-#include "core_engine.h"
-#include "sandbox_game.h"
+#include "engine.h"
+#include "clock.h"
+#include "events.h"
 
 int WinMain(
 	HINSTANCE hInstance,
@@ -9,6 +10,14 @@ int WinMain(
 	int       nShowCmd
 )
 {
-	CoreEngine engine(std::make_shared<SandboxGame>(), 1600, 900, "Hello world");
-	engine.run();
+	Engine.init();
+	Clock.init();
+	Events.init();
+
+	while (Engine.isRunning())
+	{
+		Clock.tick();
+		Events.pollEvents();
+		Engine.update();
+	}
 }

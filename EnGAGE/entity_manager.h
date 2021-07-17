@@ -1,63 +1,26 @@
-﻿#pragma once
+#pragma once
 
-#include "logger.h"
+#include "types.h"
+#include "base_system.h"
+#include "base_component.h"
+#include "component_array.h"
 
-#include "entity.h"
-#include "signature.h"
+#include <queue>
+#include <map>
+#include <memory>
 
-#include <cassert>
-
-class EntityManager
+namespace ECS
 {
-	uint32_t								mLivingEnttiyCount;
-	std::queue<Entity>						mAvailableEntities;
-	std::array<Signature, MAX_ENTITIES>		mSignatures;
-public:
-	EntityManager() noexcept :
-		mLivingEnttiyCount(0),
-		mAvailableEntities(),
-		mSignatures() 
+	class EntityManager
 	{
-		for (Entity e = 0; e < MAX_ENTITIES; e++)
-		{
-			mAvailableEntities.push(e);
-		}
-	}
+		EntityID mEntityCount;
+		std::queue<EntityID>									mAvalidableEntities;
+		std::map<EntityID, EntitySignature>						mEntitySignatures;
+		std::map<SystemID, std::unique_ptr<BaseSystem>>			mRegisteredSystems;
+		std::map<ComponentID, std::shared_ptr<IComponentArray>> mComponentArray;
+	public:
 
-	Entity createEntity() noexcept
-	{
-		assert(mLivingEnttiyCount < MAX_ENTITIES && "Too many entities in existence.");
+	private:
 
-		// Lấy ID từ phía trước của queue
-		Entity e = mAvailableEntities.front();
-		Logger::info("Entity created(id: {}).", e);
-		mAvailableEntities.pop();
-		mLivingEnttiyCount++;
-
-		return e;
-	}
-
-	void destroyEntity(Entity e) noexcept
-	{
-		assert(e < MAX_ENTITIES && "Entity out of range.");
-		Logger::info("Entity destroyed(id: {}).", e);
-		// Phá chữ kí của entity
-		mSignatures[e].reset();
-
-		//Đẩy entity ngược lại vào queue
-		mAvailableEntities.push(e);
-		mLivingEnttiyCount--;
-	}
-
-	void setSignature(Signature s, Entity e) noexcept
-	{
-		assert(e < MAX_ENTITIES && "Entity out of range.");
-		mSignatures[e] = s;
-	}
-
-	const Signature& getSignature(Entity e) const noexcept
-	{
-		assert(e < MAX_ENTITIES && "Entity out of range.");
-		return mSignatures[e];
-	}
-};
+	};
+}
