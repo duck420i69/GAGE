@@ -4,10 +4,11 @@
 
 namespace ECS
 {
-	struct BaseSystem
+	class BaseSystem
 	{
 		friend class EntityManager;
 		EntitySignature		mSignature;
+	protected:
 		std::set<EntityID>	mEntities;
 	public:
 		BaseSystem() = default;
@@ -15,6 +16,7 @@ namespace ECS
 
 		virtual void init() {}
 		virtual void update() {}
+		virtual void render() {}
 		virtual void shutdown() {}
 
 		void addEntity(const EntityID id)

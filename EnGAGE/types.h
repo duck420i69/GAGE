@@ -30,15 +30,15 @@ namespace ECS
 	template<typename T>
 	inline static ComponentID getComponentType() noexcept
 	{
-		static_assert((std::is_base_of<BaseComponent, T>::value && !std::is_same<BaseComponent, T>), "invalid template");
+		static_assert((std::is_base_of<BaseComponent, T>::value && !std::is_same<BaseComponent, T>::value), "invalid template");
 		static const ComponentID id = getRuntimeComponentID();
 		return id;
 	}
 
 	template<typename T>
-	inline static SystemID getSystemID() noexcept
+	inline static SystemID getSystemType() noexcept
 	{
-		static_assert((std::is_base_of<BaseSystem, T>::value && !std::is_same<BaseSystem, T>), "invalid template");
+		static_assert((std::is_base_of<BaseSystem, T>::value && !std::is_same<BaseSystem, T>::value), "invalid template");
 		static const SystemID id = getRuntimeSystemID();
 		return id;
 	}

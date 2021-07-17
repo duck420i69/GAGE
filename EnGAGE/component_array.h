@@ -17,7 +17,7 @@ namespace ECS
 	};
 
 	template<typename T>
-	class ComponentArray
+	class ComponentArray : public IComponentArray
 	{
 	public:
 		std::vector<T> mData;

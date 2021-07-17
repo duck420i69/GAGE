@@ -3,13 +3,10 @@
 #include "clock.h"
 #include "events.h"
 
-int WinMain(
-	HINSTANCE hInstance,
-	HINSTANCE hPrevInstance,
-	LPSTR     lpCmdLine,
-	int       nShowCmd
-)
+
+int main()
 {
+	
 	Engine.init();
 	Clock.init();
 	Events.init();
@@ -20,4 +17,6 @@ int WinMain(
 		Events.pollEvents();
 		Engine.update();
 	}
+	
+	return EXIT_SUCCESS;
 }

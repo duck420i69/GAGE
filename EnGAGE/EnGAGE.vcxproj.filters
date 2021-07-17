@@ -155,5 +155,8 @@
     <ClInclude Include="entity_manager.h">
       <Filter>Source\ECS</Filter>
     </ClInclude>
+    <ClInclude Include="entity.h">
+      <Filter>Source\ECS</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
