@@ -12,4 +12,6 @@ public:
 
 	static bool IsCloseRequested() noexcept;
 	static void Update() noexcept;
+
+	static GLFWwindow* GetWindow() noexcept;
 };

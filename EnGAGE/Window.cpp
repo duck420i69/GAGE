@@ -28,6 +28,7 @@ void Window::Create(uint32_t width, uint32_t height, const std::string& title) n
 		assert(!"That bai khoi tao window !");
 	}
 	glfwMakeContextCurrent(sWindow);
+	glfwSwapInterval(1);
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 }
 
@@ -46,5 +47,10 @@ void Window::Update() noexcept
 {
 	glfwSwapBuffers(sWindow);
 	glfwPollEvents();
+}
+
+GLFWwindow* Window::GetWindow() noexcept
+{
+	return sWindow;
 }
 
