@@ -17,6 +17,12 @@ void Window::Create(uint32_t width, uint32_t height, const std::string& title) n
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#ifndef NDEBUG
+	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
+#else
+	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_FALSE);
+#endif // !NDEBUG
+
 	if (!(sWindow = glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr)))
 	{
 		assert(!"That bai khoi tao window !");
@@ -36,7 +42,7 @@ bool Window::IsCloseRequested() noexcept
 	return glfwWindowShouldClose(sWindow);
 }
 
-void Window::Update()
+void Window::Update() noexcept
 {
 	glfwSwapBuffers(sWindow);
 	glfwPollEvents();

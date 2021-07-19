@@ -11,5 +11,5 @@ public:
 	static void Destroy() noexcept;
 
 	static bool IsCloseRequested() noexcept;
-	static void Update();
+	static void Update() noexcept;
 };
