@@ -66,6 +66,9 @@
     <ClCompile Include="imgui\ImSequencer.cpp">
       <Filter>Source\Miscs\Imgui</Filter>
     </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -113,7 +116,7 @@
     <ClInclude Include="imgui\ImZoomSlider.h">
       <Filter>Source\Miscs\Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="window.h">
+    <ClInclude Include="Window.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
   </ItemGroup>

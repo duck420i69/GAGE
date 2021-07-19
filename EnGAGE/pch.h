@@ -17,12 +17,3 @@
 #include <bitset>
 #include <algorithm>
 #include <stack>
-
-//Opengl
-#include <glad/glad.h>
-
-
-//GLM
-
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/glm.hpp>
