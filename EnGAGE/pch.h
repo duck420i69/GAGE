@@ -16,12 +16,11 @@
 #include <fstream>
 #include <bitset>
 #include <algorithm>
+#include <stack>
 
 //Opengl
 #include <glad/glad.h>
 
-//Logger
-#include "logger.h"
 
 //GLM
 

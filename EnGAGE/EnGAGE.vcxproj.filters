@@ -16,17 +16,11 @@
     <Filter Include="Source\ECS">
       <UniqueIdentifier>{cfae6f7f-e424-434b-8cbe-f389dfec85a5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\ECS\Components">
+      <UniqueIdentifier>{a2ba5964-5693-4023-8319-a9e9356c0983}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="engine.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="logger.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="clock.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Source\Miscs</Filter>
     </ClCompile>
@@ -57,9 +51,6 @@
     <ClCompile Include="imgui\imgui_widgets.cpp">
       <Filter>Source\Miscs\Imgui</Filter>
     </ClCompile>
-    <ClCompile Include="input.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
     <ClCompile Include="imgui\GraphEditor.cpp">
       <Filter>Source\Miscs\Imgui</Filter>
     </ClCompile>
@@ -75,20 +66,8 @@
     <ClCompile Include="imgui\ImSequencer.cpp">
       <Filter>Source\Miscs\Imgui</Filter>
     </ClCompile>
-    <ClCompile Include="events.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="engine.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="logger.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="clock.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Source\Miscs</Filter>
     </ClInclude>
@@ -116,9 +95,6 @@
     <ClInclude Include="imgui\imstb_truetype.h">
       <Filter>Source\Miscs\Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="input.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
     <ClInclude Include="imgui\GraphEditor.h">
       <Filter>Source\Miscs\Imgui</Filter>
     </ClInclude>
@@ -137,26 +113,8 @@
     <ClInclude Include="imgui\ImZoomSlider.h">
       <Filter>Source\Miscs\Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="events.h">
+    <ClInclude Include="window.h">
       <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="types.h">
-      <Filter>Source\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="base_component.h">
-      <Filter>Source\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="base_system.h">
-      <Filter>Source\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="component_array.h">
-      <Filter>Source\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="entity_manager.h">
-      <Filter>Source\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="entity.h">
-      <Filter>Source\ECS</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
