@@ -149,7 +149,7 @@ public:
 		KEY_RIGHT_ALT = 346,
 		KEY_RIGHT_SUPER = 347,
 		KEY_MENU = 348,
-		KEY_LAST = GLFW_KEY_MENU;
+		KEY_LAST = KEY_MENU;
 public:
 	static void Init() noexcept;
 	static void Update() noexcept;

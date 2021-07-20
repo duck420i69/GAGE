@@ -19,6 +19,9 @@
     <Filter Include="Source\ECS\Components">
       <UniqueIdentifier>{a2ba5964-5693-4023-8319-a9e9356c0983}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\Scenes">
+      <UniqueIdentifier>{33da281c-e8cb-454e-8e92-5cefadb36249}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -78,6 +81,15 @@
     <ClCompile Include="Events.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Time.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelEditorScene.cpp">
+      <Filter>Source\Core\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelScene.cpp">
+      <Filter>Source\Core\Scenes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -136,6 +148,18 @@
     </ClInclude>
     <ClInclude Include="Events.h">
       <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Time.h">
+      <Filter>Source\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>Source\Core\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelEditorScene.h">
+      <Filter>Source\Core\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelScene.h">
+      <Filter>Source\Core\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
