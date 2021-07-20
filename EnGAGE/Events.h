@@ -12,7 +12,7 @@ class Events
 	static std::bitset<5>	sButtonsPressed;
 	static bool				sDragging;
 
-	static std::bitset<400> sKeysPressed;
+	static std::bitset<400> sKeysPressed, sPrevKeys;
 public:
 	static constexpr int
 		MOUSE_BUTTON_1 = 0,
@@ -162,4 +162,5 @@ public:
 	static float GetDY() noexcept;
 
 	static bool IsKeyDown(int key) noexcept;
+	static bool IsKeyDownOnce(int key) noexcept;
 };

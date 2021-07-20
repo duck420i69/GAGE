@@ -7,6 +7,7 @@
 #include "Time.h"
 #include "LevelEditorScene.h"
 #include "LevelScene.h"
+#include "Logger.h"
 
 #include "imgui/imgui.h"
 
@@ -16,8 +17,15 @@ template<typename T>
 static void ChangeScene(std::unique_ptr<IScene>& current_scene) noexcept
 {
 	if (current_scene)
+	{
+		if (typeid(*current_scene.get()).name() == typeid(T).name())
+		{
+			return;
+		}
 		current_scene.reset();
-	
+	}
+
+	Logger::info("Switching current scene to: {}", typeid(T).name());
 	current_scene = std::make_unique<T>();
 }
 
@@ -49,11 +57,11 @@ int main()
 
 		
 
-		if (Events::IsKeyDown(Events::KEY_1))
+		if (Events::IsKeyDownOnce(Events::KEY_1))
 		{
 			ChangeScene<LevelEditorScene>(g_current_scene);
 		}
-		else if (Events::IsKeyDown(Events::KEY_2))
+		else if (Events::IsKeyDownOnce(Events::KEY_2))
 		{
 			ChangeScene<LevelScene>(g_current_scene);
 		}

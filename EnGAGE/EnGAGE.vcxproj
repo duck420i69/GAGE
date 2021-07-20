@@ -210,6 +210,7 @@
     </ClCompile>
     <ClCompile Include="LevelEditorScene.cpp" />
     <ClCompile Include="LevelScene.cpp" />
+    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Opengl.cpp" />
     <ClCompile Include="pch.cpp">
@@ -238,6 +239,7 @@
     <ClInclude Include="imgui\ImZoomSlider.h" />
     <ClInclude Include="LevelEditorScene.h" />
     <ClInclude Include="LevelScene.h" />
+    <ClInclude Include="Logger.h" />
     <ClInclude Include="Opengl.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Scene.h" />

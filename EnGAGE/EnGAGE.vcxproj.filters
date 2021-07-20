@@ -90,6 +90,9 @@
     <ClCompile Include="LevelScene.cpp">
       <Filter>Source\Core\Scenes</Filter>
     </ClCompile>
+    <ClCompile Include="Logger.cpp">
+      <Filter>Source\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -160,6 +163,9 @@
     </ClInclude>
     <ClInclude Include="LevelScene.h">
       <Filter>Source\Core\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Source\Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

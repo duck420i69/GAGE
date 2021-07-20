@@ -13,6 +13,7 @@ std::bitset<5>	Events::sButtonsPressed = { 0 };
 bool			Events::sDragging = false;
 
 std::bitset<400> Events::sKeysPressed = { 0 };
+std::bitset<400> Events::sPrevKeys = { 0 };
 
 void Events::Init() noexcept
 {
@@ -55,6 +56,7 @@ void Events::Update() noexcept
 {
 	sLastXPos = sXPos;
 	sLastYPos = sYPos;
+	sPrevKeys = sKeysPressed;
 }
 
 bool Events::IsButtonDown(int button) noexcept
@@ -90,5 +92,10 @@ float Events::GetDY() noexcept
 bool Events::IsKeyDown(int key) noexcept
 {
 	return sKeysPressed[key];
+}
+
+bool Events::IsKeyDownOnce(int key) noexcept
+{
+	return sKeysPressed[key] && !sPrevKeys[key];
 }
 
