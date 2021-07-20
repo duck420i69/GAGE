@@ -38,7 +38,7 @@ int main()
 	Widget::Init();
 
 	ChangeScene<LevelEditorScene>(g_current_scene);
-	
+
 	double start_time = Time::GetTime();
 	double end_time = Time::GetTime();
 	while (!Window::IsCloseRequested())
@@ -46,16 +46,6 @@ int main()
 		end_time = Time::GetTime();
 		double dt = end_time - start_time;
 		start_time = end_time;
-
-		Opengl::Clear();
-		Widget::Prepare();
-
-
-		Widget::Render();
-		Events::Update();
-		Window::Update();
-
-		
 
 		if (Events::IsKeyDownOnce(Events::KEY_1))
 		{
@@ -66,8 +56,18 @@ int main()
 			ChangeScene<LevelScene>(g_current_scene);
 		}
 
+		Opengl::Clear();
+		Widget::Prepare();
+
 		if (g_current_scene)
+		{
 			g_current_scene->Update(dt);
+			g_current_scene->Render();
+		}
+
+		Widget::Render();
+		Events::Update();
+		Window::Update();
 	}
 
 	if (g_current_scene)
