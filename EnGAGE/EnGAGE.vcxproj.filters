@@ -28,6 +28,12 @@
     <Filter Include="Source\Core\Render">
       <UniqueIdentifier>{c431ced8-e79d-4ac8-a42d-4ebb33db7af5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{59e96bfb-2275-42ac-8a5a-d7fff4db1f61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Shaders">
+      <UniqueIdentifier>{473fef64-72c4-463c-b93b-d1543619d54f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -185,5 +191,16 @@
     <ClInclude Include="Shader.h">
       <Filter>Source\Core\Render</Filter>
     </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Source\Core\Render</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\fragment.glsl">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\vertex.glsl">
+      <Filter>Assets\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

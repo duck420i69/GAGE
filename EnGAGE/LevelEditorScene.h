@@ -3,7 +3,7 @@
 #include "Scene.h"
 #include "Shader.h"
 
-class LevelEditorScene : public IScene
+class LevelEditorScene : public Scene
 {
 	Shader mShader;
 public:

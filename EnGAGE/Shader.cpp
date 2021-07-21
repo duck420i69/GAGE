@@ -47,6 +47,12 @@ void Shader::Create() const noexcept
 	}
 }
 
+void Shader::UploadMat4x4(const std::string& name, const float* ptr)
+{
+	int location = GetUniformLocation(name);
+	glUniformMatrix4fv(location, 1, GL_FALSE, ptr);
+}
+
 void Shader::Load(const std::string& file_path, uint32_t type) noexcept
 {
 	try
@@ -80,4 +86,18 @@ void Shader::Load(const std::string& file_path, uint32_t type) noexcept
 	{
 		Logger::error("Shader compiling shader: {}, error: {}", file_path, glsl_error);
 	}
+}
+
+int Shader::GetUniformLocation(const std::string& name)
+{
+	int location = glGetUniformLocation(mProgram, name.c_str());
+#	ifndef NDEBUG
+		if (location == -1)
+		{
+			Logger::warn("Uniform location ( {} ) is not used !", name);
+		}
+#	endif // !NDEBUG
+
+
+	return location;
 }

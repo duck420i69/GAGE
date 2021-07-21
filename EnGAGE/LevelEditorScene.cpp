@@ -9,9 +9,9 @@
 static float g_vertex_data[] = 
 { 
 	/* Position                           Color*/
-	0.5f, -0.5f, 0.0f,					1, 0, 0,
-	-0.5f, 0.5f, 0.0f,					0, 1, 0,
-	0.5f, 0.5f, 0.0f,					0, 0, 1,
+	0.5f, -0.5f,  0.0f,					1, 0, 0,
+	-0.5f, 0.5f,  0.0f,					0, 1, 0,
+	0.5f, 0.5f,   0.0f,					0, 0, 1,
 	-0.5f, -0.5f, 0.0f,					1, 0, 1,
 };
 
@@ -23,8 +23,10 @@ static uint32_t g_element_data[] =
 
 static uint32_t g_vao, g_vbo, g_ebo;
 
-LevelEditorScene::LevelEditorScene()
+LevelEditorScene::LevelEditorScene() :
+	Scene(std::make_shared<Camera>(glm::vec3(0, 0, 0)))
 {
+	mCamera->SetPosition(0, 0, 1.0f);
 	mShader.LoadVertex("assets/shaders/vertex.glsl");
 	mShader.LoadFragment("assets/shaders/fragment.glsl");
 	mShader.Create();
@@ -66,11 +68,15 @@ void LevelEditorScene::Update(double delta) noexcept
 	ImGui::Text("vbo id: %i", g_vbo);
 	ImGui::Text("ebo id: %i", g_ebo);
 	ImGui::End();
+	mCamera->UpdateProjection();
+	
 }
 
 void LevelEditorScene::Render() noexcept
 {
 	mShader.Bind();
+	mShader.UploadMat4x4("uProjection", glm::value_ptr(mCamera->GetProjection()));
+	mShader.UploadMat4x4("uView", glm::value_ptr(mCamera->GetViewMatrix()));
 	glBindVertexArray(g_vao);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_ebo);
 	glDrawElements(GL_TRIANGLES, sizeof(g_element_data) / sizeof(uint32_t), GL_UNSIGNED_INT, nullptr);

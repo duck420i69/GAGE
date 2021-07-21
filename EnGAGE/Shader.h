@@ -16,6 +16,10 @@ public:
 	void LoadVertex(const std::string& file_path) noexcept;
 	void LoadFragment(const std::string& file_path) noexcept;
 	void Create() const noexcept;
+
+	void UploadMat4x4(const std::string& name, const float* ptr);
 private:
 	void Load(const std::string& file_path, uint32_t type) noexcept;
+
+	int GetUniformLocation(const std::string& name);
 };

@@ -6,5 +6,6 @@ out vec4 out_Color;
 
 void main()
 {
-	out_Color = vec4(FS_Color, 1);
+	float noise = fract(sin(dot(FS_Color.xy ,vec2(12.9898,78.233))) * 43758.5453);
+	out_Color = vec4(FS_Color * noise, 1);
 }

@@ -11,10 +11,10 @@
 
 #include "imgui/imgui.h"
 
-static std::unique_ptr<IScene> g_current_scene = nullptr;
+static std::unique_ptr<Scene> g_current_scene = nullptr;
 
 template<typename T>
-static void ChangeScene(std::unique_ptr<IScene>& current_scene) noexcept
+static void ChangeScene(std::unique_ptr<Scene>& current_scene) noexcept
 {
 	if (current_scene)
 	{

@@ -1,10 +1,16 @@
 #pragma once
 
-class IScene
-{
-public:
-	virtual ~IScene() = default;
+#include "Camera.h"
 
-	virtual void Update(double delta) noexcept = 0;
-	virtual void Render() noexcept = 0;
+class Scene
+{
+protected:
+	std::shared_ptr<Camera> mCamera;
+public:
+	Scene(const std::shared_ptr<Camera>& camera)
+		: mCamera(camera) {}
+	virtual ~Scene() = default;
+
+	virtual void Update(double delta) noexcept {};
+	virtual void Render() noexcept {};
 };
