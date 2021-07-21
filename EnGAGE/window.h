@@ -3,6 +3,8 @@
 struct GLFWwindow;
 class Window
 {
+	friend class Events;
+
 	static uint32_t sWidth, sHeight;
 	static GLFWwindow* sWindow;
 	static std::string sTitle;
@@ -12,6 +14,9 @@ public:
 
 	static bool IsCloseRequested() noexcept;
 	static void Update() noexcept;
+
+	static const uint32_t& GetWidth() noexcept;
+	static const uint32_t& GetHeight() noexcept;
 
 	static GLFWwindow* GetWindow() noexcept;
 };

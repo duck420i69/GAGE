@@ -49,6 +49,16 @@ void Window::Update() noexcept
 	glfwPollEvents();
 }
 
+const uint32_t& Window::GetWidth() noexcept
+{
+	return sWidth;
+}
+
+const uint32_t& Window::GetHeight() noexcept
+{
+	return sHeight;
+}
+
 GLFWwindow* Window::GetWindow() noexcept
 {
 	return sWindow;

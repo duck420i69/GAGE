@@ -2,9 +2,12 @@
 
 #include <bitset>
 
+
+
 struct GLFWwindow;
 class Events
 {
+	friend class Window;
 	static float			sXPos;
 	static float			sYPos;
 	static float			sLastXPos;

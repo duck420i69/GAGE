@@ -15,6 +15,7 @@ bool			Events::sDragging = false;
 std::bitset<400> Events::sKeysPressed = { 0 };
 std::bitset<400> Events::sPrevKeys = { 0 };
 
+
 void Events::Init() noexcept
 {
 	glfwSetErrorCallback(
@@ -49,6 +50,12 @@ void Events::Init() noexcept
 				sKeysPressed[key] = true;
 			else if (action == GLFW_RELEASE)
 				sKeysPressed[key] = false;
+		});
+	glfwSetFramebufferSizeCallback(Window::GetWindow(),
+		[](GLFWwindow* w, int width, int height)
+		{
+			Window::sWidth = width;
+			Window::sHeight = height;
 		});
 }
 

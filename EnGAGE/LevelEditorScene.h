@@ -1,9 +1,11 @@
 #pragma once
 
 #include "Scene.h"
+#include "Shader.h"
 
 class LevelEditorScene : public IScene
 {
+	Shader mShader;
 public:
 	LevelEditorScene();
 	~LevelEditorScene();

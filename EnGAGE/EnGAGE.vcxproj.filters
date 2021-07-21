@@ -25,6 +25,9 @@
     <Filter Include="Source\Core\Utils">
       <UniqueIdentifier>{91dc63ea-beb9-4c8c-a393-838264dd74b0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\Render">
+      <UniqueIdentifier>{c431ced8-e79d-4ac8-a42d-4ebb33db7af5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -98,6 +101,9 @@
     </ClCompile>
     <ClCompile Include="Utils.cpp">
       <Filter>Source\Core\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source\Core\Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +181,9 @@
     </ClInclude>
     <ClInclude Include="Utils.h">
       <Filter>Source\Core\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Source\Core\Render</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Utils.h"
 
-std::vector<std::string> Utils::SplitString(std::string str, const std::string& delim)
+std::vector<std::string> Utils::SplitString(std::string str, const std::string& delim) noexcept
 {
     size_t pos = 0;
     std::vector<std::string> tokens;
@@ -14,3 +14,15 @@ std::vector<std::string> Utils::SplitString(std::string str, const std::string& 
     }
     return tokens;
 }
+
+std::string Utils::LoadFile(const std::string& path) noexcept(false)
+{
+    std::stringstream ss;
+    std::ifstream f;
+    f.exceptions(std::ios::failbit | std::ios::badbit);
+
+    f.open(path);
+    ss << f.rdbuf();
+    return ss.str();
+}
+

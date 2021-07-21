@@ -5,25 +5,6 @@
 
 #include "imgui/imgui.h"
 
-static std::string g_vertex_source =
-	"#version 460 core\n\
-	layout(location = 0) in vec3 inPos;\n\
-	layout(location = 1) in vec3 inColor;\n\
-	out vec3 FS_Color;\n\
-	void main()\n\
-	{\
-		FS_Color = inColor;\n\
-		gl_Position = vec4(inPos, 1);\n\
-	}";
-
-static std::string g_fragment_source = 
-	"#version 460 core\n\
-	in vec3 FS_Color;\n\
-	out vec4 out_Color;\n\
-	void main()\n\
-	{\n\
-		out_Color = vec4(FS_Color, 1);\n\
-	}";
 
 static float g_vertex_data[] = 
 { 
@@ -40,27 +21,13 @@ static uint32_t g_element_data[] =
 	0, 1, 3
 };
 
-static uint32_t g_vertex, g_fragment, g_program;
 static uint32_t g_vao, g_vbo, g_ebo;
 
 LevelEditorScene::LevelEditorScene()
 {
-	g_vertex = glCreateShader(GL_VERTEX_SHADER);
-	g_fragment = glCreateShader(GL_FRAGMENT_SHADER);
-	g_program = glCreateProgram();
-
-	const char* vertex_source_c_str = g_vertex_source.c_str();
-	const char* fragment_source_c_str = g_fragment_source.c_str();
-	glShaderSource(g_vertex, 1, &vertex_source_c_str, nullptr);
-	glShaderSource(g_fragment, 1, &fragment_source_c_str, nullptr);
-
-	glCompileShader(g_vertex);
-	glCompileShader(g_fragment);
-
-	glAttachShader(g_program, g_vertex);
-	glAttachShader(g_program, g_fragment);
-	glLinkProgram(g_program);
-	glValidateProgram(g_program);
+	mShader.LoadVertex("assets/shaders/vertex.glsl");
+	mShader.LoadFragment("assets/shaders/fragment.glsl");
+	mShader.Create();
 
 	//TODO: check for shader errors
 
@@ -86,9 +53,6 @@ LevelEditorScene::LevelEditorScene()
 
 LevelEditorScene::~LevelEditorScene()
 {
-	glDeleteProgram(g_program);
-	glDeleteShader(g_vertex);
-	glDeleteShader(g_fragment);
 
 	glDeleteVertexArrays(1, &g_vao);
 	glDeleteBuffers(1, &g_vbo);
@@ -98,9 +62,6 @@ LevelEditorScene::~LevelEditorScene()
 void LevelEditorScene::Update(double delta) noexcept
 {
 	ImGui::Begin("Level editor");
-	ImGui::Text("Program id: %i", g_program);
-	ImGui::Text("vertex id: %i", g_vertex);
-	ImGui::Text("fragment id: %i", g_fragment);
 	ImGui::Text("vao id: %i", g_vao);
 	ImGui::Text("vbo id: %i", g_vbo);
 	ImGui::Text("ebo id: %i", g_ebo);
@@ -109,7 +70,7 @@ void LevelEditorScene::Update(double delta) noexcept
 
 void LevelEditorScene::Render() noexcept
 {
-	glUseProgram(g_program);
+	mShader.Bind();
 	glBindVertexArray(g_vao);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, g_ebo);
 	glDrawElements(GL_TRIANGLES, sizeof(g_element_data) / sizeof(uint32_t), GL_UNSIGNED_INT, nullptr);

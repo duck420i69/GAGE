@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "Opengl.h"
 
+#include "Window.h"
+#include "Logger.h"
+
 #include <glad/glad.h>
 
 void MessageCallbackFn(
@@ -12,10 +15,7 @@ void MessageCallbackFn(
 	const GLchar* message,
 	const void* user_param)
 {
-	std::stringstream ss;
-	ss << std::string(message) << "\n";
-	std::string result = ss.str();
-	//TODO: Logger here
+	Logger::info("{}", message);
 }
 
 void Opengl::Init() noexcept
@@ -28,5 +28,6 @@ void Opengl::Init() noexcept
 
 void Opengl::Clear() noexcept
 {
+	glViewport(0, 0, Window::GetWidth(), Window::GetHeight());
 	glClear(GL_COLOR_BUFFER_BIT);
 }
