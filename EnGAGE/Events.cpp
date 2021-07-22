@@ -2,6 +2,7 @@
 #include "Events.h"
 
 #include "Window.h"
+#include "Logger.h"
 
 #include <GLFW/glfw3.h>
 
@@ -21,10 +22,7 @@ void Events::Init() noexcept
 	glfwSetErrorCallback(
 		[](int error_code, const char* description)
 		{
-			std::stringstream ss;
-			ss << std::string(description) << "\n";
-			std::string result = ss.str();
-			//TODO: Logger here
+			Logger::error("Glfw error: {}", description);
 		});
 	glfwSetCursorPosCallback(Window::GetWindow(),
 		[](GLFWwindow* w, double x, double y)

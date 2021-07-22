@@ -53,6 +53,12 @@ void Shader::UploadMat4x4(const std::string& name, const float* ptr)
 	glUniformMatrix4fv(location, 1, GL_FALSE, ptr);
 }
 
+void Shader::UploadTexture(const std::string& name, const int& slot)
+{
+	int location = GetUniformLocation(name);
+	glUniform1i(location, slot);
+}
+
 void Shader::Load(const std::string& file_path, uint32_t type) noexcept
 {
 	try

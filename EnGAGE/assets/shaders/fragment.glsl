@@ -1,11 +1,14 @@
 #version 460 core
 
 in vec3 FS_Color;
+in vec2 FS_Uv;
 
 out vec4 out_Color;
 
+uniform sampler2D uTexSampler;
+
 void main()
 {
-	float noise = fract(sin(dot(FS_Color.xy ,vec2(12.9898,78.233))) * 43758.5453);
-	out_Color = vec4(FS_Color * noise, 1);
+	//out_Color = vec4(FS_Color, 1);
+	out_Color = texture(uTexSampler, FS_Uv);
 }

@@ -11,25 +11,23 @@ class Camera
 {
 	glm::mat4x4 mProjectionMatrix, mViewMatrix;
 	glm::vec3	mPosition, mFront, mUp;
-	float		mFov;
-	float		mNear, mFar;
+	//float		mFov;
+	//float		mNear, mFar;
 public:
 	Camera(const glm::vec3& position) noexcept :
 		mProjectionMatrix(1.0f), mViewMatrix(1.0f),
-		mPosition(position), mFront(0, 0, -1), mUp(0, 1, 0),
-		mFov(60.0f), mNear(1.0f), mFar(100.0f) {}
+		mPosition(position), mFront(0, 0, -1), mUp(0, 1, 0)
+		//mFov(60.0f), mNear(1.0f), mFar(100.0f) 
+	{}
 
 	inline void UpdateProjection() noexcept
 	{
-		mProjectionMatrix = glm::perspective(
-			glm::radians(mFov),
-			(float)Window::GetWidth() / (float)Window::GetHeight(),
-			mNear, mFar);
+		mProjectionMatrix = glm::ortho<float>(-1, 1, -1, 1);
+		mViewMatrix = glm::lookAt(mPosition, mPosition + mFront, mUp);
 	}
 
-	inline const glm::mat4& GetViewMatrix() noexcept
+	inline const glm::mat4& GetViewMatrix() const noexcept
 	{
-		mViewMatrix = glm::lookAt(mPosition, mPosition + mFront, mUp);
 		return mViewMatrix;
 	}
 

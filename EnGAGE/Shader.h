@@ -18,6 +18,7 @@ public:
 	void Create() const noexcept;
 
 	void UploadMat4x4(const std::string& name, const float* ptr);
+	void UploadTexture(const std::string& name, const int& slot);
 private:
 	void Load(const std::string& file_path, uint32_t type) noexcept;
 

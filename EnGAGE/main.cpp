@@ -8,36 +8,33 @@
 #include "LevelEditorScene.h"
 #include "LevelScene.h"
 #include "Logger.h"
+#include "Globals.h"
+#include "GameObject.h"
 
 #include "imgui/imgui.h"
 
-static std::unique_ptr<Scene> g_current_scene = nullptr;
-
-template<typename T>
-static void ChangeScene(std::unique_ptr<Scene>& current_scene) noexcept
+class Test : public Component
 {
-	if (current_scene)
-	{
-		if (typeid(*current_scene.get()).name() == typeid(T).name())
-		{
-			return;
-		}
-		current_scene.reset();
-	}
+public:
+	void Update(double dt) noexcept override {}
+};
 
-	Logger::info("Switching current scene to: {}", typeid(T).name());
-	current_scene = std::make_unique<T>();
-}
+class Test2 : public Component
+{
+public:
+	void Update(double dt) noexcept override {}
+};
 
 int main()
 {
-	Window::Create(1600, 900, "Hello world");
+
+	Window::Create(Globals::gScreenWidth, Globals::gScreenHeight, Globals::gScreenTitle);
 	Time::Init();
 	Events::Init();
 	Opengl::Init();
 	Widget::Init();
 
-	ChangeScene<LevelEditorScene>(g_current_scene);
+	Globals::ChangeScene<LevelEditorScene>(Globals::gCurrentScene);
 
 	double start_time = Time::GetTime();
 	double end_time = Time::GetTime();
@@ -49,20 +46,20 @@ int main()
 
 		if (Events::IsKeyDownOnce(Events::KEY_1))
 		{
-			ChangeScene<LevelEditorScene>(g_current_scene);
+			Globals::ChangeScene<LevelEditorScene>(Globals::gCurrentScene);
 		}
 		else if (Events::IsKeyDownOnce(Events::KEY_2))
 		{
-			ChangeScene<LevelScene>(g_current_scene);
+			Globals::ChangeScene<LevelScene>(Globals::gCurrentScene);
 		}
 
 		Opengl::Clear();
 		Widget::Prepare();
 
-		if (g_current_scene)
+		if (Globals::gCurrentScene)
 		{
-			g_current_scene->Update(dt);
-			g_current_scene->Render();
+			Globals::gCurrentScene->Update(dt);
+			Globals::gCurrentScene->Render();
 		}
 
 		Widget::Render();
@@ -70,8 +67,8 @@ int main()
 		Window::Update();
 	}
 
-	if (g_current_scene)
-		g_current_scene.reset();
+	if (Globals::gCurrentScene)
+		Globals::gCurrentScene.reset();
 	Widget::Destroy();
 	Window::Destroy();
 }

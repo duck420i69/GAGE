@@ -2,10 +2,12 @@
 
 #include "Scene.h"
 #include "Shader.h"
+#include "Texture.h"
 
 class LevelEditorScene : public Scene
 {
 	Shader mShader;
+	Texture mTestTexture;
 public:
 	LevelEditorScene();
 	~LevelEditorScene();

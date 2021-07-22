@@ -10,9 +10,6 @@
     <Filter Include="Source\Miscs">
       <UniqueIdentifier>{ecc79f96-3019-4f16-842b-ad9e7b2f98f6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\Miscs\Imgui">
-      <UniqueIdentifier>{3178eb2f-360c-4c59-9687-3c6fba001c43}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\ECS">
       <UniqueIdentifier>{cfae6f7f-e424-434b-8cbe-f389dfec85a5}</UniqueIdentifier>
     </Filter>
@@ -34,6 +31,15 @@
     <Filter Include="Assets\Shaders">
       <UniqueIdentifier>{473fef64-72c4-463c-b93b-d1543619d54f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Thirdparty">
+      <UniqueIdentifier>{5709e21f-ecc6-4285-8f46-d93ec30090ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Thirdparty\ImGui">
+      <UniqueIdentifier>{c8f2ae52-569c-49fa-81aa-00b2d35944fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Thirdparty\stb_image">
+      <UniqueIdentifier>{d5017fd9-0c93-4448-91f9-d4d728bb0be9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -44,42 +50,6 @@
     </ClCompile>
     <ClCompile Include="glad.c">
       <Filter>Source\Miscs</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui.cpp">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_demo.cpp">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_draw.cpp">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_impl_glfw.cpp">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_impl_opengl3.cpp">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_tables.cpp">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\imgui_widgets.cpp">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\GraphEditor.cpp">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\ImCurveEdit.cpp">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\ImGradient.cpp">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\ImGuizmo.cpp">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui\ImSequencer.cpp">
-      <Filter>Source\Miscs\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="Window.cpp">
       <Filter>Source\Core</Filter>
@@ -111,52 +81,55 @@
     <ClCompile Include="Shader.cpp">
       <Filter>Source\Core\Render</Filter>
     </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Source\Core\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="thirdparty\imgui\GraphEditor.cpp">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="thirdparty\imgui\ImCurveEdit.cpp">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="thirdparty\imgui\ImGradient.cpp">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="thirdparty\imgui\imgui.cpp">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="thirdparty\imgui\imgui_demo.cpp">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="thirdparty\imgui\imgui_draw.cpp">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="thirdparty\imgui\imgui_impl_glfw.cpp">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="thirdparty\imgui\imgui_impl_opengl3.cpp">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="thirdparty\imgui\imgui_tables.cpp">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="thirdparty\imgui\imgui_widgets.cpp">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="thirdparty\imgui\ImGuizmo.cpp">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="thirdparty\imgui\ImSequencer.cpp">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="thirdparty\stb_image\stb_image.cpp">
+      <Filter>Thirdparty\stb_image</Filter>
+    </ClCompile>
+    <ClCompile Include="Globals.cpp">
+      <Filter>Source\Miscs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>Source\Miscs</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imconfig.h">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imgui.h">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imgui_impl_glfw.h">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imgui_impl_opengl3.h">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imgui_internal.h">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imstb_rectpack.h">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imstb_textedit.h">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\imstb_truetype.h">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\GraphEditor.h">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\ImCurveEdit.h">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\ImGradient.h">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\ImGuizmo.h">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\ImSequencer.h">
-      <Filter>Source\Miscs\Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui\ImZoomSlider.h">
-      <Filter>Source\Miscs\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="Window.h">
       <Filter>Source\Core</Filter>
@@ -193,6 +166,63 @@
     </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Source\Core\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Source\Core\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\imgui\GraphEditor.h">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\imgui\imconfig.h">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\imgui\ImCurveEdit.h">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\imgui\ImGradient.h">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\imgui\imgui.h">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\imgui\imgui_impl_glfw.h">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\imgui\imgui_impl_opengl3.h">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\imgui\imgui_internal.h">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\imgui\ImGuizmo.h">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\imgui\ImSequencer.h">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\imgui\imstb_rectpack.h">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\imgui\imstb_textedit.h">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\imgui\imstb_truetype.h">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\imgui\ImZoomSlider.h">
+      <Filter>Thirdparty\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\stb_image\stb_image.h">
+      <Filter>Thirdparty\stb_image</Filter>
+    </ClInclude>
+    <ClInclude Include="Globals.h">
+      <Filter>Source\Miscs</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Source\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>Source\ECS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
