@@ -8,7 +8,7 @@
 
 class Renderer
 {
-	const uint32_t MAX_BATCH_SIZE = 500;
+	const uint32_t MAX_BATCH_SIZE = 5;
 	
 	std::vector<std::unique_ptr<RenderBatch>> mBatches;
 public:

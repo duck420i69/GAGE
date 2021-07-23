@@ -6,6 +6,8 @@
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "Asset.h"
+
 static constexpr size_t VERTEX_SIZE = 7;
 
 RenderBatch::RenderBatch(uint32_t max_batch_size) noexcept :
@@ -15,9 +17,7 @@ RenderBatch::RenderBatch(uint32_t max_batch_size) noexcept :
 	mShader(),
 	mVertexData(VERTEX_SIZE * 4 * max_batch_size)
 {
-	mShader.LoadVertex("Assets/Shaders/vertex.glsl");
-	mShader.LoadFragment("Assets/Shaders/fragment.glsl");
-	mShader.Create();
+	mShader = Asset::GetShader("Assets/Shaders/default");
 
 	UploadToGPU();
 }
@@ -70,9 +70,9 @@ void RenderBatch::Render() const noexcept
 	glBufferSubData(GL_ARRAY_BUFFER, 0, mVertexData.size() * sizeof(float), mVertexData.data());
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	mShader.Bind();
-	mShader.UploadMat4x4("uProjection", glm::value_ptr(Globals::gCurrentScene->GetCamera().GetProjection()));
-	mShader.UploadMat4x4("uView", glm::value_ptr(Globals::gCurrentScene->GetCamera().GetViewMatrix()));
+	mShader->Bind();
+	mShader->UploadMat4x4("uProjection", glm::value_ptr(Globals::gCurrentScene->GetCamera().GetProjection()));
+	mShader->UploadMat4x4("uView", glm::value_ptr(Globals::gCurrentScene->GetCamera().GetViewMatrix()));
 
 	glBindVertexArray(mVAO);
 	glDrawElements(GL_TRIANGLES, mSprites.size() * 6, GL_UNSIGNED_INT, nullptr);

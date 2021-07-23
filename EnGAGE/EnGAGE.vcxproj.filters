@@ -129,6 +129,9 @@
     <ClCompile Include="RenderBatch.cpp">
       <Filter>Source\Core\Render</Filter>
     </ClCompile>
+    <ClCompile Include="Asset.cpp">
+      <Filter>Source\Core\Utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -239,12 +242,15 @@
     <ClInclude Include="Renderer.h">
       <Filter>Source\Core\Render</Filter>
     </ClInclude>
+    <ClInclude Include="Asset.h">
+      <Filter>Source\Core\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\shaders\fragment.glsl">
+    <None Include="assets\shaders\default_FS.glsl">
       <Filter>Assets\Shaders</Filter>
     </None>
-    <None Include="assets\shaders\vertex.glsl">
+    <None Include="assets\shaders\default_VS.glsl">
       <Filter>Assets\Shaders</Filter>
     </None>
   </ItemGroup>

@@ -11,7 +11,7 @@ class RenderBatch
 	bool						mHasRoom;
 	uint32_t					mVAO, mVBO, mEBO;
 	uint32_t					mMaxBatchSize;
-	Shader						mShader;
+	std::shared_ptr<Shader>		mShader;
 	std::vector<float>			mVertexData;
 public:
 	RenderBatch(uint32_t max_batch_size) noexcept;
