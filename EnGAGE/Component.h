@@ -7,8 +7,9 @@ class Component
 public:
 	GameObject* mGameObject;
 public:
-	Component() :
-		mGameObject(nullptr) {}
+	Component() noexcept :
+		mGameObject(nullptr)
+	{}
 
 	virtual void Update(double dt) noexcept = 0;
 };

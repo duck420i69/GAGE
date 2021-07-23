@@ -8,7 +8,9 @@ class SpriteRenderer : public Component
 {
 	glm::vec4 mColor;
 public:
-	SpriteRenderer(const glm::vec4& color) : mColor(color) {}
+	SpriteRenderer(const glm::vec4& color) noexcept :
+		mColor(color)
+	{}
 
 	void Update(double dt) noexcept override {}
 

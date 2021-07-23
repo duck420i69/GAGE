@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Scene.h"
-#include "Shader.h"
-#include "Texture.h"
 
 class LevelEditorScene : public Scene
 {

@@ -1,9 +1,5 @@
 #pragma once
 
-#include <bitset>
-
-
-
 struct GLFWwindow;
 class Events
 {

@@ -4,16 +4,12 @@
 
 class Transform
 {
-	using Vec3 = glm::vec3;
-
 public:
-	Vec3 mPos, mRot, mScale;
+	glm::vec3 mPos, mRot, mScale;
 public:
-	Transform(const Vec3& pos, const Vec3& rot, const Vec3& scale) :
-		mPos(pos), mRot(rot), mScale(scale) {}
-
-
 	Transform() :
-		Transform({ 0, 0, 0 }, { 0, 0, 0 }, {1, 1, 1})
+		Transform({ 0, 0, 0 }, { 0, 0, 0 }, { 1, 1, 1 })
 	{}
+	Transform(const glm::vec3& pos, const glm::vec3& rot, const glm::vec3& scale) :
+		mPos(pos), mRot(rot), mScale(scale) {}	
 };

@@ -41,9 +41,9 @@ public:
 		}
 	}
 
-	void Render() noexcept
+	void Render() const noexcept
 	{
-		for (auto& batch : mBatches)
+		for (const auto& batch : mBatches)
 		{
 			batch->Render();
 		}
