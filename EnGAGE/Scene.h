@@ -2,22 +2,26 @@
 
 #include "Camera.h"
 #include "GameObject.h"
+#include "Renderer.h"
+
 
 class Scene
 {
 protected:
-	std::shared_ptr<Camera> mCamera;
-	std::vector<std::shared_ptr<GameObject>> mGameObject;
+	Renderer mRenderer;
+	Camera mCamera;
+	std::vector<std::shared_ptr<GameObject>> mGameObjects;
 public:
-	Scene(const std::shared_ptr<Camera>& camera)
-		: mCamera(camera) {}
 	virtual ~Scene() = default;
 
 	virtual void Update(double delta) noexcept {};
 	virtual void Render() noexcept {};
+
+	inline const Camera& GetCamera() const noexcept { return mCamera; }
 protected:
 	void AddGameObject(const std::shared_ptr<GameObject>& go) noexcept
 	{
-		mGameObject.push_back(go);
+		mGameObjects.push_back(go);
+		mRenderer.Add(*go);
 	}
 };

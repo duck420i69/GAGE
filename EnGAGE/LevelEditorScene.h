@@ -6,8 +6,6 @@
 
 class LevelEditorScene : public Scene
 {
-	Shader mShader;
-	Texture mTestTexture;
 public:
 	LevelEditorScene();
 	~LevelEditorScene();

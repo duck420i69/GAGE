@@ -9,16 +9,25 @@
 
 class Camera
 {
-	glm::mat4x4 mProjectionMatrix, mViewMatrix;
-	glm::vec3	mPosition, mFront, mUp;
+	using Vec3 = glm::vec3;
+	using Mat4 = glm::mat4;
+
+	Mat4	mProjectionMatrix, mViewMatrix;
+	Vec3	mPosition, mFront, mUp;
 	//float		mFov;
 	//float		mNear, mFar;
 public:
-	Camera(const glm::vec3& position) noexcept :
-		mProjectionMatrix(1.0f), mViewMatrix(1.0f),
-		mPosition(position), mFront(0, 0, -1), mUp(0, 1, 0)
-		//mFov(60.0f), mNear(1.0f), mFar(100.0f) 
+	Camera() noexcept :
+		Camera({ 0, 0, 0 }, { 0, 0 , -1 }, {0, 1, 0})
 	{}
+
+	Camera(const Vec3& pos) noexcept :
+		Camera(pos, { 0, 0 , -1 }, { 0, 1, 0 })
+	{}
+
+	Camera(const Vec3& pos, const Vec3& front, const Vec3& up) noexcept :
+		mProjectionMatrix(1.0f), mViewMatrix(1.0f),
+		mPosition(pos), mFront(front), mUp(up) {}
 
 	inline void UpdateProjection() noexcept
 	{
@@ -35,6 +44,7 @@ public:
 	{
 		return mProjectionMatrix;
 	}
+
 	inline void MovePosition(float x, float y, float z) noexcept
 	{
 		mPosition.x += x;

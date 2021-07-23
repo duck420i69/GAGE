@@ -17,10 +17,10 @@ public:
 	void LoadFragment(const std::string& file_path) noexcept;
 	void Create() const noexcept;
 
-	void UploadMat4x4(const std::string& name, const float* ptr);
-	void UploadTexture(const std::string& name, const int& slot);
+	void UploadMat4x4(const std::string& name, const float* ptr) const;
+	void UploadTexture(const std::string& name, const int& slot) const;
 private:
 	void Load(const std::string& file_path, uint32_t type) noexcept;
 
-	int GetUniformLocation(const std::string& name);
+	int GetUniformLocation(const std::string& name) const;
 };

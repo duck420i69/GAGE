@@ -170,6 +170,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="RenderBatch.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="thirdparty\imgui\GraphEditor.cpp">
@@ -240,8 +241,11 @@
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Opengl.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="RenderBatch.h" />
+    <ClInclude Include="Renderer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="SpriteRenderer.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="thirdparty\imgui\GraphEditor.h" />
     <ClInclude Include="thirdparty\imgui\imconfig.h" />
@@ -259,6 +263,7 @@
     <ClInclude Include="thirdparty\imgui\ImZoomSlider.h" />
     <ClInclude Include="thirdparty\stb_image\stb_image.h" />
     <ClInclude Include="Time.h" />
+    <ClInclude Include="Transform.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Widget.h" />
     <ClInclude Include="Window.h" />

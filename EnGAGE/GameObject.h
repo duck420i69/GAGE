@@ -1,18 +1,25 @@
 #pragma once
 
 #include "Component.h"
+#include "Transform.h"
 
 class GameObject
 {
 	std::string mName;
 	std::vector<std::shared_ptr<Component>> mComponents;
 public:
+	Transform mTransform;
+public:
+	GameObject(const std::string& name, const Transform& transform) noexcept :
+		mName(name), mComponents(), mTransform(transform)
+	{}
+
 	GameObject(const std::string& name) noexcept :
-		mName(name)
+		GameObject(name, Transform())
 	{}
 
 	template<class T>
-	std::weak_ptr<T> GetComponent() noexcept
+	const std::weak_ptr<T> GetComponent() const  noexcept
 	{
 		for (auto& component : mComponents)
 		{

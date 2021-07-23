@@ -47,13 +47,13 @@ void Shader::Create() const noexcept
 	}
 }
 
-void Shader::UploadMat4x4(const std::string& name, const float* ptr)
+void Shader::UploadMat4x4(const std::string& name, const float* ptr) const
 {
 	int location = GetUniformLocation(name);
 	glUniformMatrix4fv(location, 1, GL_FALSE, ptr);
 }
 
-void Shader::UploadTexture(const std::string& name, const int& slot)
+void Shader::UploadTexture(const std::string& name, const int& slot) const
 {
 	int location = GetUniformLocation(name);
 	glUniform1i(location, slot);
@@ -94,7 +94,7 @@ void Shader::Load(const std::string& file_path, uint32_t type) noexcept
 	}
 }
 
-int Shader::GetUniformLocation(const std::string& name)
+int Shader::GetUniformLocation(const std::string& name) const
 {
 	int location = glGetUniformLocation(mProgram, name.c_str());
 #	ifndef NDEBUG

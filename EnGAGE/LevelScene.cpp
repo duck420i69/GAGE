@@ -1,8 +1,7 @@
 #include "pch.h"
 #include "LevelScene.h"
 
-LevelScene::LevelScene() noexcept :
-	Scene(nullptr)
+LevelScene::LevelScene() noexcept
 {
 }
 
