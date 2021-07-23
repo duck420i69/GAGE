@@ -8,18 +8,19 @@
 
 #include "Asset.h"
 
-static constexpr size_t VERTEX_SIZE = 7;
 
 RenderBatch::RenderBatch(uint32_t max_batch_size) noexcept :
 	mSprites(), mHasRoom(true),
 	mVAO(0), mVBO(0), mEBO(0),
 	mMaxBatchSize(max_batch_size),
 	mShader(),
-	mVertexData(VERTEX_SIZE * 4 * max_batch_size)
+	mVertexData(VERTEX_SIZE * 4 * max_batch_size), 
+	mTextures()
 {
 	mShader = Asset::GetShader("Assets/Shaders/default");
 
 	UploadToGPU();
+	Logger::info("Creaing render batch: {}", max_batch_size);
 }
 
 RenderBatch::~RenderBatch() noexcept
@@ -27,15 +28,36 @@ RenderBatch::~RenderBatch() noexcept
 	glDeleteVertexArrays(1, &mVAO);
 	glDeleteBuffers(1, &mVBO);
 	glDeleteBuffers(1, &mEBO);
+	Logger::info("Destroying render batch: {}", mMaxBatchSize);
 }
 
 void RenderBatch::AddSprite(const SpriteRenderer& sprite)
 {
+	Logger::info("Adding sprite to batch !");
 	mSprites.push_back(sprite);
 
 	const size_t index = mSprites.size() - 1;
 	const glm::vec4& color = sprite.GetColor();
 	size_t offset = index * 4 * VERTEX_SIZE;
+
+	if (sprite.GetTexture())
+	{
+		if (std::find(mTextures.begin(), mTextures.end(), sprite.GetTexture()) == mTextures.end())
+		{
+			mTextures.push_back(sprite.GetTexture());
+		}
+	}
+
+	int texID = 0;
+	if(sprite.GetTexture())
+	for (size_t i = 0; i < mTextures.size(); i++)
+	{
+		if (mTextures[i] == sprite.GetTexture())
+		{
+			texID = i + 1;
+			break;
+		}
+	}
 
 	float x_add = 1.0f;
 	float y_add = 1.0f;
@@ -56,6 +78,11 @@ void RenderBatch::AddSprite(const SpriteRenderer& sprite)
 		mVertexData[offset + 5] = color.b;
 		mVertexData[offset + 6] = color.a;
 
+		mVertexData[offset + 7] = sprite.GetTexCoords()[i].x;
+		mVertexData[offset + 8] = sprite.GetTexCoords()[i].y;
+
+		mVertexData[offset + 9] = texID;
+
 		offset += VERTEX_SIZE;
 	}
 
@@ -73,11 +100,16 @@ void RenderBatch::Render() const noexcept
 	mShader->Bind();
 	mShader->UploadMat4x4("uProjection", glm::value_ptr(Globals::gCurrentScene->GetCamera().GetProjection()));
 	mShader->UploadMat4x4("uView", glm::value_ptr(Globals::gCurrentScene->GetCamera().GetViewMatrix()));
+	for (size_t i = 0; i < mTextures.size(); i++)
+	{
+		mShader->UploadTexture("uTextures[" + std::to_string(i + 1) + "]", i + 1);
+		mTextures[i]->Bind(i + 1);
+	}
 
 	glBindVertexArray(mVAO);
 	glDrawElements(GL_TRIANGLES, mSprites.size() * 6, GL_UNSIGNED_INT, nullptr);
 	glBindVertexArray(0);
-
+	glBindTexture(GL_TEXTURE_2D, 0);
 	glUseProgram(0);
 }
 
@@ -93,8 +125,12 @@ void RenderBatch::UploadToGPU() noexcept
 	glBufferData(GL_ARRAY_BUFFER, mVertexData.size() * sizeof(float), nullptr, GL_DYNAMIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+	glEnableVertexAttribArray(3);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_SIZE, 0);
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_SIZE, (const void*)(sizeof(float) * 3));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_SIZE, (const void*)(sizeof(float) * 7));
+	glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, sizeof(float) * VERTEX_SIZE, (const void*)(sizeof(float) * 9));
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mEBO);

@@ -14,6 +14,7 @@ Shader::Shader() noexcept
 Shader::~Shader() noexcept
 {
 	glDeleteProgram(mProgram);
+	Logger::info("Destroying shader: {}", mProgram);
 }
 
 void Shader::Bind() const
@@ -24,11 +25,13 @@ void Shader::Bind() const
 void Shader::LoadVertex(const std::string& file_path) noexcept
 {
 	Load(file_path, GL_VERTEX_SHADER);
+	Logger::info("Loading vertex shader: {}", file_path);
 }
 
 void Shader::LoadFragment(const std::string& file_path) noexcept
 {
 	Load(file_path, GL_FRAGMENT_SHADER);
+	Logger::info("Loading fragment shader: {}", file_path);
 }
 
 void Shader::Create() const noexcept
@@ -45,6 +48,7 @@ void Shader::Create() const noexcept
 	{
 		glDeleteShader(shader);
 	}
+	Logger::info("Creating program: {}", mProgram);
 }
 
 void Shader::UploadMat4x4(const std::string& name, const float* ptr) const
@@ -57,6 +61,12 @@ void Shader::UploadTexture(const std::string& name, const int& slot) const
 {
 	int location = GetUniformLocation(name);
 	glUniform1i(location, slot);
+}
+
+void Shader::UploadIntArr(const std::string& name, const int* arr, const uint32_t size) const
+{
+	int location = GetUniformLocation(name);
+	glUniform1iv(location, size, arr);
 }
 
 void Shader::Load(const std::string& file_path, uint32_t type) noexcept

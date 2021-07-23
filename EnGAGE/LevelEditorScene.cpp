@@ -6,12 +6,14 @@
 #include "thirdparty/imgui/imgui.h"
 
 #include "Events.h"
+#include "Asset.h"
 
 static std::mt19937 eng;
 
 static std::uniform_real_distribution<float> randPos(-1, 1);
 static std::uniform_real_distribution<float> randScale(0.1f, 1);
 static std::uniform_real_distribution<float> randColor(0, 1);
+static std::uniform_int_distribution<uint32_t> randTexture(1, 2);
 
 LevelEditorScene::LevelEditorScene()
 {
@@ -28,7 +30,7 @@ void LevelEditorScene::Update(double delta) noexcept
 {
 	mCamera.UpdateProjection();
 
-	if (Events::IsKeyDownOnce(Events::KEY_F))
+	if (Events::IsKeyDown(Events::KEY_F))
 	{
 		auto ptr = std::make_shared<GameObject>("");
 		ptr->mTransform.mScale.x = randScale(eng);
@@ -36,7 +38,14 @@ void LevelEditorScene::Update(double delta) noexcept
 		ptr->mTransform.mScale.z = 1;
 		ptr->mTransform.mPos.x = randPos(eng);
 		ptr->mTransform.mPos.y = randPos(eng);
-		ptr->AddComponent<SpriteRenderer>(glm::vec4{ randColor(eng), randColor(eng), randColor(eng), 1 });
+		if (randTexture(eng) == 1)
+		{
+			ptr->AddComponent<SpriteRenderer>(Asset::GetTexture("Assets/Textures/testImage.png"));
+		}
+		else if (randTexture(eng) == 2)
+		{
+			ptr->AddComponent<SpriteRenderer>(Asset::GetTexture("Assets/Textures/testImage2.png"));
+		}
 		this->AddGameObject(ptr);
 	}
 }

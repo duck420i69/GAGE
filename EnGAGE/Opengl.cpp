@@ -24,6 +24,15 @@ void Opengl::Init() noexcept
 		glEnable(GL_DEBUG_OUTPUT);
 		glDebugMessageCallback(MessageCallbackFn, nullptr);
 #	endif // !NDEBUG
+
+	int texture_units;
+	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &texture_units);
+
+	Logger::info("Max texture image units: {}", texture_units);
+
+	//Enable n stuffs
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void Opengl::Clear() noexcept

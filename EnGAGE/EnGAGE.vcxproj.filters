@@ -40,6 +40,9 @@
     <Filter Include="Thirdparty\stb_image">
       <UniqueIdentifier>{d5017fd9-0c93-4448-91f9-d4d728bb0be9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets\Textures">
+      <UniqueIdentifier>{23af4e75-c1ba-4103-85b9-a7360b922fb7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -61,9 +64,6 @@
       <Filter>Source\Core</Filter>
     </ClCompile>
     <ClCompile Include="Events.cpp">
-      <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Time.cpp">
       <Filter>Source\Core</Filter>
     </ClCompile>
     <ClCompile Include="LevelEditorScene.cpp">
@@ -147,9 +147,6 @@
       <Filter>Source\Core</Filter>
     </ClInclude>
     <ClInclude Include="Events.h">
-      <Filter>Source\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Time.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
@@ -253,5 +250,16 @@
     <None Include="assets\shaders\default_VS.glsl">
       <Filter>Assets\Shaders</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Textures\ignore_this.png">
+      <Filter>Assets\Textures</Filter>
+    </Image>
+    <Image Include="Assets\Textures\testImage.png">
+      <Filter>Assets\Textures</Filter>
+    </Image>
+    <Image Include="Assets\Textures\testImage2.png">
+      <Filter>Assets\Textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>

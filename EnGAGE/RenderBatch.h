@@ -4,15 +4,18 @@
 #include "Shader.h"
 
 /* ===Vertex layout=== */
-/* Position(3 floats)    Color(4 floats) */
+/* Position(3 floats)    Color(4 floats)      TexCoord(2 floats)        TexID(1 float)*/
 class RenderBatch
 {
-	std::vector<SpriteRenderer> mSprites;
-	bool						mHasRoom;
-	uint32_t					mVAO, mVBO, mEBO;
-	uint32_t					mMaxBatchSize;
-	std::shared_ptr<Shader>		mShader;
-	std::vector<float>			mVertexData;
+	const size_t VERTEX_SIZE = 10;
+
+	std::vector<SpriteRenderer>				mSprites;
+	bool									mHasRoom;
+	uint32_t								mVAO, mVBO, mEBO;
+	uint32_t								mMaxBatchSize;
+	std::shared_ptr<Shader>					mShader;
+	std::vector<float>						mVertexData;
+	std::vector<std::shared_ptr<Texture>>	mTextures;
 public:
 	RenderBatch(uint32_t max_batch_size) noexcept;
 	~RenderBatch() noexcept;

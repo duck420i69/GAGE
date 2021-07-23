@@ -37,6 +37,8 @@ Texture::Texture(const std::string& filePath) noexcept :
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		stbi_image_free(image_data);
+
+		Logger::info("Creating texture: {}", filePath);
 	}
 	catch (std::exception& e)
 	{
@@ -46,6 +48,7 @@ Texture::Texture(const std::string& filePath) noexcept :
 
 Texture::~Texture() noexcept
 {
+	Logger::info("Destroying texture: {}", mID);
 	glDeleteTextures(1, &mID);
 }
 

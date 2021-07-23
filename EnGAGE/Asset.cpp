@@ -36,3 +36,9 @@ std::shared_ptr<Texture> Asset::GetTexture(const std::string& path)
         return sTextures[path];
     }
 }
+
+void Asset::Destroy()
+{
+    sShaders.clear();
+    sTextures.clear();
+}

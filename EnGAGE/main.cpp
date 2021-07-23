@@ -4,43 +4,31 @@
 #include "Opengl.h"
 #include "Widget.h"
 #include "Events.h"
-#include "Time.h"
 #include "LevelEditorScene.h"
 #include "LevelScene.h"
 #include "Logger.h"
 #include "Globals.h"
 #include "GameObject.h"
+#include "Asset.h"
 
-#include "imgui/imgui.h"
+#include <GLFW/glfw3.h>
 
-class Test : public Component
-{
-public:
-	void Update(double dt) noexcept override {}
-};
-
-class Test2 : public Component
-{
-public:
-	void Update(double dt) noexcept override {}
-};
 
 int main()
 {
 
 	Window::Create(Globals::gScreenWidth, Globals::gScreenHeight, Globals::gScreenTitle);
-	Time::Init();
 	Events::Init();
 	Opengl::Init();
 	Widget::Init();
 
 	Globals::ChangeScene<LevelEditorScene>(Globals::gCurrentScene);
 
-	double start_time = Time::GetTime();
-	double end_time = Time::GetTime();
+	double start_time = glfwGetTime();
+	double end_time = glfwGetTime();
 	while (!Window::IsCloseRequested())
 	{
-		end_time = Time::GetTime();
+		end_time = glfwGetTime();
 		double dt = end_time - start_time;
 		start_time = end_time;
 
@@ -71,4 +59,5 @@ int main()
 		Globals::gCurrentScene.reset();
 	Widget::Destroy();
 	Window::Destroy();
+	Asset::Destroy();
 }

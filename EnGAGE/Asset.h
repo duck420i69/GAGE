@@ -14,4 +14,5 @@ class Asset
 public:
 	static std::shared_ptr<Shader> GetShader(const std::string& path);
 	static std::shared_ptr<Texture> GetTexture(const std::string& path);
+	static void Destroy();
 };
