@@ -242,6 +242,12 @@
     <ClInclude Include="Asset.h">
       <Filter>Source\Core\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Sprite.h">
+      <Filter>Source\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteSheet.h">
+      <Filter>Source\ECS\Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\default_FS.glsl">
@@ -259,6 +265,9 @@
       <Filter>Assets\Textures</Filter>
     </Image>
     <Image Include="Assets\Textures\testImage2.png">
+      <Filter>Assets\Textures</Filter>
+    </Image>
+    <Image Include="Assets\Textures\spritesheet.png">
       <Filter>Assets\Textures</Filter>
     </Image>
   </ItemGroup>

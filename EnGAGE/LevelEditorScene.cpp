@@ -13,12 +13,14 @@ static std::mt19937 eng;
 static std::uniform_real_distribution<float> randPos(-1, 1);
 static std::uniform_real_distribution<float> randScale(0.1f, 1);
 static std::uniform_real_distribution<float> randColor(0, 1);
-static std::uniform_int_distribution<uint32_t> randTexture(1, 2);
+static std::uniform_int_distribution<uint32_t> randTexture(0, 25);
 
 LevelEditorScene::LevelEditorScene()
 {
 	eng.seed(10);
 
+	auto sheet_texture = Asset::GetTexture("Assets/Textures/spritesheet.png");
+	Asset::AddSpriteSheets("Blocks", std::make_shared<SpriteSheet>(sheet_texture, 16, 16, 26, 0));
 }
 
 LevelEditorScene::~LevelEditorScene()
@@ -29,7 +31,7 @@ LevelEditorScene::~LevelEditorScene()
 void LevelEditorScene::Update(double delta) noexcept
 {
 	mCamera.UpdateProjection();
-
+	auto sprite_sheet = *Asset::GetSpriteSheets("Blocks");
 	if (Events::IsKeyDown(Events::KEY_F))
 	{
 		auto ptr = std::make_shared<GameObject>("");
@@ -38,14 +40,7 @@ void LevelEditorScene::Update(double delta) noexcept
 		ptr->mTransform.mScale.z = 1;
 		ptr->mTransform.mPos.x = randPos(eng);
 		ptr->mTransform.mPos.y = randPos(eng);
-		if (randTexture(eng) == 1)
-		{
-			ptr->AddComponent<SpriteRenderer>(Asset::GetTexture("Assets/Textures/testImage.png"));
-		}
-		else if (randTexture(eng) == 2)
-		{
-			ptr->AddComponent<SpriteRenderer>(Asset::GetTexture("Assets/Textures/testImage2.png"));
-		}
+		ptr->AddComponent<SpriteRenderer>(sprite_sheet[randTexture(eng)]);
 		this->AddGameObject(ptr);
 	}
 }

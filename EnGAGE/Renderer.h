@@ -9,7 +9,7 @@
 class Renderer
 {
 	const uint32_t MAX_BATCH_SIZE = 500;
-	
+
 	std::vector<std::unique_ptr<RenderBatch>> mBatches;
 public:
 	void Add(const GameObject& go) noexcept
@@ -26,13 +26,17 @@ public:
 		{
 			if (batch->HasRoom())
 			{
-				batch->AddSprite(sprite);
-				added = true;
-				break;
+				auto texture = sprite.GetTexture();
+				if (texture == nullptr or (batch->HasTexture(texture) or batch->HasTextureRoom()))
+				{
+					batch->AddSprite(sprite);
+					added = true;
+					break;
+				}
 			}
 		}
 
-		if (!added) 
+		if (!added)
 		{
 			auto newBatch = std::make_unique<RenderBatch>(MAX_BATCH_SIZE);
 			newBatch->AddSprite(sprite);

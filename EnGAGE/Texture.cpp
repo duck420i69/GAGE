@@ -8,7 +8,7 @@
 
 
 Texture::Texture(const std::string& filePath) noexcept :
-	mID(0)
+	mID(0), mWidth(0), mHeight(0)
 {
 	try
 	{
@@ -24,7 +24,8 @@ Texture::Texture(const std::string& filePath) noexcept :
 
 			throw std::runtime_error(ss.str());
 		}
-
+		mWidth = width;
+		mHeight = height;
 		glGenTextures(1, &mID);
 		glBindTexture(GL_TEXTURE_2D, mID);
 

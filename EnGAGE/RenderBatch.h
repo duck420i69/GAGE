@@ -7,7 +7,8 @@
 /* Position(3 floats)    Color(4 floats)      TexCoord(2 floats)        TexID(1 float)*/
 class RenderBatch
 {
-	const size_t VERTEX_SIZE = 10;
+	const int VERTEX_SIZE = 10;
+	const size_t MAX_TEXTURES = 8;
 
 	std::vector<SpriteRenderer>				mSprites;
 	bool									mHasRoom;
@@ -24,6 +25,11 @@ public:
 	void Render() const noexcept;
 
 	inline bool HasRoom() const noexcept { return mHasRoom; }
+	inline bool HasTextureRoom() const noexcept { return mTextures.size() < MAX_TEXTURES; }
+	inline bool HasTexture(const std::shared_ptr<Texture>& texture) const noexcept 
+	{
+		return std::count(mTextures.begin(), mTextures.end(), texture) != 0; 
+	}
 private:
 	void UploadToGPU() noexcept;
 	std::vector<uint32_t> GenerateIndices() const noexcept;
