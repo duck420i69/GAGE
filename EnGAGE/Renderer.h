@@ -16,18 +16,18 @@ public:
 	{
 		if (auto ptr = go.GetComponent<SpriteRenderer>().lock())
 		{
-			Add(*ptr);
+			Add(ptr);
 		}
 	}
-	void Add(const SpriteRenderer& sprite) noexcept
+	void Add(const std::weak_ptr<SpriteRenderer>& sprite) noexcept
 	{
 		bool added = false;
 		for (auto& batch : mBatches)
 		{
 			if (batch->HasRoom())
 			{
-				auto texture = sprite.GetTexture();
-				if (texture == nullptr or (batch->HasTexture(texture) or batch->HasTextureRoom()))
+				auto texture = sprite.lock()->GetTexture();
+				if (texture.lock() == nullptr or (batch->HasTexture(texture) or batch->HasTextureRoom()))
 				{
 					batch->AddSprite(sprite);
 					added = true;

@@ -48,6 +48,7 @@ public:
 	{
 		auto comp = std::make_shared<T>(std::forward<Args>(args)...);
 		comp->mGameObject = this;
+		comp->Start();
 		mComponents.push_back(comp);
 
 	}

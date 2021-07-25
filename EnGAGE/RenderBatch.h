@@ -10,25 +10,29 @@ class RenderBatch
 	const int VERTEX_SIZE = 10;
 	const size_t MAX_TEXTURES = 8;
 
-	std::vector<SpriteRenderer>				mSprites;
-	bool									mHasRoom;
-	uint32_t								mVAO, mVBO, mEBO;
-	uint32_t								mMaxBatchSize;
-	std::shared_ptr<Shader>					mShader;
-	std::vector<float>						mVertexData;
-	std::vector<std::shared_ptr<Texture>>	mTextures;
+	std::vector<std::weak_ptr<SpriteRenderer>>	mSprites;
+	bool										mHasRoom;
+	uint32_t									mVAO, mVBO, mEBO;
+	uint32_t									mMaxBatchSize;
+	std::weak_ptr<Shader>						mShader;
+	std::vector<float>							mVertexData;
+	std::vector<std::weak_ptr<Texture>>			mTextures;
 public:
 	RenderBatch(uint32_t max_batch_size) noexcept;
 	~RenderBatch() noexcept;
 
-	void AddSprite(const SpriteRenderer& sprite);
-	void Render() const noexcept;
+	void AddSprite(const std::weak_ptr<SpriteRenderer>& sprite);
+	void Render() noexcept;
+	void LoadVertices(int index) noexcept;
 
 	inline bool HasRoom() const noexcept { return mHasRoom; }
 	inline bool HasTextureRoom() const noexcept { return mTextures.size() < MAX_TEXTURES; }
-	inline bool HasTexture(const std::shared_ptr<Texture>& texture) const noexcept 
+	inline bool HasTexture(const std::weak_ptr<Texture>& texture) const noexcept 
 	{
-		return std::count(mTextures.begin(), mTextures.end(), texture) != 0; 
+		return std::find_if(mTextures.begin(), mTextures.end(), [&](const auto& t)
+			{
+				return t.lock() == texture.lock();
+			}) != mTextures.end();
 	}
 private:
 	void UploadToGPU() noexcept;

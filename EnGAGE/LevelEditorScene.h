@@ -2,7 +2,7 @@
 
 #include "Scene.h"
 
-class LevelEditorScene : public Scene
+class LevelEditorScene : public Scene 
 {
 public:
 	LevelEditorScene();

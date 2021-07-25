@@ -14,7 +14,7 @@ RenderBatch::RenderBatch(uint32_t max_batch_size) noexcept :
 	mVAO(0), mVBO(0), mEBO(0),
 	mMaxBatchSize(max_batch_size),
 	mShader(),
-	mVertexData((size_t)VERTEX_SIZE * 4 * max_batch_size), 
+	mVertexData((size_t)VERTEX_SIZE * 4 * max_batch_size),
 	mTextures()
 {
 	mShader = Asset::GetShader("Assets/Shaders/default");
@@ -31,33 +31,80 @@ RenderBatch::~RenderBatch() noexcept
 	Logger::info("Destroying render batch: {}", mMaxBatchSize);
 }
 
-void RenderBatch::AddSprite(const SpriteRenderer& sprite)
+void RenderBatch::AddSprite(const std::weak_ptr<SpriteRenderer>& sprite)
 {
 	Logger::info("Adding sprite to batch !");
 	mSprites.push_back(sprite);
 
-	const size_t index = mSprites.size() - 1;
+	LoadVertices(mSprites.size() - 1);
+
+	if (mSprites.size() >= mMaxBatchSize)
+		mHasRoom = false;
+}
+
+void RenderBatch::Render() noexcept
+{
+	bool rebuffer_data = false;
+	for (int i = 0; i < mSprites.size(); i++)
+	{
+		auto& spr = *mSprites[i].lock();
+		if (spr.IsDirty())
+		{
+			LoadVertices(i);
+			spr.CleanDirty();
+			rebuffer_data = true;
+		}
+	}
+	if (rebuffer_data)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, mVBO);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, mVertexData.size() * sizeof(float), mVertexData.data());
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
+	mShader.lock()->Bind();
+	mShader.lock()->UploadMat4x4("uProjection", glm::value_ptr(Globals::gCurrentScene->GetCamera().GetProjection()));
+	mShader.lock()->UploadMat4x4("uView", glm::value_ptr(Globals::gCurrentScene->GetCamera().GetViewMatrix()));
+	for (int i = 0; i < mTextures.size(); i++)
+	{
+		mShader.lock()->UploadTexture("uTextures[" + std::to_string(i + 1) + "]", i + 1);
+		mTextures[i].lock()->Bind(i + 1);
+	}
+
+	glBindVertexArray(mVAO);
+	glDrawElements(GL_TRIANGLES, (int)mSprites.size() * 6, GL_UNSIGNED_INT, nullptr);
+	glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glUseProgram(0);
+}
+
+void RenderBatch::LoadVertices(int index) noexcept
+{
+	const auto& sprite = *mSprites[index].lock();
 	const glm::vec4& color = sprite.GetColor();
 	size_t offset = index * 4 * VERTEX_SIZE;
 
-	if (sprite.GetTexture())
+	if (sprite.GetTexture().lock())
 	{
-		if (std::find(mTextures.begin(), mTextures.end(), sprite.GetTexture()) == mTextures.end())
+		if (std::find_if(mTextures.begin(), mTextures.end(), [&](const auto& t)
+			{
+				return t.lock() == sprite.GetTexture().lock();
+			}) == mTextures.end())
 		{
 			mTextures.push_back(sprite.GetTexture());
 		}
 	}
 
 	int texID = 0;
-	if(sprite.GetTexture())
-	for (int i = 0; i < mTextures.size(); i++)
-	{
-		if (mTextures[i] == sprite.GetTexture())
+	if (sprite.GetTexture().lock())
+		for (int i = 0; i < mTextures.size(); i++)
 		{
-			texID = i + 1;
-			break;
+			if (mTextures[i].lock() == sprite.GetTexture().lock())
+			{
+				texID = i + 1;
+				break;
+			}
 		}
-	}
 
 	float x_add = 1.0f;
 	float y_add = 1.0f;
@@ -85,32 +132,6 @@ void RenderBatch::AddSprite(const SpriteRenderer& sprite)
 
 		offset += VERTEX_SIZE;
 	}
-
-
-	if (mSprites.size() >= mMaxBatchSize)
-		mHasRoom = false;
-}
-
-void RenderBatch::Render() const noexcept
-{
-	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, mVertexData.size() * sizeof(float), mVertexData.data());
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	mShader->Bind();
-	mShader->UploadMat4x4("uProjection", glm::value_ptr(Globals::gCurrentScene->GetCamera().GetProjection()));
-	mShader->UploadMat4x4("uView", glm::value_ptr(Globals::gCurrentScene->GetCamera().GetViewMatrix()));
-	for (int i = 0; i < mTextures.size(); i++)
-	{
-		mShader->UploadTexture("uTextures[" + std::to_string(i + 1) + "]", i + 1);
-		mTextures[i]->Bind(i + 1);
-	}
-
-	glBindVertexArray(mVAO);
-	glDrawElements(GL_TRIANGLES, (int)mSprites.size() * 6, GL_UNSIGNED_INT, nullptr);
-	glBindVertexArray(0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glUseProgram(0);
 }
 
 void RenderBatch::UploadToGPU() noexcept
@@ -142,7 +163,7 @@ void RenderBatch::UploadToGPU() noexcept
 std::vector<uint32_t> RenderBatch::GenerateIndices() const noexcept
 {
 	//6 indices per quad
-	std::vector<uint32_t> result( (size_t)mMaxBatchSize * 6 );
+	std::vector<uint32_t> result((size_t)mMaxBatchSize * 6);
 
 	for (uint32_t i = 0; i < mMaxBatchSize; i++)
 	{
