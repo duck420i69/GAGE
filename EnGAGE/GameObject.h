@@ -7,15 +7,16 @@ class GameObject
 {
 	std::string mName;
 	std::vector<std::shared_ptr<Component>> mComponents;
+	int			mZIndex;
 public:
 	Transform mTransform;
 public:
-	GameObject(const std::string& name, const Transform& transform) noexcept :
-		mName(name), mComponents(), mTransform(transform)
+	GameObject(const std::string& name, const Transform& transform, int z_index) noexcept :
+		mName(name), mComponents(), mZIndex(z_index), mTransform(transform)
 	{}
 
-	GameObject(const std::string& name) noexcept :
-		GameObject(name, Transform())
+	GameObject(const std::string& name, int z_index = 0) noexcept :
+		GameObject(name, Transform(), z_index)
 	{}
 
 	template<class T>
@@ -61,4 +62,5 @@ public:
 		}
 	}
 
+	inline const int& ZIndex() const noexcept { return mZIndex; }
 };

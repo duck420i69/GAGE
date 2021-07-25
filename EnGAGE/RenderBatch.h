@@ -17,8 +17,9 @@ class RenderBatch
 	std::weak_ptr<Shader>						mShader;
 	std::vector<float>							mVertexData;
 	std::vector<std::weak_ptr<Texture>>			mTextures;
+	int											mZIndex;
 public:
-	RenderBatch(uint32_t max_batch_size) noexcept;
+	RenderBatch(uint32_t max_batch_size, int z_index) noexcept;
 	~RenderBatch() noexcept;
 
 	void AddSprite(const std::weak_ptr<SpriteRenderer>& sprite);
@@ -34,6 +35,8 @@ public:
 				return t.lock() == texture.lock();
 			}) != mTextures.end();
 	}
+
+	inline const int& ZIndex() const noexcept { return mZIndex; }
 private:
 	void UploadToGPU() noexcept;
 	std::vector<uint32_t> GenerateIndices() const noexcept;

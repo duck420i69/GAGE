@@ -9,13 +9,14 @@
 #include "Asset.h"
 
 
-RenderBatch::RenderBatch(uint32_t max_batch_size) noexcept :
+RenderBatch::RenderBatch(uint32_t max_batch_size, int z_index) noexcept :
 	mSprites(), mHasRoom(true),
 	mVAO(0), mVBO(0), mEBO(0),
 	mMaxBatchSize(max_batch_size),
 	mShader(),
 	mVertexData((size_t)VERTEX_SIZE * 4 * max_batch_size),
-	mTextures()
+	mTextures(),
+	mZIndex(z_index)
 {
 	mShader = Asset::GetShader("Assets/Shaders/default");
 

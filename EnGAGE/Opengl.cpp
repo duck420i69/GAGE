@@ -39,4 +39,5 @@ void Opengl::Clear() noexcept
 {
 	glViewport(0, 0, Window::GetWidth(), Window::GetHeight());
 	glClear(GL_COLOR_BUFFER_BIT);
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 }

@@ -11,13 +11,11 @@
 
 static std::mt19937 eng;
 
-static std::uniform_real_distribution<float> randPos(-1, 1);
-static std::uniform_real_distribution<float> randScale(0.1f, 1);
+static std::uniform_real_distribution<float> randPos(-100, 100);
+static std::uniform_real_distribution<float> randScale(1.0f, 50);
 static std::uniform_real_distribution<float> randColor(0, 1);
 static std::uniform_int_distribution<uint32_t> randTexture(0, 25);
 
-static std::shared_ptr<GameObject> g_first_object = nullptr;
-static bool g_first_time = true;
 static int g_sprite_index = 0;
 static float g_sprite_time = 0.2f;
 static float g_sprite_time_left = 0.0f;
@@ -42,13 +40,8 @@ void LevelEditorScene::Update(double delta) noexcept
 	g_sprite_sheet = Asset::GetSpriteSheets("Blocks");
 	if (Events::IsKeyDownOnce(Events::KEY_F))
 	{
-		auto ptr = std::make_shared<GameObject>("");
+		auto ptr = std::make_shared<GameObject>("", 0);
 
-		if (g_first_time)
-		{
-			g_first_object = ptr;
-			g_first_time = false;
-		}
 
 		ptr->mTransform.mScale.x = randScale(eng);
 		ptr->mTransform.mScale.y = randScale(eng);
@@ -59,19 +52,7 @@ void LevelEditorScene::Update(double delta) noexcept
 		this->AddGameObject(ptr);
 	}
 
-	if (g_first_object)
-	{
-		g_sprite_time_left -= delta;
-		if (g_sprite_time_left <= 0.0f) {
-			g_sprite_time_left = g_sprite_time;
-			g_sprite_index++;
-			if (g_sprite_index > 4)
-			{
-				g_sprite_index = 0;
-			}
-			g_first_object->GetComponent<SpriteRenderer>().lock()->SetSprite((*g_sprite_sheet.lock())[g_sprite_index]);
-		}
-	}
+	
 	for (auto& go : mGameObjects)
 	{
 		go->Update(delta);

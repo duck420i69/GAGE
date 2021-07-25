@@ -30,7 +30,7 @@ public:
 
 	inline void UpdateProjection() noexcept
 	{
-		mProjectionMatrix = glm::ortho<float>(-1, 1, -1, 1);
+		mProjectionMatrix = glm::ortho<float>(-100, 100, -100, 100);
 		mViewMatrix = glm::lookAt(mPosition, mPosition + mFront, mUp);
 	}
 
