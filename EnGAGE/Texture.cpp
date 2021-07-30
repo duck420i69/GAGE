@@ -7,19 +7,19 @@
 #include <stb_image/stb_image.h>
 
 
-Texture::Texture(const std::string& filePath) noexcept :
-	mID(0), mWidth(0), mHeight(0)
+Texture::Texture(const std::string& file_path) noexcept :
+	mName(file_path), mID(0), mWidth(0), mHeight(0)
 {
 	try
 	{
 		int width = 0, height = 0, bpp = 0;
 		stbi_uc* image_data = nullptr;
 		stbi_set_flip_vertically_on_load(true);
-		image_data = stbi_load(filePath.c_str(), &width, &height, &bpp, STBI_rgb_alpha);
+		image_data = stbi_load(file_path.c_str(), &width, &height, &bpp, STBI_rgb_alpha);
 		if (!image_data)
 		{
 			std::stringstream ss;
-			ss << "Failed to load image : " << filePath << ", stb_image's report: " <<
+			ss << "Failed to load image : " << file_path << ", stb_image's report: " <<
 				std::string(stbi_failure_reason());
 
 			throw std::runtime_error(ss.str());
@@ -39,7 +39,7 @@ Texture::Texture(const std::string& filePath) noexcept :
 
 		stbi_image_free(image_data);
 
-		Logger::info("Creating texture: {}", filePath);
+		Logger::info("Creating texture: {}", file_path);
 	}
 	catch (std::exception& e)
 	{

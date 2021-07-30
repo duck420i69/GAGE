@@ -46,6 +46,7 @@ int main()
 
 		if (Globals::gCurrentScene)
 		{
+			Globals::gCurrentScene->SceneImGui();
 			Globals::gCurrentScene->Update(dt);
 			Globals::gCurrentScene->Render();
 		}

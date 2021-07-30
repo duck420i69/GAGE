@@ -10,4 +10,5 @@ public:
 
 	void Update(double delta) noexcept override;
 	void Render() noexcept override;
+	void ImGui() noexcept override;
 };

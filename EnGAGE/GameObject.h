@@ -5,6 +5,8 @@
 
 class GameObject
 {
+	friend class Globals;
+
 	std::string mName;
 	std::vector<std::shared_ptr<Component>> mComponents;
 	int			mZIndex;
@@ -18,6 +20,14 @@ public:
 	GameObject(const std::string& name, int z_index = 0) noexcept :
 		GameObject(name, Transform(), z_index)
 	{}
+
+	void ImGui() noexcept
+	{
+		for (auto& comp : mComponents)
+		{
+			comp->ImGui();
+		}
+	}
 
 	template<class T>
 	const std::weak_ptr<T> GetComponent() const  noexcept

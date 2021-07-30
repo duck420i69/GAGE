@@ -8,6 +8,7 @@
 #include "Events.h"
 #include "Asset.h"
 #include "Logger.h"
+#include "Globals.h"
 
 static std::mt19937 eng;
 
@@ -16,9 +17,7 @@ static std::uniform_real_distribution<float> randScale(1.0f, 50);
 static std::uniform_real_distribution<float> randColor(0, 1);
 static std::uniform_int_distribution<uint32_t> randTexture(0, 25);
 
-static int g_sprite_index = 0;
-static float g_sprite_time = 0.2f;
-static float g_sprite_time_left = 0.0f;
+static bool g_first_time = true;
 
 static std::weak_ptr<SpriteSheet> g_sprite_sheet = std::weak_ptr<SpriteSheet>();
 LevelEditorScene::LevelEditorScene()
@@ -27,11 +26,12 @@ LevelEditorScene::LevelEditorScene()
 
 	auto sheet_texture = Asset::GetTexture("Assets/Textures/spritesheet.png");
 	Asset::AddSpriteSheets("Blocks", std::make_shared<SpriteSheet>(sheet_texture, 16, 16, 26, 0));
+	mGameObjects = Globals::LoadAllGameObjects();
 }
 
 LevelEditorScene::~LevelEditorScene()
 {
-
+	Globals::SaveAllGameObjects(mGameObjects);
 }
 
 void LevelEditorScene::Update(double delta) noexcept
@@ -40,8 +40,13 @@ void LevelEditorScene::Update(double delta) noexcept
 	g_sprite_sheet = Asset::GetSpriteSheets("Blocks");
 	if (Events::IsKeyDownOnce(Events::KEY_F))
 	{
-		auto ptr = std::make_shared<GameObject>("", 0);
+		auto ptr = std::make_shared<GameObject>("Dumb ass", 0);
 
+		if (g_first_time)
+		{
+			this->mActiveGameObject = ptr;
+			g_first_time = false;
+		}
 
 		ptr->mTransform.mScale.x = randScale(eng);
 		ptr->mTransform.mScale.y = randScale(eng);
@@ -62,4 +67,11 @@ void LevelEditorScene::Update(double delta) noexcept
 void LevelEditorScene::Render() noexcept
 {
 	this->mRenderer.Render();
+}
+
+void LevelEditorScene::ImGui() noexcept
+{
+	ImGui::Begin("Level editor");
+	ImGui::Text("Hello world");
+	ImGui::End();
 }

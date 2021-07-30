@@ -4,6 +4,7 @@
 class GameObject;
 class Component
 {
+	friend class Globals;
 public:
 	GameObject* mGameObject;
 public:
@@ -12,6 +13,9 @@ public:
 	{}
 	virtual ~Component() = default;
 
-	virtual void Start() noexcept = 0;
-	virtual void Update(double dt) noexcept = 0;
+	virtual void Start() noexcept {};
+	virtual void Update(double dt) noexcept {};
+	virtual void ImGui() noexcept {};
+private:
+	virtual void ParseComponent(std::ofstream& s) noexcept = 0;
 };
