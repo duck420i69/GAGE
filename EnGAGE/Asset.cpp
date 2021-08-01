@@ -3,7 +3,6 @@
 
 std::map<std::string, std::shared_ptr<Texture>> Asset::sTextures;
 std::map<std::string, std::shared_ptr<Shader>> Asset::sShaders;
-std::map<std::string, std::shared_ptr<SpriteSheet>> Asset::sSpriteSheets;
 
 std::weak_ptr<Shader> Asset::GetShader(const std::string& path) noexcept
 {
@@ -38,26 +37,10 @@ std::weak_ptr<Texture> Asset::GetTexture(const std::string& path) noexcept
     }
 }
 
-void Asset::AddSpriteSheets(const std::string& name, const std::shared_ptr<SpriteSheet>& sheet) noexcept
-{
-    if (sSpriteSheets.count(name) == 0)
-    {
-        sSpriteSheets.emplace(name, sheet);
-    }
-}
 
-std::weak_ptr<SpriteSheet> Asset::GetSpriteSheets(const std::string& name) noexcept
-{
-    if (sSpriteSheets.count(name) == 0)
-    {
-        assert(!"Sprite sheet not added !");
-    }
-    return sSpriteSheets[name];
-}
 
 void Asset::Destroy() noexcept
 {
-    sSpriteSheets.clear();
     sShaders.clear();
     sTextures.clear();
 }

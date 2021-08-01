@@ -1,24 +1,38 @@
-from random import randrange
+
+import enum
 
 class Tile:
-	def __init__(self, r, g, b):
-		self.r = r
-		self.g = g
-		self.b = b
+    TILE_SIZE = 32
+    
+    def __init__(self, color):
+        self.color = color
+
+class TileType:
+    NULL = Tile((0, 0, 0))
+    GRASS = Tile((0, 137, 0))
+    DIRT = Tile((192, 137, 0))
 
 class Map:
-	TILE_SIZE = 32 # pixels
-	def __init__(self, size_x, size_y):
-		self.size_x = size_x
-		self.size_y = size_y
-		self.map = []
+    
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+        self.map = []
+    
+    def load(self):
+        for i in range(0, self.width * self.height):
+            self.map.append(TileType.NULL)
 
-		for y in range(0, size_y):
-			for x in range(0, size_x):
-				self.map.append(Tile(56, 23, 75))
+    def update(self, window):
+        for y in range(self.height):
+            for x in range(self.width):
 
-	def render(self, window):
-		for x in range(0, self.size_x):
-			for y in range(0, self.size_y):
-				tile = self.map[x + y * self.size_x]
-				window.draw_quad(x * Map.TILE_SIZE, y * Map.TILE_SIZE, Map.TILE_SIZE, Map.TILE_SIZE, tile.r, tile.g, tile.b)
+                #Render tile
+                tile = self.map[x + y * self.width]
+                window.draw_quad(
+                    x * Tile.TILE_SIZE,
+                    y * Tile.TILE_SIZE,
+                    Tile.TILE_SIZE,
+                    Tile.TILE_SIZE, tile.color[0], tile.color[1], tile.color[2]);
+
+    

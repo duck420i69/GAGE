@@ -17,6 +17,13 @@ class Window:
         #key_callback_fn(key, down_state)
         self.key_callback_fn = None
 
+        #mouse_pos_callback_fn(pos, rel, buttons)
+        self.mouse_pos_callback_fn = None
+
+
+    def shutdown(self):
+        pygame.quit()
+
     def clear(self, r, g, b):
         self.surface.fill((r, g, b))
         
@@ -24,6 +31,10 @@ class Window:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.close_request = True
+            
+            if self.mouse_pos_callback_fn != None:
+                if event.type == pygame.MOUSEMOTION:
+                    self.mouse_pos_callback_fn(event.pos, event.rel, event.buttons)
 
             if self.key_callback_fn != None:
                 if event.type == pygame.KEYDOWN:
@@ -39,6 +50,9 @@ class Window:
     
     def register_mouse_callback(self, callback):
         self.mouse_callback_fn = callback
+
+    def register_mouse_pos_callback(self, callback):
+        self.mouse_pos_callback_fn = callback
 
     def register_key_callback(self, callback):
         self.key_callback_fn = callback

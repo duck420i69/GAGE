@@ -10,12 +10,6 @@
     <Filter Include="Source\Miscs">
       <UniqueIdentifier>{ecc79f96-3019-4f16-842b-ad9e7b2f98f6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\ECS">
-      <UniqueIdentifier>{cfae6f7f-e424-434b-8cbe-f389dfec85a5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source\ECS\Components">
-      <UniqueIdentifier>{a2ba5964-5693-4023-8319-a9e9356c0983}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\Core\Utils">
       <UniqueIdentifier>{91dc63ea-beb9-4c8c-a393-838264dd74b0}</UniqueIdentifier>
     </Filter>
@@ -65,12 +59,6 @@
     </ClCompile>
     <ClCompile Include="Events.cpp">
       <Filter>Source\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="LevelEditorScene.cpp">
-      <Filter>Source\Core\Scene</Filter>
-    </ClCompile>
-    <ClCompile Include="LevelScene.cpp">
-      <Filter>Source\Core\Scene</Filter>
     </ClCompile>
     <ClCompile Include="Logger.cpp">
       <Filter>Source\Core</Filter>
@@ -126,9 +114,6 @@
     <ClCompile Include="Globals.cpp">
       <Filter>Source\Miscs</Filter>
     </ClCompile>
-    <ClCompile Include="RenderBatch.cpp">
-      <Filter>Source\Core\Render</Filter>
-    </ClCompile>
     <ClCompile Include="Asset.cpp">
       <Filter>Source\Core\Utils</Filter>
     </ClCompile>
@@ -152,12 +137,6 @@
     <ClInclude Include="Scene.h">
       <Filter>Source\Core\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="LevelEditorScene.h">
-      <Filter>Source\Core\Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="LevelScene.h">
-      <Filter>Source\Core\Scene</Filter>
-    </ClInclude>
     <ClInclude Include="Logger.h">
       <Filter>Source\Core</Filter>
     </ClInclude>
@@ -165,9 +144,6 @@
       <Filter>Source\Core\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Shader.h">
-      <Filter>Source\Core\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
       <Filter>Source\Core\Render</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
@@ -221,32 +197,8 @@
     <ClInclude Include="Globals.h">
       <Filter>Source\Miscs</Filter>
     </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Source\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="Component.h">
-      <Filter>Source\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="Transform.h">
-      <Filter>Source\ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="SpriteRenderer.h">
-      <Filter>Source\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderBatch.h">
-      <Filter>Source\Core\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>Source\Core\Render</Filter>
-    </ClInclude>
     <ClInclude Include="Asset.h">
       <Filter>Source\Core\Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Sprite.h">
-      <Filter>Source\ECS\Components</Filter>
-    </ClInclude>
-    <ClInclude Include="SpriteSheet.h">
-      <Filter>Source\ECS\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

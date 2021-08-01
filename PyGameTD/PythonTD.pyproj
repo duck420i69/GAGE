@@ -22,21 +22,13 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="EnGAGE.py">
+    <Compile Include="map.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PyGameTD.py" />
-    <Compile Include="tower.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="window.py">
       <SubType>Code</SubType>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="map.py">
-      <SubType>Code</SubType>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

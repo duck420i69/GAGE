@@ -8,7 +8,6 @@ class Globals
 public:
 	static uint32_t gScreenWidth, gScreenHeight;
 	static std::string gScreenTitle;
-	static std::unique_ptr<Scene> gCurrentScene;
 
 
 	template<typename T>
@@ -26,6 +25,4 @@ public:
 		Logger::info("Switching current scene to: {}", typeid(T).name());
 		current_scene = std::make_unique<T>();
 	}
-	static std::vector<std::shared_ptr<GameObject>> LoadAllGameObjects(const std::string& file_name = "Assets/save");
-	static void SaveAllGameObjects(const std::vector<std::shared_ptr<GameObject>>& game_objects, const std::string& file_name = "Assets/save");
 };

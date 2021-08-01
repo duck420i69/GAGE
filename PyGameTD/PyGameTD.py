@@ -1,28 +1,30 @@
 import pygame
 import sys
-from random import randrange
 from window import Window
-from tower import *
-from map import *
+from map import Map
 
-clock = pygame.time.Clock()
-win = Window(1600, 900, "CUM")
+SCREEN_WIDTH = 1600
+SCREEN_HEIGHT = 900
+SCREEN_TITLE = "Retarded tower defence"
 
-towers = []
+def main():
+    clock = pygame.time.Clock()
+    win = Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
+    map = Map(10, 10)
 
-map = Map(50, 28)
-
-
-while not win.close_requested():
-    delta = clock.tick(60)
-    win.poll_events()
+    map.load()
     
-    win.clear(0, 0, 0)
-    
-    map.render(win)
-    for tower in towers:
-        tower.render(win)
-        tower.update(delta, win)
- 
-    win.flip()
+    while not win.close_requested():
+        win.poll_events()
+        delta = clock.tick(60)
+        win.clear(0, 0, 0)
+        
+        #Game's logic and render here
+        map.update(win)
 
+        win.flip()
+
+    win.shutdown()
+
+if __name__ == "__main__":
+    main()
