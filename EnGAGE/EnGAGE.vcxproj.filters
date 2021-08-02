@@ -37,6 +37,15 @@
     <Filter Include="Source\Core\Scene">
       <UniqueIdentifier>{33da281c-e8cb-454e-8e92-5cefadb36249}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\TowerDefence">
+      <UniqueIdentifier>{4d93ae16-1db3-4737-9e8a-dcd59c310cc3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\TowerDefence\Scene">
+      <UniqueIdentifier>{bdfd740d-7162-4e0d-bae1-a51cb1a78823}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Saves">
+      <UniqueIdentifier>{18ad1ec4-09db-48c0-aa6b-055f7472c5f0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -116,6 +125,21 @@
     </ClCompile>
     <ClCompile Include="Asset.cpp">
       <Filter>Source\Core\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMap.cpp">
+      <Filter>Source\TowerDefence</Filter>
+    </ClCompile>
+    <ClCompile Include="Tile.cpp">
+      <Filter>Source\TowerDefence</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Source\TowerDefence</Filter>
+    </ClCompile>
+    <ClCompile Include="TileType.cpp">
+      <Filter>Source\TowerDefence</Filter>
+    </ClCompile>
+    <ClCompile Include="EditScene.cpp">
+      <Filter>Source\TowerDefence\Scene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -200,6 +224,21 @@
     <ClInclude Include="Asset.h">
       <Filter>Source\Core\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="TileMap.h">
+      <Filter>Source\TowerDefence</Filter>
+    </ClInclude>
+    <ClInclude Include="Tile.h">
+      <Filter>Source\TowerDefence</Filter>
+    </ClInclude>
+    <ClInclude Include="TileType.h">
+      <Filter>Source\TowerDefence</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Source\TowerDefence</Filter>
+    </ClInclude>
+    <ClInclude Include="EditScene.h">
+      <Filter>Source\TowerDefence\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\default_FS.glsl">
@@ -210,6 +249,12 @@
     </None>
     <None Include="Assets\save">
       <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Shaders\tile_FS.glsl">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\tile_VS.glsl">
+      <Filter>Assets\Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +268,12 @@
       <Filter>Assets\Textures</Filter>
     </Image>
     <Image Include="Assets\Textures\spritesheet.png">
+      <Filter>Assets\Textures</Filter>
+    </Image>
+    <Image Include="Assets\Textures\dirt.png">
+      <Filter>Assets\Textures</Filter>
+    </Image>
+    <Image Include="Assets\Textures\grass.png">
       <Filter>Assets\Textures</Filter>
     </Image>
   </ItemGroup>

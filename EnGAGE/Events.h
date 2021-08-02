@@ -6,8 +6,10 @@ class Events
 	friend class Window;
 	static float			sXPos;
 	static float			sYPos;
+	static float			sScroll;
 	static float			sLastXPos;
 	static float			sLastYPos;
+	static float			sLastScroll;
 	static std::bitset<5>	sButtonsPressed;
 	static bool				sDragging;
 
@@ -157,8 +159,10 @@ public:
 	static bool IsDragging() noexcept;
 	static float GetX() noexcept;
 	static float GetY() noexcept;
+	static float GetScroll() noexcept;
 	static float GetDX() noexcept;
 	static float GetDY() noexcept;
+	static float GetDScroll() noexcept;
 
 	static bool IsKeyDown(int key) noexcept;
 	static bool IsKeyDownOnce(int key) noexcept;

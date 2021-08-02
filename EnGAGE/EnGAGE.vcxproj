@@ -95,6 +95,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Asset.cpp" />
+    <ClCompile Include="EditScene.cpp" />
     <ClCompile Include="Events.cpp" />
     <ClCompile Include="glad.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -103,6 +104,9 @@
     <ClCompile Include="Globals.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="Opengl.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -162,15 +166,20 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="TileType.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Widget.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Asset.h" />
+    <ClInclude Include="EditScene.h" />
     <ClInclude Include="Events.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Tile.h" />
+    <ClInclude Include="TileMap.h" />
     <ClInclude Include="Opengl.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Scene.h" />
@@ -191,6 +200,7 @@
     <ClInclude Include="thirdparty\imgui\imstb_truetype.h" />
     <ClInclude Include="thirdparty\imgui\ImZoomSlider.h" />
     <ClInclude Include="thirdparty\stb_image\stb_image.h" />
+    <ClInclude Include="TileType.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Widget.h" />
     <ClInclude Include="Window.h" />
@@ -199,8 +209,12 @@
     <None Include="Assets\save" />
     <None Include="assets\shaders\default_FS.glsl" />
     <None Include="assets\shaders\default_VS.glsl" />
+    <None Include="Assets\Shaders\tile_FS.glsl" />
+    <None Include="Assets\Shaders\tile_VS.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="Assets\Textures\dirt.png" />
+    <Image Include="Assets\Textures\grass.png" />
     <Image Include="Assets\Textures\ignore_this.png" />
     <Image Include="Assets\Textures\spritesheet.png" />
     <Image Include="Assets\Textures\testImage.png" />

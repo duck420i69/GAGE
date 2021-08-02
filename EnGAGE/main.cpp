@@ -8,6 +8,9 @@
 #include "Globals.h"
 #include "Asset.h"
 
+#include "TileType.h"
+#include "EditScene.h"
+
 #include <GLFW/glfw3.h>
 
 
@@ -18,22 +21,35 @@ int main()
 	Opengl::Init();
 	Widget::Init();
 
-	double start_time = glfwGetTime();
-	double end_time = glfwGetTime();
-	while (!Window::IsCloseRequested())
 	{
-		end_time = glfwGetTime();
-		double dt = end_time - start_time;
-		start_time = end_time;
+		TileType::Load();
+		Globals::ChangeScene<EditScene>();
 
-		
+		double start_time = glfwGetTime();
+		double end_time = glfwGetTime();
+		while (!Window::IsCloseRequested())
+		{
+			end_time = glfwGetTime();
+			float dt = (float)(end_time - start_time);
+			start_time = end_time;
 
-		Opengl::Clear();
-		Widget::Prepare();
+			Globals::gCurrentScene->Update(dt);
 
-		Widget::Render();
-		Events::Update();
-		Window::Update();
+			Opengl::Clear();
+			Widget::Prepare();
+
+
+			Globals::gCurrentScene->ImGui();
+			Globals::gCurrentScene->Render();
+
+			Widget::Render();
+			Events::Update();
+			Window::Update();
+		}
+
+		if (Globals::gCurrentScene) {
+			Globals::gCurrentScene.reset();
+		}
 	}
 	Widget::Destroy();
 	Window::Destroy();

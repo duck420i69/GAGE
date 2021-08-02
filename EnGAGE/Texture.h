@@ -13,5 +13,6 @@ public:
 
 	inline const unsigned int& GetWidth() const noexcept { return mWidth; }
 	inline const unsigned int& GetHeight() const noexcept { return mHeight; }
+	inline const unsigned int& GetID() const noexcept { return mID; }
 	inline const std::string& GetName() const noexcept { return mName;  }
 };

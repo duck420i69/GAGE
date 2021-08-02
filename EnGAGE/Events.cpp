@@ -8,8 +8,10 @@
 
 float			Events::sXPos = 0;
 float			Events::sYPos = 0;
+float			Events::sScroll = 0;
 float			Events::sLastXPos = 0;
 float			Events::sLastYPos = 0;
+float			Events::sLastScroll = 0;
 std::bitset<5>	Events::sButtonsPressed = { 0 };
 bool			Events::sDragging = false;
 
@@ -55,12 +57,18 @@ void Events::Init() noexcept
 			Window::sWidth = width;
 			Window::sHeight = height;
 		});
+	glfwSetScrollCallback(Window::GetWindow(), 
+		[](GLFWwindow* w, double x, double y) {
+			sScroll = y;
+			sLastScroll = y;
+		});
 }
 
 void Events::Update() noexcept
 {
 	sLastXPos = sXPos;
 	sLastYPos = sYPos;
+	sLastScroll = 0;
 	sPrevKeys = sKeysPressed;
 }
 
@@ -84,6 +92,11 @@ float Events::GetY() noexcept
 	return sYPos;
 }
 
+float Events::GetScroll() noexcept
+{
+	return sScroll;
+}
+
 float Events::GetDX() noexcept
 {
 	return sXPos - sLastXPos;
@@ -92,6 +105,11 @@ float Events::GetDX() noexcept
 float Events::GetDY() noexcept
 {
 	return sYPos - sLastYPos;
+}
+
+float Events::GetDScroll() noexcept
+{
+	return sLastScroll;
 }
 
 bool Events::IsKeyDown(int key) noexcept

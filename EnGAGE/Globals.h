@@ -6,23 +6,23 @@
 class Globals
 {
 public:
-	static uint32_t gScreenWidth, gScreenHeight;
+	static unsigned int gScreenWidth, gScreenHeight;
 	static std::string gScreenTitle;
-
+	static std::unique_ptr<Scene> gCurrentScene;
 
 	template<typename T>
-	static void ChangeScene(std::unique_ptr<Scene>& current_scene) noexcept
+	static void ChangeScene() noexcept
 	{
-		if (current_scene)
+		if (gCurrentScene)
 		{
-			if (typeid(*current_scene).name() == typeid(T).name())
+			if (typeid(*gCurrentScene).name() == typeid(T).name())
 			{
 				return;
 			}
-			current_scene.reset();
+			gCurrentScene.reset();
 		}
 
 		Logger::info("Switching current scene to: {}", typeid(T).name());
-		current_scene = std::make_unique<T>();
+		gCurrentScene = std::make_unique<T>();
 	}
 };
