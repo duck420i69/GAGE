@@ -23,27 +23,34 @@ void Player::Update(float delta) noexcept
 
 void Player::UpdateZoom(float delta) noexcept
 {
-	float scroll = Events::GetDScroll();
-	mZoom -= ZOOM_SPEED * delta * scroll;
+	ImGuiIO& io = ImGui::GetIO();
 
-	if (mZoom < 1.0f) mZoom = 1.0f;
+	if (!io.WantCaptureMouse) {
+		float scroll = Events::GetDScroll();
+		mZoom -= ZOOM_SPEED * delta * scroll;
+
+		if (mZoom < 1.0f) mZoom = 1.0f;
+	}
 }
 
 void Player::UpdateMovement(float delta) noexcept
 {
+	ImGuiIO& io = ImGui::GetIO();
 	glm::vec2 dir = { 0, 0 };
 
-	if (Events::IsKeyDown(Events::KEY_W)) {
-		dir.y += 1;
-	}
-	if (Events::IsKeyDown(Events::KEY_S)) {
-		dir.y -= 1;
-	}
-	if (Events::IsKeyDown(Events::KEY_D)) {
-		dir.x += 1;
-	}
-	if (Events::IsKeyDown(Events::KEY_A)) {
-		dir.x -= 1;
+	if (!io.WantCaptureKeyboard) {
+		if (Events::IsKeyDown(Events::KEY_W)) {
+			dir.y += 1;
+		}
+		if (Events::IsKeyDown(Events::KEY_S)) {
+			dir.y -= 1;
+		}
+		if (Events::IsKeyDown(Events::KEY_D)) {
+			dir.x += 1;
+		}
+		if (Events::IsKeyDown(Events::KEY_A)) {
+			dir.x -= 1;
+		}
 	}
 
 	dir = glm::length2(dir) != 0 ? glm::normalize(dir) : glm::vec2(0, 0);

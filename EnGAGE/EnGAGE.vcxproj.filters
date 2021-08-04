@@ -129,9 +129,6 @@
     <ClCompile Include="TileMap.cpp">
       <Filter>Source\TowerDefence</Filter>
     </ClCompile>
-    <ClCompile Include="Tile.cpp">
-      <Filter>Source\TowerDefence</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Source\TowerDefence</Filter>
     </ClCompile>
@@ -139,6 +136,12 @@
       <Filter>Source\TowerDefence</Filter>
     </ClCompile>
     <ClCompile Include="EditScene.cpp">
+      <Filter>Source\TowerDefence\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuScene.cpp">
+      <Filter>Source\TowerDefence\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameScene.cpp">
       <Filter>Source\TowerDefence\Scene</Filter>
     </ClCompile>
   </ItemGroup>
@@ -237,6 +240,15 @@
       <Filter>Source\TowerDefence</Filter>
     </ClInclude>
     <ClInclude Include="EditScene.h">
+      <Filter>Source\TowerDefence\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="MenuScene.h">
+      <Filter>Source\TowerDefence\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="LogicTile.h">
+      <Filter>Source\TowerDefence</Filter>
+    </ClInclude>
+    <ClInclude Include="GameScene.h">
       <Filter>Source\TowerDefence\Scene</Filter>
     </ClInclude>
   </ItemGroup>

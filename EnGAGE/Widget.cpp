@@ -19,6 +19,9 @@ void Widget::Init() noexcept
 
     ImGui_ImplGlfw_InitForOpenGL(Window::GetWindow(), true);
     ImGui_ImplOpenGL3_Init("#version 460 core");
+
+    //Tower defense
+    io.Fonts->AddFontFromFileTTF("Assets/Fonts/FallingSky/FallingSky-JKwK.otf", 18.0f, NULL, io.Fonts->GetGlyphRangesVietnamese());
 }
 
 void Widget::Destroy() noexcept

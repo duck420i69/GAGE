@@ -9,7 +9,7 @@
 #include "Asset.h"
 
 #include "TileType.h"
-#include "EditScene.h"
+#include "MenuScene.h"
 
 #include <GLFW/glfw3.h>
 
@@ -23,7 +23,7 @@ int main()
 
 	{
 		TileType::Load();
-		Globals::ChangeScene<EditScene>();
+		Globals::ChangeScene<MenuScene>();
 
 		double start_time = glfwGetTime();
 		double end_time = glfwGetTime();

@@ -4,16 +4,14 @@
 #include "Player.h"
 #include "TileMap.h"
 
-
-class EditScene : public Scene {
+class GameScene : public Scene {
 	TileMap mMap;
 	Player mPlayer;
 
-	std::weak_ptr<Tile<false>> mCurrentBrush;
-	std::weak_ptr<Tile<true>> mCurrentLogicBrush;
+	bool mOpenPauseMenu = false;
 public:
-	EditScene() noexcept;
-	~EditScene() noexcept;
+	GameScene(const std::string& save) noexcept;
+
 	void Update(float delta) noexcept override;
 	void Render() noexcept override;
 	void ImGui() noexcept override;

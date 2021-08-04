@@ -10,8 +10,8 @@ public:
 	static std::string gScreenTitle;
 	static std::unique_ptr<Scene> gCurrentScene;
 
-	template<typename T>
-	static void ChangeScene() noexcept
+	template<typename T, typename...Args>
+	static void ChangeScene(Args&&... args) noexcept
 	{
 		if (gCurrentScene)
 		{
@@ -23,6 +23,6 @@ public:
 		}
 
 		Logger::info("Switching current scene to: {}", typeid(T).name());
-		gCurrentScene = std::make_unique<T>();
+		gCurrentScene = std::make_unique<T>(std::forward<Args>(args)...);
 	}
 };
