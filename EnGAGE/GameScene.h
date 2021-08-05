@@ -3,9 +3,13 @@
 #include "Scene.h"
 #include "Player.h"
 #include "TileMap.h"
+#include "EnemyManager.h"
+#include "SpriteRenderer.h"
 
 class GameScene : public Scene {
 	TileMap mMap;
+	EnemyManager mEnemyManager;
+	SpriteRenderer mSpriteRenderer;
 	Player mPlayer;
 
 	bool mOpenPauseMenu = false;

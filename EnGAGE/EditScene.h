@@ -3,14 +3,21 @@
 #include "Scene.h"
 #include "Player.h"
 #include "TileMap.h"
-
+#include "SpriteRenderer.h"
 
 class EditScene : public Scene {
+
+	enum class Mode {
+		DRAW, LOGIC
+	};
+
+	SpriteRenderer mSpriteRenderer;
 	TileMap mMap;
 	Player mPlayer;
 
-	std::weak_ptr<Tile<false>> mCurrentBrush;
-	std::weak_ptr<Tile<true>> mCurrentLogicBrush;
+	std::weak_ptr<Tile> mCurrentBrush;
+	std::weak_ptr<LogicTile> mCurrentLogicBrush;
+	Mode				mCurrentMode;
 public:
 	EditScene() noexcept;
 	~EditScene() noexcept;

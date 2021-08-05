@@ -14,7 +14,7 @@ Texture::Texture(const std::string& file_path) noexcept :
 	{
 		int width = 0, height = 0, bpp = 0;
 		stbi_uc* image_data = nullptr;
-		stbi_set_flip_vertically_on_load(true);
+		stbi_set_flip_vertically_on_load(false);
 		image_data = stbi_load(file_path.c_str(), &width, &height, &bpp, STBI_rgb_alpha);
 		if (!image_data)
 		{

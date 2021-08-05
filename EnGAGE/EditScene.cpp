@@ -12,7 +12,7 @@
 #include <Windows.h>
 
 EditScene::EditScene() noexcept :
-	mCurrentBrush(TileType::NONE), mCurrentLogicBrush(TileType::LOGIC_NONE)
+	mCurrentBrush(TileType::GetArray()[1]), mCurrentLogicBrush(TileType::GetLogicArray()[1]), mCurrentMode(Mode::DRAW)
 {
 }
 
@@ -23,28 +23,69 @@ EditScene::~EditScene() noexcept
 void EditScene::Update(float delta) noexcept
 {
 	mPlayer.Update(delta);
-	mMap.Update(delta, mPlayer);
+	mSpriteRenderer.Update(mPlayer);
+
+	//Đổi giữa chế độ logic và draw
+	if (Events::IsKeyDownOnce(Events::KEY_TAB)) {
+		if (mCurrentMode == Mode::DRAW) {
+			mCurrentMode = Mode::LOGIC;
+		}
+		else if (mCurrentMode == Mode::LOGIC) {
+			mCurrentMode = Mode::DRAW;
+		}
+	}
+
+	//Xoay sprite
+	if (mCurrentMode == Mode::LOGIC && Events::IsKeyDownOnce(Events::KEY_R)) {
+		auto logic_tile = mMap.GetLogicTile(mPlayer.GetCursor().x, mPlayer.GetCursor().y);
+		if (TileType::NotLogicNone(logic_tile)) {
+			if (TileType::IsLogicSpawn(logic_tile)) {
+				static unsigned int logic_spawn_tile_count = 0;
+				mMap.PlaceLogicTile(mPlayer.GetCursor().x, mPlayer.GetCursor().y, TileType::GetLogicArray()[logic_spawn_tile_count % 4 + 1]);
+				logic_spawn_tile_count++;
+			}
+			if (TileType::IsCheckpoint(logic_tile)) {
+				static unsigned int logic_checkpoint_tile_count = 0;
+				mMap.PlaceLogicTile(mPlayer.GetCursor().x, mPlayer.GetCursor().y, TileType::GetLogicArray()[logic_checkpoint_tile_count % 4 + 5]);
+				logic_checkpoint_tile_count++;
+			}
+		}
+	}
 
 	ImGuiIO& io = ImGui::GetIO();
 	if (mMap.GetWidth() != 0 && mMap.GetHeight() != 0 && !io.WantCaptureMouse) {
-		if (mCurrentBrush.lock() && Events::IsButtonDown(0)) {
-			mMap.PlaceTile(mPlayer.GetCursor().x, mPlayer.GetCursor().y, mCurrentBrush);
+		if (mCurrentBrush.lock() &&  mCurrentMode == Mode::DRAW) {
+			if (Events::IsButtonDown(0)) {
+				mMap.PlaceTile(mPlayer.GetCursor().x, mPlayer.GetCursor().y, mCurrentBrush);
+			}
+			else if (Events::IsButtonDown(1)) {
+				mMap.PlaceTile(mPlayer.GetCursor().x, mPlayer.GetCursor().y, TileType::NONE);
+			}
 		}
-
-		if (mCurrentLogicBrush.lock() && Events::IsButtonDown(1)) {
-			mMap.PlaceLogicTile(mPlayer.GetCursor().x, mPlayer.GetCursor().y, mCurrentLogicBrush);
+		if (mCurrentLogicBrush.lock() && mCurrentMode == Mode::LOGIC) {
+			if (Events::IsButtonDown(0)) {
+				mMap.PlaceLogicTile(mPlayer.GetCursor().x, mPlayer.GetCursor().y, mCurrentLogicBrush);
+			}
+			else if (Events::IsButtonDown(1)) {
+				mMap.PlaceLogicTile(mPlayer.GetCursor().x, mPlayer.GetCursor().y, TileType::LOGIC_NONE);
+			}
 		}
 	}
+
+	
 }
 
 void EditScene::Render() noexcept
 {
-	mMap.RenderEdit();
+	mSpriteRenderer.Render(mMap.GetWidth(), mMap.GetHeight(), mMap.GetTiles());
+	mSpriteRenderer.Render(mMap.GetWidth(), mMap.GetHeight(), mMap.GetLogicTiles());
 }
 
 void EditScene::ImGui() noexcept
 {
-	
+	//ImGui::Begin("CurrentMode", 0, ImGuiWindowFlags_NoMove | ImGuiWindow);
+	//ImGui::End();
+
 	bool open_new_popup = false;
 	bool open_save_popup = false;
 	if (ImGui::BeginMainMenuBar()) {
@@ -84,14 +125,14 @@ void EditScene::ImGui() noexcept
 			ImGui::EndMenu();
 		}
 		if (ImGui::BeginMenu(u8"Edit")) {
-			if (ImGui::BeginMenu(u8"Brush(Chuột trái)")) {
+			if (ImGui::BeginMenu(u8"Brush")) {
 				//Selecting brush	
 				const auto tile_array = TileType::GetArray();
 				ImGui::Text(u8"chọn cọ vẽ");
 				auto current_texture = mCurrentBrush.lock()->GetTexture().lock();
 				ImGui::Image((ImTextureID)current_texture->GetID(),
 					ImVec2((float)current_texture->GetWidth(), (float)current_texture->GetHeight()));
-				for (unsigned int i = 0; i < TileType::NUM_TYPES; i++) {
+				for (unsigned int i = 1; i < TileType::NUM_TYPES; i++) {
 					auto texture = tile_array[i].lock()->GetTexture().lock();
 					unsigned int texture_id = texture->GetID();
 					unsigned int width = texture->GetWidth();
@@ -99,20 +140,22 @@ void EditScene::ImGui() noexcept
 					if (ImGui::ImageButton((ImTextureID)texture_id, ImVec2((float)width, (float)height))) {
 						mCurrentBrush = tile_array[i];
 					}
+					if (ImGui::IsItemHovered()) {
+						ImGui::BeginTooltip();
+						ImGui::Text("%s", tile_array[i].lock()->GetName().c_str());
+						ImGui::EndTooltip();
+					}
 					ImGui::SameLine();
 				}
 
-				ImGui::EndMenu();
-			}
 
-			if (ImGui::BeginMenu(u8"Logic Brush(Chuột phải)")) {
 				//Selecting logic brush	
 				const auto logic_tile_array = TileType::GetLogicArray();
-				ImGui::Text(u8"chọn cọ logic vẽ");
+				ImGui::Text(u8"chọn cọ vẽ logic");
 				auto current_logic_texture = mCurrentLogicBrush.lock()->GetTexture().lock();
 				ImGui::Image((ImTextureID)current_logic_texture->GetID(),
 					ImVec2((float)current_logic_texture->GetWidth(), (float)current_logic_texture->GetHeight()));
-				for (unsigned int i = 0; i < TileType::NUM_LOGIC_TYPES; i++) {
+				for (unsigned int i = 1; i < TileType::NUM_LOGIC_TYPES; i++) {
 					auto texture = logic_tile_array[i].lock()->GetTexture().lock();
 					unsigned int texture_id = texture->GetID();
 					unsigned int width = texture->GetWidth();
@@ -120,13 +163,32 @@ void EditScene::ImGui() noexcept
 					if (ImGui::ImageButton((ImTextureID)texture_id, ImVec2((float)width, (float)height))) {
 						mCurrentLogicBrush = logic_tile_array[i];
 					}
+					if (ImGui::IsItemHovered()) {
+						ImGui::BeginTooltip();
+						ImGui::Text("%s", logic_tile_array[i].lock()->GetName().c_str());
+						ImGui::EndTooltip();
+					}
 					ImGui::SameLine();
 				}
+
 				ImGui::EndMenu();
 			}
 
+
 			ImGui::EndMenu();
 		}
+
+		//Display current mode
+		static std::string mode = "";
+		switch (mCurrentMode) {
+		case Mode::DRAW:
+			mode = "draw";
+			break;
+		case Mode::LOGIC:
+			mode = "logic";
+			break;
+		}
+		ImGui::Text("Current mode: %s", mode.c_str());
 
 		ImGui::EndMainMenuBar();
 	}

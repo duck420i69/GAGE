@@ -96,6 +96,7 @@
   <ItemGroup>
     <ClCompile Include="Asset.cpp" />
     <ClCompile Include="EditScene.cpp" />
+    <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="Events.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="glad.c">
@@ -167,6 +168,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="TileType.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Widget.cpp" />
@@ -175,6 +177,8 @@
   <ItemGroup>
     <ClInclude Include="Asset.h" />
     <ClInclude Include="EditScene.h" />
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="Events.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="Globals.h" />
@@ -182,6 +186,7 @@
     <ClInclude Include="LogicTile.h" />
     <ClInclude Include="MenuScene.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Point.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TileMap.h" />
     <ClInclude Include="Opengl.h" />
@@ -204,6 +209,7 @@
     <ClInclude Include="thirdparty\imgui\imstb_truetype.h" />
     <ClInclude Include="thirdparty\imgui\ImZoomSlider.h" />
     <ClInclude Include="thirdparty\stb_image\stb_image.h" />
+    <ClInclude Include="SpriteRenderer.h" />
     <ClInclude Include="TileType.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Widget.h" />

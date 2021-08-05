@@ -46,6 +46,9 @@
     <Filter Include="Assets\Saves">
       <UniqueIdentifier>{18ad1ec4-09db-48c0-aa6b-055f7472c5f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\TowerDefence\Tile">
+      <UniqueIdentifier>{ffdb66c9-b2c6-48ee-a69f-1b6139795a3c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -126,13 +129,7 @@
     <ClCompile Include="Asset.cpp">
       <Filter>Source\Core\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="TileMap.cpp">
-      <Filter>Source\TowerDefence</Filter>
-    </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>Source\TowerDefence</Filter>
-    </ClCompile>
-    <ClCompile Include="TileType.cpp">
       <Filter>Source\TowerDefence</Filter>
     </ClCompile>
     <ClCompile Include="EditScene.cpp">
@@ -143,6 +140,18 @@
     </ClCompile>
     <ClCompile Include="GameScene.cpp">
       <Filter>Source\TowerDefence\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMap.cpp">
+      <Filter>Source\TowerDefence\Tile</Filter>
+    </ClCompile>
+    <ClCompile Include="TileType.cpp">
+      <Filter>Source\TowerDefence\Tile</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteRenderer.cpp">
+      <Filter>Source\TowerDefence\Tile</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyManager.cpp">
+      <Filter>Source\TowerDefence\Tile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -227,15 +236,6 @@
     <ClInclude Include="Asset.h">
       <Filter>Source\Core\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="TileMap.h">
-      <Filter>Source\TowerDefence</Filter>
-    </ClInclude>
-    <ClInclude Include="Tile.h">
-      <Filter>Source\TowerDefence</Filter>
-    </ClInclude>
-    <ClInclude Include="TileType.h">
-      <Filter>Source\TowerDefence</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Source\TowerDefence</Filter>
     </ClInclude>
@@ -245,11 +245,32 @@
     <ClInclude Include="MenuScene.h">
       <Filter>Source\TowerDefence\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="LogicTile.h">
-      <Filter>Source\TowerDefence</Filter>
-    </ClInclude>
     <ClInclude Include="GameScene.h">
       <Filter>Source\TowerDefence\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Tile.h">
+      <Filter>Source\TowerDefence\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMap.h">
+      <Filter>Source\TowerDefence\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="TileType.h">
+      <Filter>Source\TowerDefence\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="LogicTile.h">
+      <Filter>Source\TowerDefence\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteRenderer.h">
+      <Filter>Source\TowerDefence\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Source\TowerDefence\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyManager.h">
+      <Filter>Source\TowerDefence\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="Point.h">
+      <Filter>Source\TowerDefence\Tile</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

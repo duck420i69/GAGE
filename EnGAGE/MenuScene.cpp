@@ -40,16 +40,4 @@ void MenuScene::ImGui() noexcept
 		ImGui::EndPopup();
 	}
 	ImGui::End();
-
-
-
-	/*static std::string selection = "";
-	if (ImGui::TreeNode("Map selection")) {
-		for (const auto& entry : std::filesystem::directory_iterator("Assets/Saves/")) {
-			if (ImGui::Selectable(entry.path().u8string().c_str(), selection == entry.path().u8string()) && entry.exists()) {
-				selection = entry.path().u8string();
-			}
-		}
-		ImGui::TreePop();
-	}*/
 }

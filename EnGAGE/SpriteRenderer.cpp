@@ -1,0 +1,128 @@
+#include "pch.h"
+#include "SpriteRenderer.h"
+
+#include "Asset.h"
+#include "Logger.h"
+#include "Window.h"
+#include "Player.h"
+
+#include <glad/glad.h>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/norm.hpp>
+
+
+SpriteRenderer::SpriteRenderer() noexcept :
+	mShader(Asset::GetShader("Assets/Shaders/tile"))
+{
+	const float vertex_data[] = {
+		0, 1, 0, 0,
+		0, 0, 0, 1,
+		1, 1, 1, 0,
+		1, 1, 1, 0,
+		0, 0, 0, 1,
+		1, 0, 1, 1
+	};
+
+
+	glGenVertexArrays(1, &mVAO);
+	glGenBuffers(1, &mVBO);
+
+	glBindVertexArray(mVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, mVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 24, vertex_data, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, 0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (const void*)(sizeof(float) * 2));
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+	Logger::info("Loading tilemap's gpu data...");
+}
+
+SpriteRenderer::~SpriteRenderer() noexcept
+{
+	Logger::info("Deleting tilemap...");
+	glDeleteVertexArrays(1, &mVAO);
+	glDeleteBuffers(1, &mVBO);
+	mVAO = 0;
+	mVBO = 0;
+}
+
+void SpriteRenderer::Update(const Player& player) noexcept
+{
+	//Update matrices
+	float aspectRatio = (float)Window::GetWidth() / (float)Window::GetHeight();
+	float zoom = player.GetZoom();
+	auto pos = player.GetPos();
+	mProjection = glm::ortho(-zoom * aspectRatio, zoom * aspectRatio, -zoom, zoom);
+	mView = glm::translate(glm::mat4(1.0f), glm::vec3(-pos, 0));
+}
+
+void SpriteRenderer::Render(const std::vector<Enemy>& enemies) const noexcept
+{
+	//Render all tiles and logic tiles
+	auto shader = mShader.lock();
+	shader->Bind();
+	glBindVertexArray(mVAO);
+
+	shader->UploadMat4x4("uProjection", glm::value_ptr(mProjection));
+	shader->UploadMat4x4("uView", glm::value_ptr(mView));
+
+	glm::mat4 model;
+	for (const auto& e : enemies) {
+		model = glm::translate(glm::mat4(1.0f), { e.GetX(), e.GetY(), 0 });
+		shader->UploadMat4x4("uModel", glm::value_ptr(model));
+		e.GetTexture().lock()->Bind();
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+	
+	}
+	glBindVertexArray(0);
+	glUseProgram(0);
+}
+
+void SpriteRenderer::Render(unsigned int width, unsigned int height, const std::vector<std::weak_ptr<Tile>>& tiles) const noexcept
+{
+	//Render all tiles and logic tiles
+	auto shader = mShader.lock();
+	shader->Bind();
+	glBindVertexArray(mVAO);
+
+	shader->UploadMat4x4("uProjection", glm::value_ptr(mProjection));
+	shader->UploadMat4x4("uView", glm::value_ptr(mView));
+
+	glm::mat4 model;
+	for (unsigned int y = 0; y < height; y++) {
+		for (unsigned int x = 0; x < width; x++) {
+			model = glm::translate(glm::mat4(1.0f), { x, y, 0 });
+			shader->UploadMat4x4("uModel", glm::value_ptr(model));
+			tiles[x + y * width].lock()->GetTexture().lock()->Bind();
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+		}
+	}
+	glBindVertexArray(0);
+	glUseProgram(0);
+}
+
+void SpriteRenderer::Render(unsigned int width, unsigned int height, const std::vector<std::weak_ptr<LogicTile>>& tiles) const noexcept
+{
+	//Render all tiles and logic tiles
+	auto shader = mShader.lock();
+	shader->Bind();
+	glBindVertexArray(mVAO);
+
+	shader->UploadMat4x4("uProjection", glm::value_ptr(mProjection));
+	shader->UploadMat4x4("uView", glm::value_ptr(mView));
+
+	glm::mat4 model;
+	for (unsigned int y = 0; y < height; y++) {
+		for (unsigned int x = 0; x < width; x++) {
+			model = glm::translate(glm::mat4(1.0f), { x, y, 0 });
+			shader->UploadMat4x4("uModel", glm::value_ptr(model));
+			tiles[x + y * width].lock()->GetTexture().lock()->Bind();
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+		}
+	}
+	glBindVertexArray(0);
+	glUseProgram(0);
+}
