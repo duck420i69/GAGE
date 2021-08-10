@@ -3,14 +3,17 @@
 #include "Scene.h"
 #include "Player.h"
 #include "TileMap.h"
-#include "EnemyManager.h"
 #include "SpriteRenderer.h"
+#include "Wave.h"
 
 class GameScene : public Scene {
+	
 	TileMap mMap;
-	EnemyManager mEnemyManager;
 	SpriteRenderer mSpriteRenderer;
 	Player mPlayer;
+
+	std::vector<Wave> mWaves;
+	std::vector<Enemy> mEnemies;
 
 	bool mOpenPauseMenu = false;
 public:

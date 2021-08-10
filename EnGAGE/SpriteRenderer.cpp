@@ -5,6 +5,7 @@
 #include "Logger.h"
 #include "Window.h"
 #include "Player.h"
+#include "TileType.h"
 
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>
@@ -59,16 +60,21 @@ void SpriteRenderer::Update(const Player& player) noexcept
 	mView = glm::translate(glm::mat4(1.0f), glm::vec3(-pos, 0));
 }
 
-void SpriteRenderer::Render(const std::vector<Enemy>& enemies) const noexcept
+void SpriteRenderer::Prepare() const noexcept
 {
-	//Render all tiles and logic tiles
 	auto shader = mShader.lock();
 	shader->Bind();
 	glBindVertexArray(mVAO);
 
+	shader->UploadFloat("uAlpha", 0.0f);
 	shader->UploadMat4x4("uProjection", glm::value_ptr(mProjection));
 	shader->UploadMat4x4("uView", glm::value_ptr(mView));
+}
 
+
+void SpriteRenderer::Render(const std::vector<Enemy>& enemies) const noexcept
+{
+	auto shader = mShader.lock();
 	glm::mat4 model;
 	for (const auto& e : enemies) {
 		model = glm::translate(glm::mat4(1.0f), { e.GetX(), e.GetY(), 0 });
@@ -77,19 +83,11 @@ void SpriteRenderer::Render(const std::vector<Enemy>& enemies) const noexcept
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	
 	}
-	glBindVertexArray(0);
-	glUseProgram(0);
 }
 
 void SpriteRenderer::Render(unsigned int width, unsigned int height, const std::vector<std::weak_ptr<Tile>>& tiles) const noexcept
 {
-	//Render all tiles and logic tiles
 	auto shader = mShader.lock();
-	shader->Bind();
-	glBindVertexArray(mVAO);
-
-	shader->UploadMat4x4("uProjection", glm::value_ptr(mProjection));
-	shader->UploadMat4x4("uView", glm::value_ptr(mView));
 
 	glm::mat4 model;
 	for (unsigned int y = 0; y < height; y++) {
@@ -100,29 +98,49 @@ void SpriteRenderer::Render(unsigned int width, unsigned int height, const std::
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 		}
 	}
-	glBindVertexArray(0);
-	glUseProgram(0);
 }
 
 void SpriteRenderer::Render(unsigned int width, unsigned int height, const std::vector<std::weak_ptr<LogicTile>>& tiles) const noexcept
 {
-	//Render all tiles and logic tiles
 	auto shader = mShader.lock();
-	shader->Bind();
-	glBindVertexArray(mVAO);
-
-	shader->UploadMat4x4("uProjection", glm::value_ptr(mProjection));
-	shader->UploadMat4x4("uView", glm::value_ptr(mView));
-
 	glm::mat4 model;
 	for (unsigned int y = 0; y < height; y++) {
 		for (unsigned int x = 0; x < width; x++) {
+			auto tile = tiles[x + y * width].lock();
+			if (tile == TileType::LOGIC_NONE)
+				continue;
 			model = glm::translate(glm::mat4(1.0f), { x, y, 0 });
 			shader->UploadMat4x4("uModel", glm::value_ptr(model));
-			tiles[x + y * width].lock()->GetTexture().lock()->Bind();
+			tile->GetTexture().lock()->Bind();
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 		}
 	}
+}
+
+void SpriteRenderer::EndRender() const noexcept
+{
 	glBindVertexArray(0);
 	glUseProgram(0);
+}
+
+void SpriteRenderer::RenderOpaque(unsigned int x, unsigned int y, const std::weak_ptr<Tile>& tile)
+{
+	auto shader = mShader.lock();
+	glm::mat4 model;
+	model = glm::translate(glm::mat4(1.0f), { x, y, 0 });
+	shader->UploadMat4x4("uModel", glm::value_ptr(model));
+	shader->UploadFloat("uAlpha", 0.5f);
+	tile.lock()->GetTexture().lock()->Bind();
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+}
+
+void SpriteRenderer::RenderOpaque(unsigned int x, unsigned int y, const std::weak_ptr<LogicTile>& tile)
+{
+	auto shader = mShader.lock();
+	glm::mat4 model;
+	model = glm::translate(glm::mat4(1.0f), { x, y, 0 });
+	shader->UploadMat4x4("uModel", glm::value_ptr(model));
+	shader->UploadFloat("uAlpha", 0.5f);
+	tile.lock()->GetTexture().lock()->Bind();
+	glDrawArrays(GL_TRIANGLES, 0, 6);
 }

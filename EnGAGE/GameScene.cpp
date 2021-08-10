@@ -4,28 +4,31 @@
 #include "Events.h"
 #include "Globals.h"
 #include "MenuScene.h"
+#include "SaveManager.h"
 
 GameScene::GameScene(const std::string& save) noexcept
 {
-	mMap.Load(save);
-	mEnemyManager.Load(mMap.GetLogicTiles(), mMap.GetWidth(), mMap.GetHeight());
+	SaveManager::Load(save, mMap, mWaves);
 }
 
 void GameScene::Update(float delta) noexcept
 {
 	mPlayer.Update(delta);
 	mSpriteRenderer.Update(mPlayer);
-	mEnemyManager.Update(delta);
 
 	if (Events::IsKeyDownOnce(Events::KEY_ESCAPE)) {
 		Globals::ChangeScene<MenuScene>();
 	}
+
+
+	
 }
 
 void GameScene::Render() noexcept
 {
+	mSpriteRenderer.Prepare();
 	mSpriteRenderer.Render(mMap.GetWidth(), mMap.GetHeight(), mMap.GetTiles());
-	mSpriteRenderer.Render(mEnemyManager.GetEnemies());
+	mSpriteRenderer.EndRender();
 }
 
 void GameScene::ImGui() noexcept

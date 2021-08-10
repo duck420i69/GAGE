@@ -25,6 +25,5 @@ public:
 	static bool NotLogicNone(const std::weak_ptr<LogicTile>& tile) noexcept;
 	static bool IsLogicSpawn(const std::weak_ptr<LogicTile>& tile) noexcept;
 	static bool IsCheckpoint(const std::weak_ptr<LogicTile>& tile) noexcept;
-	static glm::vec2 GetLogicSpawnDir(const std::weak_ptr<LogicTile>& tile) noexcept;
-	static glm::vec2 GetCheckpointDir(const std::weak_ptr<LogicTile>& tile) noexcept;
+	static glm::vec2 GetLogicDir(const std::weak_ptr<LogicTile>& tile) noexcept;
 };

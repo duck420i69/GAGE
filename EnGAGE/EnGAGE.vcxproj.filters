@@ -49,6 +49,9 @@
     <Filter Include="Source\TowerDefence\Tile">
       <UniqueIdentifier>{ffdb66c9-b2c6-48ee-a69f-1b6139795a3c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\TowerDefence\Wave">
+      <UniqueIdentifier>{0830c37e-3404-40cf-a0a9-4b791de51a20}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -150,9 +153,10 @@
     <ClCompile Include="SpriteRenderer.cpp">
       <Filter>Source\TowerDefence\Tile</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyManager.cpp">
-      <Filter>Source\TowerDefence\Tile</Filter>
+    <ClCompile Include="SaveManager.cpp">
+      <Filter>Source\TowerDefence</Filter>
     </ClCompile>
+    <ClCompile Include="EnemyType.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -263,14 +267,20 @@
     <ClInclude Include="SpriteRenderer.h">
       <Filter>Source\TowerDefence\Tile</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>Source\TowerDefence\Tile</Filter>
-    </ClInclude>
-    <ClInclude Include="EnemyManager.h">
-      <Filter>Source\TowerDefence\Tile</Filter>
-    </ClInclude>
     <ClInclude Include="Point.h">
       <Filter>Source\TowerDefence\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Source\TowerDefence\Wave</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveManager.h">
+      <Filter>Source\TowerDefence</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemyType.h">
+      <Filter>Source\TowerDefence\Wave</Filter>
+    </ClInclude>
+    <ClInclude Include="Wave.h">
+      <Filter>Source\TowerDefence\Wave</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

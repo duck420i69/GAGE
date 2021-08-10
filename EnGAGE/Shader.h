@@ -16,6 +16,7 @@ public:
 	void Create() const noexcept;
 
 	void UploadMat4x4(const std::string& name, const float* ptr) const;
+	void UploadFloat(const std::string& name, const float value) const;
 	void UploadTexture(const std::string& name, const int& slot) const;
 	void UploadIntArr(const std::string& name, const int* arr, const uint32_t size) const;
 private:

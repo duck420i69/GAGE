@@ -6,6 +6,7 @@
 #include "Logger.h"
 #include "MenuScene.h"
 #include "Globals.h"
+#include "SaveManager.h"
 
 #include <imgui/imgui.h>
 
@@ -20,11 +21,8 @@ EditScene::~EditScene() noexcept
 {
 }
 
-void EditScene::Update(float delta) noexcept
+void EditScene::SwitchMode() noexcept
 {
-	mPlayer.Update(delta);
-	mSpriteRenderer.Update(mPlayer);
-
 	//Đổi giữa chế độ logic và draw
 	if (Events::IsKeyDownOnce(Events::KEY_TAB)) {
 		if (mCurrentMode == Mode::DRAW) {
@@ -34,7 +32,10 @@ void EditScene::Update(float delta) noexcept
 			mCurrentMode = Mode::DRAW;
 		}
 	}
+}
 
+void EditScene::RotateSprite() noexcept
+{
 	//Xoay sprite
 	if (mCurrentMode == Mode::LOGIC && Events::IsKeyDownOnce(Events::KEY_R)) {
 		auto logic_tile = mMap.GetLogicTile(mPlayer.GetCursor().x, mPlayer.GetCursor().y);
@@ -51,10 +52,13 @@ void EditScene::Update(float delta) noexcept
 			}
 		}
 	}
+}
 
+void EditScene::Draw() noexcept
+{
 	ImGuiIO& io = ImGui::GetIO();
 	if (mMap.GetWidth() != 0 && mMap.GetHeight() != 0 && !io.WantCaptureMouse) {
-		if (mCurrentBrush.lock() &&  mCurrentMode == Mode::DRAW) {
+		if (mCurrentBrush.lock() && mCurrentMode == Mode::DRAW) {
 			if (Events::IsButtonDown(0)) {
 				mMap.PlaceTile(mPlayer.GetCursor().x, mPlayer.GetCursor().y, mCurrentBrush);
 			}
@@ -71,14 +75,30 @@ void EditScene::Update(float delta) noexcept
 			}
 		}
 	}
+}
 
-	
+void EditScene::Update(float delta) noexcept
+{
+	mPlayer.Update(delta);
+	mSpriteRenderer.Update(mPlayer);
+
+	SwitchMode();
+	RotateSprite();
+	Draw();
+
 }
 
 void EditScene::Render() noexcept
 {
+	mSpriteRenderer.Prepare();
 	mSpriteRenderer.Render(mMap.GetWidth(), mMap.GetHeight(), mMap.GetTiles());
 	mSpriteRenderer.Render(mMap.GetWidth(), mMap.GetHeight(), mMap.GetLogicTiles());
+	if(mCurrentMode == Mode::DRAW)
+		mSpriteRenderer.RenderOpaque(mPlayer.GetCursor().x, mPlayer.GetCursor().y, mCurrentBrush);
+	else if(mCurrentMode == Mode::LOGIC)
+		mSpriteRenderer.RenderOpaque(mPlayer.GetCursor().x, mPlayer.GetCursor().y, mCurrentLogicBrush);
+
+	mSpriteRenderer.EndRender();
 }
 
 void EditScene::ImGui() noexcept
@@ -88,6 +108,7 @@ void EditScene::ImGui() noexcept
 
 	bool open_new_popup = false;
 	bool open_save_popup = false;
+
 	if (ImGui::BeginMainMenuBar()) {
 		if (ImGui::BeginMenu(u8"File")) {
 
@@ -100,7 +121,7 @@ void EditScene::ImGui() noexcept
 			if (ImGui::BeginMenu(u8"Load")) {
 				for (const auto& entry : std::filesystem::directory_iterator("Assets/Saves/")) {
 					if (ImGui::Selectable(entry.path().u8string().c_str()) && entry.exists()) {
-						mMap.Load(entry.path().u8string());
+						SaveManager::Load(entry.path().u8string(), mMap, mWaves);
 					}
 				}
 				ImGui::EndMenu();
@@ -128,7 +149,6 @@ void EditScene::ImGui() noexcept
 			if (ImGui::BeginMenu(u8"Brush")) {
 				//Selecting brush	
 				const auto tile_array = TileType::GetArray();
-				ImGui::Text(u8"chọn cọ vẽ");
 				auto current_texture = mCurrentBrush.lock()->GetTexture().lock();
 				ImGui::Image((ImTextureID)current_texture->GetID(),
 					ImVec2((float)current_texture->GetWidth(), (float)current_texture->GetHeight()));
@@ -147,11 +167,10 @@ void EditScene::ImGui() noexcept
 					}
 					ImGui::SameLine();
 				}
-
-
+				ImGui::NewLine();
+				ImGui::Separator();
 				//Selecting logic brush	
 				const auto logic_tile_array = TileType::GetLogicArray();
-				ImGui::Text(u8"chọn cọ vẽ logic");
 				auto current_logic_texture = mCurrentLogicBrush.lock()->GetTexture().lock();
 				ImGui::Image((ImTextureID)current_logic_texture->GetID(),
 					ImVec2((float)current_logic_texture->GetWidth(), (float)current_logic_texture->GetHeight()));
@@ -178,6 +197,7 @@ void EditScene::ImGui() noexcept
 			ImGui::EndMenu();
 		}
 
+
 		//Display current mode
 		static std::string mode = "";
 		switch (mCurrentMode) {
@@ -190,9 +210,64 @@ void EditScene::ImGui() noexcept
 		}
 		ImGui::Text("Current mode: %s", mode.c_str());
 
+
+		//Wave
+		if (ImGui::BeginMenu(u8"Wave")) {
+			std::vector<std::string> items;
+
+			for (unsigned int i = 0; i < mWaves.size(); i++) {
+				items.push_back("Wave " + std::to_string(i));
+			}
+			static int item_current_idx = 0;
+			const std::string& combo_preview_value = items.empty() ? "" : items[item_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)
+
+
+			if (ImGui::Button(u8"New")) {
+				mWaves.emplace_back();
+			}
+			ImGui::SameLine();
+			if (ImGui::Button(u8"Erase") && !mWaves.empty() && !combo_preview_value.empty()) {
+				mWaves.erase(mWaves.begin() + item_current_idx);
+				item_current_idx = 0;
+			}
+
+			if (ImGui::BeginCombo("Wave list", combo_preview_value.c_str()))
+			{
+				for (int n = 0; n < items.size(); n++)
+				{
+					const bool is_selected = (item_current_idx == n);
+					if (ImGui::Selectable(items[n].c_str(), is_selected))
+						item_current_idx = n;
+
+					if (is_selected)
+						ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndCombo();
+			}
+			Wave* current_wave = mWaves.empty() ? nullptr : &mWaves[item_current_idx];
+
+			for (unsigned int i = 0; i < (unsigned int)EnemyType::COUNT; i++) {
+				auto texture = EnemyTypeTexture::Get((EnemyType)i).lock();
+				if (ImGui::ImageButton((ImTextureID)texture->GetID(), ImVec2(texture->GetWidth(), texture->GetHeight())) && current_wave) {
+					current_wave->AddEnemy((EnemyType)i);
+				}
+				ImGui::SameLine();
+			}
+			ImGui::NewLine();
+			if(current_wave)
+			for (const auto& enemy : current_wave->GetEnemies()) {
+				auto texture = EnemyTypeTexture::Get(enemy).lock();
+				ImGui::Image((ImTextureID)texture->GetID(), ImVec2(texture->GetWidth(), texture->GetHeight()));
+				ImGui::SameLine();
+			}
+
+			ImGui::EndMenu();
+		}
+
+
 		ImGui::EndMainMenuBar();
 	}
-	if (open_new_popup) 
+	if (open_new_popup)
 		ImGui::OpenPopup(u8"NewMap");
 	if (ImGui::BeginPopup(u8"NewMap")) {
 		//Create new empty map
@@ -216,10 +291,9 @@ void EditScene::ImGui() noexcept
 		ImGui::InputText(u8"Tên máp", map_name, sizeof(char) * MAX_MAP_NAME_LENGTH);
 		if (ImGui::Button(u8"Sao lưu")) {
 			if (strlen(map_name) != 0)
-				mMap.Write("Assets/Saves/" + std::string(map_name));
+				SaveManager::Save("Assets/Saves/" + std::string(map_name), mMap, mWaves);
 		}
 		ImGui::EndPopup();
 	}
-
 }
 

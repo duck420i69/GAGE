@@ -20,8 +20,7 @@ class TileMap {
 public:
 
 	void LoadNew(unsigned int width, unsigned int height, const TilePtr& tile, const LogicTilePtr& logic_tile) noexcept;
-	void Load(const std::string& file_name) noexcept;
-	void Write(const std::string& file_name) noexcept;
+	void Load(unsigned int width, unsigned int height, const TileArray& tiles, const LogicTileArray& logic_tiles) noexcept;
 
 	void PlaceTile(unsigned int x, unsigned int y, const TilePtr& tile);
 	void PlaceLogicTile(unsigned int x, unsigned int y, const LogicTilePtr& tile);

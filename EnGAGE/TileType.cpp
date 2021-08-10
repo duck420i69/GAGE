@@ -80,39 +80,19 @@ bool TileType::IsCheckpoint(const std::weak_ptr<LogicTile>& tile) noexcept
 		tile_ == LOGIC_CHECKPOINT_RIGHT;
 }
 
-glm::vec2 TileType::GetLogicSpawnDir(const std::weak_ptr<LogicTile>& tile) noexcept
+glm::vec2 TileType::GetLogicDir(const std::weak_ptr<LogicTile>& tile) noexcept
 {
 	auto tile_ = tile.lock();
-	if (tile_ == LOGIC_SPAWN_UP) {
+	if (tile_ == LOGIC_SPAWN_UP || tile_ == LOGIC_CHECKPOINT_UP) {
 		return { 0, 1 };
 	}
-	else if (tile_ == LOGIC_SPAWN_DOWN) {
+	else if (tile_ == LOGIC_SPAWN_DOWN || tile_ == LOGIC_CHECKPOINT_DOWN) {
 		return { 0, -1 };
 	}
-	else if (tile_ == LOGIC_SPAWN_LEFT) {
+	else if (tile_ == LOGIC_SPAWN_LEFT || tile_ == LOGIC_CHECKPOINT_LEFT) {
 		return { -1, 0 };
 	}
-	else if (tile_ == LOGIC_SPAWN_RIGHT) {
-		return { 1, 0 };
-	}
-	else {
-		return { 0, 0 };
-	}
-}
-
-glm::vec2 TileType::GetCheckpointDir(const std::weak_ptr<LogicTile>& tile) noexcept
-{
-	auto tile_ = tile.lock();
-	if (tile_ == LOGIC_CHECKPOINT_UP) {
-		return { 0, 1 };
-	}
-	else if (tile_ == LOGIC_CHECKPOINT_DOWN) {
-		return { 0, -1 };
-	}
-	else if (tile_ == LOGIC_CHECKPOINT_LEFT) {
-		return { -1, 0 };
-	}
-	else if (tile_ == LOGIC_CHECKPOINT_RIGHT) {
+	else if (tile_ == LOGIC_SPAWN_RIGHT || tile_ == LOGIC_CHECKPOINT_RIGHT) {
 		return { 1, 0 };
 	}
 	else {

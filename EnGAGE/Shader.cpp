@@ -57,6 +57,12 @@ void Shader::UploadMat4x4(const std::string& name, const float* ptr) const
 	glUniformMatrix4fv(location, 1, GL_FALSE, ptr);
 }
 
+void Shader::UploadFloat(const std::string& name, const float value) const
+{
+	int location = GetUniformLocation(name);
+	glUniform1f(location, value);
+}
+
 void Shader::UploadTexture(const std::string& name, const int& slot) const
 {
 	int location = GetUniformLocation(name);

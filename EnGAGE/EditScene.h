@@ -4,6 +4,8 @@
 #include "Player.h"
 #include "TileMap.h"
 #include "SpriteRenderer.h"
+#include "Enemy.h"
+#include "Wave.h"
 
 class EditScene : public Scene {
 
@@ -15,6 +17,7 @@ class EditScene : public Scene {
 	TileMap mMap;
 	Player mPlayer;
 
+	std::vector<Wave> mWaves;
 	std::weak_ptr<Tile> mCurrentBrush;
 	std::weak_ptr<LogicTile> mCurrentLogicBrush;
 	Mode				mCurrentMode;
@@ -24,4 +27,8 @@ public:
 	void Update(float delta) noexcept override;
 	void Render() noexcept override;
 	void ImGui() noexcept override;
+private:
+	void SwitchMode() noexcept;
+	void RotateSprite() noexcept;
+	void Draw() noexcept;
 };

@@ -11,6 +11,8 @@
 #include "TileType.h"
 #include "MenuScene.h"
 
+
+
 #include <GLFW/glfw3.h>
 
 
@@ -32,6 +34,10 @@ int main()
 			end_time = glfwGetTime();
 			float dt = (float)(end_time - start_time);
 			start_time = end_time;
+
+			if (dt > 0.05f) {
+				dt = 0.05f;
+			}
 
 			Globals::gCurrentScene->Update(dt);
 
