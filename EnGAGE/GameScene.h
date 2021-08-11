@@ -4,18 +4,19 @@
 #include "Player.h"
 #include "TileMap.h"
 #include "SpriteRenderer.h"
-#include "Wave.h"
+#include "WaveManager.h"
 
 class GameScene : public Scene {
 	
 	TileMap mMap;
 	SpriteRenderer mSpriteRenderer;
+	WaveManager mWaveManager;
 	Player mPlayer;
-
-	std::vector<Wave> mWaves;
-	std::vector<Enemy> mEnemies;
+	
 
 	bool mOpenPauseMenu = false;
+
+	
 public:
 	GameScene(const std::string& save) noexcept;
 

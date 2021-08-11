@@ -172,6 +172,7 @@
     <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="TileType.cpp" />
     <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="WaveManager.cpp" />
     <ClCompile Include="Widget.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
@@ -189,6 +190,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="SaveManager.h" />
+    <ClInclude Include="CheckPoint.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TileMap.h" />
     <ClInclude Include="Opengl.h" />
@@ -215,6 +217,7 @@
     <ClInclude Include="TileType.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Wave.h" />
+    <ClInclude Include="WaveManager.h" />
     <ClInclude Include="Widget.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

@@ -37,6 +37,8 @@ void SaveManager::Save(const std::string& file_name, const TileMap& map, const s
 		
 		file << waves.size() << "\n";
 		for (const auto& wave : waves) {
+			file << wave.GetEnemySpeed() << "\n";
+			file << wave.GetEnemySpawnDelay() << "\n";
 			file << wave.GetEnemies().size() << "\n";
 			for (const auto& e : wave.GetEnemies()) {
 				file << (unsigned int)e << " ";
@@ -86,13 +88,19 @@ void SaveManager::Load(const std::string& file_name, TileMap& map, std::vector<W
 		waves.reserve(num_waves);
 		for (unsigned int i = 0; i < num_waves; i++) {
 			waves.push_back(Wave());
+			float enemy_speed;
+			float enemy_spawn_delay;
 			unsigned int enemy_count;
+			file >> enemy_speed;
+			file >> enemy_spawn_delay;
 			file >> enemy_count;
 			for (unsigned int i = 0; i < enemy_count; i++) {
 				unsigned int enemy;
 				file >> enemy;
 				waves.back().AddEnemy((EnemyType)enemy);
 			}
+			waves.back().SetEnemySpawnDelay(enemy_spawn_delay);
+			waves.back().SetEnemySpeed(enemy_speed);
 		}
 
 		map.Load(width, height, tiles, logic_tiles);

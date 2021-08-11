@@ -157,6 +157,7 @@
       <Filter>Source\TowerDefence</Filter>
     </ClCompile>
     <ClCompile Include="EnemyType.cpp" />
+    <ClCompile Include="WaveManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -280,6 +281,12 @@
       <Filter>Source\TowerDefence\Wave</Filter>
     </ClInclude>
     <ClInclude Include="Wave.h">
+      <Filter>Source\TowerDefence\Wave</Filter>
+    </ClInclude>
+    <ClInclude Include="WaveManager.h">
+      <Filter>Source\TowerDefence\Wave</Filter>
+    </ClInclude>
+    <ClInclude Include="CheckPoint.h">
       <Filter>Source\TowerDefence\Wave</Filter>
     </ClInclude>
   </ItemGroup>

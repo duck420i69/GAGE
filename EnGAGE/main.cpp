@@ -18,6 +18,7 @@
 
 int main()
 {
+	
 	Window::Create(Globals::gScreenWidth, Globals::gScreenHeight, Globals::gScreenTitle);
 	Events::Init();
 	Opengl::Init();

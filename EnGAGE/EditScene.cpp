@@ -233,7 +233,7 @@ void EditScene::ImGui() noexcept
 
 			if (ImGui::BeginCombo("Wave list", combo_preview_value.c_str()))
 			{
-				for (int n = 0; n < items.size(); n++)
+				for (unsigned int n = 0; n < items.size(); n++)
 				{
 					const bool is_selected = (item_current_idx == n);
 					if (ImGui::Selectable(items[n].c_str(), is_selected))
@@ -241,10 +241,14 @@ void EditScene::ImGui() noexcept
 
 					if (is_selected)
 						ImGui::SetItemDefaultFocus();
+					
 				}
 				ImGui::EndCombo();
 			}
+			//Wave inspector
 			Wave* current_wave = mWaves.empty() ? nullptr : &mWaves[item_current_idx];
+			ImGui::SliderFloat("Enemy speed", &current_wave->GetEnemySpeed(), 1.0f, 30.0f);
+			ImGui::SliderFloat("Enemy spawn delay", &current_wave->GetEnemySpawnDelay(), 0.01f, 3.0f);
 
 			for (unsigned int i = 0; i < (unsigned int)EnemyType::COUNT; i++) {
 				auto texture = EnemyTypeTexture::Get((EnemyType)i).lock();
@@ -252,13 +256,21 @@ void EditScene::ImGui() noexcept
 					current_wave->AddEnemy((EnemyType)i);
 				}
 				ImGui::SameLine();
+				
 			}
 			ImGui::NewLine();
-			if(current_wave)
-			for (const auto& enemy : current_wave->GetEnemies()) {
-				auto texture = EnemyTypeTexture::Get(enemy).lock();
-				ImGui::Image((ImTextureID)texture->GetID(), ImVec2(texture->GetWidth(), texture->GetHeight()));
-				ImGui::SameLine();
+			if (current_wave) {
+				
+				for (unsigned int i = 0; i < current_wave->GetEnemies().size(); i++) {
+					const auto& enemy = current_wave->GetEnemies()[i];
+					auto texture = EnemyTypeTexture::Get(enemy).lock();
+					ImGui::Image((ImTextureID)texture->GetID(), ImVec2(texture->GetWidth(), texture->GetHeight()));				
+					ImGui::SameLine();
+
+					if ((i + 1) % 10 == 0) {
+						ImGui::NewLine();
+					}
+				}
 			}
 
 			ImGui::EndMenu();
