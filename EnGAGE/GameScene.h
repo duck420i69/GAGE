@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Scene.h"
-#include "Player.h"
+#include "Camera.h"
 #include "TileMap.h"
 #include "SpriteRenderer.h"
 #include "WaveManager.h"
@@ -11,8 +11,8 @@ class GameScene : public Scene {
 	TileMap mMap;
 	SpriteRenderer mSpriteRenderer;
 	WaveManager mWaveManager;
-	Player mPlayer;
-	
+	Camera mPlayer;
+	std::vector<Tower> mTowerTest = {};
 
 	bool mOpenPauseMenu = false;
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Scene.h"
-#include "Player.h"
+#include "Camera.h"
 #include "TileMap.h"
 #include "SpriteRenderer.h"
 #include "Enemy.h"
@@ -15,7 +15,7 @@ class EditScene : public Scene {
 
 	SpriteRenderer mSpriteRenderer;
 	TileMap mMap;
-	Player mPlayer;
+	Camera mPlayer;
 
 	std::vector<Wave> mWaves;
 	std::weak_ptr<Tile> mCurrentBrush;

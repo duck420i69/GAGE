@@ -5,7 +5,7 @@
 #include "Events.h"
 #include "Logger.h"
 #include "TileType.h"
-#include "Player.h"
+#include "Camera.h"
 
 #include <glad/glad.h>
 #include <glm/gtc/matrix_transform.hpp>

@@ -6,7 +6,7 @@
 #include <memory>
 #include <vector>
 
-class Player;
+class Camera;
 class TileMap {
 
 	using TilePtr = std::weak_ptr<Tile>;

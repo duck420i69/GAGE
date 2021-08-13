@@ -52,6 +52,9 @@
     <Filter Include="Source\TowerDefence\Wave">
       <UniqueIdentifier>{0830c37e-3404-40cf-a0a9-4b791de51a20}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\TowerDefence\Tower">
+      <UniqueIdentifier>{d78cdfb3-919d-45d5-bc4d-393d95e22dd9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -132,7 +135,7 @@
     <ClCompile Include="Asset.cpp">
       <Filter>Source\Core\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Player.cpp">
+    <ClCompile Include="Camera.cpp">
       <Filter>Source\TowerDefence</Filter>
     </ClCompile>
     <ClCompile Include="EditScene.cpp">
@@ -241,7 +244,7 @@
     <ClInclude Include="Asset.h">
       <Filter>Source\Core\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Player.h">
+    <ClInclude Include="Camera.h">
       <Filter>Source\TowerDefence</Filter>
     </ClInclude>
     <ClInclude Include="EditScene.h">
@@ -288,6 +291,9 @@
     </ClInclude>
     <ClInclude Include="CheckPoint.h">
       <Filter>Source\TowerDefence\Wave</Filter>
+    </ClInclude>
+    <ClInclude Include="Tower.h">
+      <Filter>Source\TowerDefence\Tower</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

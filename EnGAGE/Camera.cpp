@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "Player.h"
+#include "Camera.h"
 
 #include "Events.h"
 #include "Window.h"
@@ -13,7 +13,7 @@
 #include <imgui/imgui.h>
 
 
-void Player::Update(float delta) noexcept
+void Camera::Update(float delta) noexcept
 {
 	UpdateZoom(delta);
 	UpdateMovement(delta);
@@ -21,7 +21,7 @@ void Player::Update(float delta) noexcept
 }
 
 
-void Player::UpdateZoom(float delta) noexcept
+void Camera::UpdateZoom(float delta) noexcept
 {
 	ImGuiIO& io = ImGui::GetIO();
 
@@ -33,7 +33,7 @@ void Player::UpdateZoom(float delta) noexcept
 	}
 }
 
-void Player::UpdateMovement(float delta) noexcept
+void Camera::UpdateMovement(float delta) noexcept
 {
 	ImGuiIO& io = ImGui::GetIO();
 	glm::vec2 dir = { 0, 0 };
@@ -57,7 +57,7 @@ void Player::UpdateMovement(float delta) noexcept
 	mPos += dir * MOVE_SPEED * delta;
 }
 
-void Player::UpdateCursor() noexcept
+void Camera::UpdateCursor() noexcept
 {
 
 	float real_x = (2 * Events::GetX() - Window::GetWidth()) * (mZoom / Window::GetHeight()) + mPos.x;

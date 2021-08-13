@@ -28,15 +28,17 @@ public:
 		mPos.x += mVel.x * delta * speed;
 		mPos.y += mVel.y * delta * speed;
 
-		constexpr float EPSILON = 0.3f;
-		for (auto it = mCheckPoints.begin(); it != mCheckPoints.end(); ++it) {
+		constexpr float EPSILON = 0.25f;
+
+		auto it = mCheckPoints.begin();
+		while (it != mCheckPoints.end()) {
 			if (std::abs(it->pos.x - mPos.x) < EPSILON && std::abs(it->pos.y - mPos.y) < EPSILON) {
 				mVel = TileType::GetLogicDir(it->tile);
 				mPos = it->pos;
 				it = mCheckPoints.erase(it);
-				if (mCheckPoints.empty()) {
-					break;
-				}
+			}
+			else {
+				it++;
 			}
 			
 		}

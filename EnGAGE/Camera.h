@@ -2,7 +2,7 @@
 
 #include <glm/vec2.hpp>
 
-class Player
+class Camera
 {
 	const float DEFAULT_ZOOM = 10.0f;
 	const float ZOOM_SPEED = 8.0f;
@@ -12,7 +12,7 @@ class Player
 	glm::ivec2  mCursorPos = { 0, 0 };
 	glm::vec2	mPos = { 0, 0 };
 public:
-	Player() noexcept = default;
+	Camera() noexcept = default;
 	void Update(float delta) noexcept;
 
 	inline const float& GetZoom() const noexcept { return mZoom; }

@@ -4,7 +4,7 @@
 #include "Asset.h"
 #include "Logger.h"
 #include "Window.h"
-#include "Player.h"
+#include "Camera.h"
 #include "TileType.h"
 
 #include <glad/glad.h>
@@ -50,7 +50,7 @@ SpriteRenderer::~SpriteRenderer() noexcept
 	mVBO = 0;
 }
 
-void SpriteRenderer::Update(const Player& player) noexcept
+void SpriteRenderer::Update(const Camera& player) noexcept
 {
 	//Update matrices
 	float aspectRatio = (float)Window::GetWidth() / (float)Window::GetHeight();
@@ -115,6 +115,34 @@ void SpriteRenderer::Render(unsigned int width, unsigned int height, const std::
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 		}
 	}
+}
+
+void SpriteRenderer::Render(const std::vector<Tower>& tower)
+{
+	auto shader = mShader.lock();
+	
+	std::for_each(tower.cbegin(), tower.cend(), [&](const Tower& t) {
+		auto base_texture = t.GetBaseTexture().lock();
+		auto cannon_texture = t.GetCannonTexture().lock();
+		glm::mat4 model;
+		model = glm::translate(glm::mat4(1.0f), { t.GetPos().x, t.GetPos().y, 0 });
+		shader->UploadMat4x4("uModel", glm::value_ptr(model));
+
+		//Render base first
+		base_texture->Bind();
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+
+		//Update the matrix to rotate the cannon first
+		model = glm::translate(glm::mat4(1.0f), { t.GetPos().x + 0.5f, t.GetPos().y + 0.5f, 0 });
+		model = glm::rotate(model, glm::radians(t.GetRotation()), { 0, 0, 1 });
+		model = glm::translate(model, { -0.5f, -0.5f, 0 });
+
+		shader->UploadMat4x4("uModel", glm::value_ptr(model));
+
+		//Render cannon second
+		cannon_texture->Bind();
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		});
 }
 
 void SpriteRenderer::EndRender() const noexcept

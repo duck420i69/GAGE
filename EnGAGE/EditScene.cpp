@@ -247,8 +247,10 @@ void EditScene::ImGui() noexcept
 			}
 			//Wave inspector
 			Wave* current_wave = mWaves.empty() ? nullptr : &mWaves[item_current_idx];
-			ImGui::SliderFloat("Enemy speed", &current_wave->GetEnemySpeed(), 1.0f, 30.0f);
-			ImGui::SliderFloat("Enemy spawn delay", &current_wave->GetEnemySpawnDelay(), 0.01f, 3.0f);
+			if (current_wave) {
+				ImGui::SliderFloat("Enemy speed", &current_wave->GetEnemySpeed(), 1.0f, 20.0f);
+				ImGui::SliderFloat("Enemy spawn delay", &current_wave->GetEnemySpawnDelay(), 0.01f, 3.0f);
+			}
 
 			for (unsigned int i = 0; i < (unsigned int)EnemyType::COUNT; i++) {
 				auto texture = EnemyTypeTexture::Get((EnemyType)i).lock();

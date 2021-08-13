@@ -60,7 +60,7 @@ void WaveManager::Update(float delta, const TileMap& map) noexcept
 		else {
 			//Update all enemy's positions
 			it->Update(delta, map.GetWidth(), map.GetHeight(), wave->GetEnemySpeed());
-			++it;
+			it++;
 		}
 	}
 }

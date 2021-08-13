@@ -4,12 +4,13 @@
 #include "Tile.h"
 #include "LogicTile.h"
 #include "Enemy.h"
+#include "Tower.h"
 
 #include <memory>
 #include <vector>
 #include <glm/mat4x4.hpp>
 
-class Player;
+class Camera;
 class SpriteRenderer {
 	unsigned int mVAO = 0, mVBO = 0;
 	std::weak_ptr<Shader> mShader;
@@ -20,11 +21,12 @@ public:
 	SpriteRenderer() noexcept;
 	~SpriteRenderer() noexcept;
 
-	void Update(const Player& player) noexcept;
+	void Update(const Camera& player) noexcept;
 	void Prepare() const noexcept;
 	void Render(const std::vector<Enemy>& enemies) const noexcept;
 	void Render(unsigned int width, unsigned int height, const std::vector<std::weak_ptr<Tile>>& tiles) const noexcept;
 	void Render(unsigned int width, unsigned int height, const std::vector<std::weak_ptr<LogicTile>>& tiles) const noexcept;
+	void Render(const std::vector<Tower>& tower);
 	void EndRender() const noexcept;
 
 	void RenderOpaque(unsigned int x, unsigned int y, const std::weak_ptr<Tile>& tile);
