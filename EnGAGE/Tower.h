@@ -7,24 +7,37 @@
 #include <glm/vec2.hpp>
 #include <glm/gtx/norm.hpp>
 #include <memory>
+#include <chrono>
 
 class Tower {
 	glm::vec2 mPosition;
 	std::weak_ptr<Texture> mBaseTexture;
 	std::weak_ptr<Texture> mCannonTexture;
-	float mCannonRotation;
+	float mRange;
+	float mCannonRotation = 0;
 
-	float mRange = 2.0f;
+	float mFiringDelay;
+	float mAccumulatedTime = 0.0f;
+protected:
+	bool mTargetLocked;
 public:
 	Tower(const glm::vec2& pos, const std::weak_ptr<Texture>& base_texture,
-		const std::weak_ptr<Texture>& cannon_texture, float cannon_rotation) noexcept :
+		const std::weak_ptr<Texture>& cannon_texture, float range, float firing_delay) noexcept :
 		mPosition(pos),
 		mBaseTexture(base_texture),
 		mCannonTexture(cannon_texture),
-		mCannonRotation(cannon_rotation)
+		mRange(range),
+		mFiringDelay(firing_delay)
 	{}
 
-	inline void Update(const std::vector<Enemy>& enemies) noexcept {
+	inline void OnShoot() noexcept {
+
+	}
+
+	
+
+	inline void Update(const std::vector<Enemy>& enemies, float delta) noexcept {
+
 		static constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
 
 		bool has_enemy = !enemies.empty();
@@ -42,14 +55,20 @@ public:
 				direction = { x, y };
 			}
 			});
-
-		if (has_enemy && length_min_squared < mRange * mRange) {
+		if (mTargetLocked = has_enemy && length_min_squared < mRange * mRange) {
 			//Lock into target
 			float real_length = glm::sqrt(length_min_squared);
 			direction.x /= real_length;
 			direction.y /= real_length;
 			mCannonRotation = glm::degrees(glm::atan(direction.y, direction.x) - glm::pi<float>() / 2.0f);
+			mAccumulatedTime += delta;
+
+			if (mAccumulatedTime >= mFiringDelay) {
+				OnShoot();
+				mAccumulatedTime = 0.0f;
+			}
 		}
+
 	}
 
 	inline void SetRotation(float rotation) noexcept { mCannonRotation = rotation; }

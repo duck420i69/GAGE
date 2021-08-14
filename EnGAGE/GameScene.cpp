@@ -26,14 +26,7 @@ void GameScene::Update(float delta) noexcept
 		return;
 	}
 
-	if (Events::IsButtonDown(0)) {
-		mTowerTest.emplace_back(glm::vec2{ mPlayer.GetCursor().x, mPlayer.GetCursor().y },
-			Asset::GetTexture("Assets/Textures/tower_generic_base.png"),
-			Asset::GetTexture("Assets/Textures/tower_generic_cannon.png"), 0.0f);
-	}
-	std::for_each(mTowerTest.begin(), mTowerTest.end(), [&](auto& tower) {
-		tower.Update(mWaveManager.GetEnemies());
-		});
+	
 }
 
 void GameScene::Render() noexcept
@@ -41,8 +34,6 @@ void GameScene::Render() noexcept
 	mSpriteRenderer.Prepare();
 	mSpriteRenderer.Render(mMap.GetWidth(), mMap.GetHeight(), mMap.GetTiles());
 	mSpriteRenderer.Render(mWaveManager.GetEnemies());
-	
-	mSpriteRenderer.Render(mTowerTest);
 	mSpriteRenderer.EndRender();
 }
 

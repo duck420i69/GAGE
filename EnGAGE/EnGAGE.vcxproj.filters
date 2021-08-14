@@ -295,6 +295,9 @@
     <ClInclude Include="Tower.h">
       <Filter>Source\TowerDefence\Tower</Filter>
     </ClInclude>
+    <ClInclude Include="BasicTower.h">
+      <Filter>Source\TowerDefence\Tower</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\default_FS.glsl">

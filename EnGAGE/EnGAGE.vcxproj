@@ -178,6 +178,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Asset.h" />
+    <ClInclude Include="BasicTower.h" />
     <ClInclude Include="EditScene.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyType.h" />

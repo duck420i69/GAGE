@@ -10,6 +10,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/norm.hpp>
+#include <glm/gtx/matrix_interpolation.hpp>
 #include <imgui/imgui.h>
 
 
@@ -25,10 +26,20 @@ void Camera::UpdateZoom(float delta) noexcept
 {
 	ImGuiIO& io = ImGui::GetIO();
 
-	if (!io.WantCaptureMouse) {
+	if (!io.WantCaptureMouse && !io.WantCaptureKeyboard) {
 		float scroll = Events::GetDScroll();
-		mZoom -= ZOOM_SPEED * delta * scroll;
 
+		if (Events::IsKeyDown(Events::KEY_R)) {
+			scroll += 1;
+		}
+		if (Events::IsKeyDown(Events::KEY_F)) {
+			scroll -= 1;
+		}
+
+		mZoomVel -= ZOOM_SPEED * delta * scroll;
+
+		mZoom += mZoomVel * delta;
+		mZoomVel *= ZOOM_FRICTION;
 		if (mZoom < 1.0f) mZoom = 1.0f;
 	}
 }
@@ -54,7 +65,9 @@ void Camera::UpdateMovement(float delta) noexcept
 	}
 
 	dir = glm::length2(dir) != 0 ? glm::normalize(dir) : glm::vec2(0, 0);
-	mPos += dir * MOVE_SPEED * delta;
+	mVel += dir * MOVE_SPEED * delta;
+	mPos += mVel * delta;
+	mVel *= CAM_FRICTION;
 }
 
 void Camera::UpdateCursor() noexcept
@@ -62,7 +75,6 @@ void Camera::UpdateCursor() noexcept
 
 	float real_x = (2 * Events::GetX() - Window::GetWidth()) * (mZoom / Window::GetHeight()) + mPos.x;
 	float real_y = (1 - (2 * Events::GetY()) / Window::GetHeight()) * mZoom + mPos.y;
-
 
 	mCursorPos.x = real_x < 0.0f ? (int)glm::floor(real_x) : (int)real_x;
 	mCursorPos.y = real_y < 0.0f ? (int)glm::floor(real_y) : (int)real_y;

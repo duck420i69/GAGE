@@ -12,7 +12,6 @@ class GameScene : public Scene {
 	SpriteRenderer mSpriteRenderer;
 	WaveManager mWaveManager;
 	Camera mPlayer;
-	std::vector<Tower> mTowerTest = {};
 
 	bool mOpenPauseMenu = false;
 
