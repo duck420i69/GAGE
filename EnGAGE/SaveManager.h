@@ -1,10 +1,11 @@
 #pragma once
 
 #include "TileMap.h"
-#include "Wave.h"
+#include "WaveManager.h"
+
 
 class SaveManager {
 public:
-	static void Save(const std::string& file_name, const TileMap& map, const std::vector<Wave>& waves);
-	static void Load(const std::string& file_name, TileMap& map, std::vector<Wave>& waves);
+	static void Save(const std::string& file_name, const TileMap& map, const WaveManager& wave_manager);
+	static void Load(const std::string& file_name, TileMap& map, WaveManager& wave_manager);
 };

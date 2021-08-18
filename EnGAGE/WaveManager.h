@@ -31,4 +31,6 @@ public:
 	inline const std::vector<Enemy>& GetEnemies() const noexcept { return mEnemies; }
 	inline const std::vector<Wave>& GetWaves() const noexcept { return mWaves; }
 	inline std::vector<Wave>& GetWaves() noexcept { return mWaves; }
+
+	inline void SetWaves(const std::vector<Wave>& waves) { mWaves = std::move(waves); }
 };

@@ -13,6 +13,7 @@ float			Events::sLastXPos = 0;
 float			Events::sLastYPos = 0;
 float			Events::sLastScroll = 0;
 std::bitset<5>	Events::sButtonsPressed = { 0 };
+std::bitset<5>	Events::sPrevButtons = { 0 };
 bool			Events::sDragging = false;
 
 std::bitset<400> Events::sKeysPressed = { 0 };
@@ -70,11 +71,17 @@ void Events::Update() noexcept
 	sLastYPos = sYPos;
 	sLastScroll = 0;
 	sPrevKeys = sKeysPressed;
+	sPrevButtons = sButtonsPressed;
 }
 
 bool Events::IsButtonDown(int button) noexcept
 {
 	return sButtonsPressed[button];
+}
+
+bool Events::IsButtonDownOnce(int button) noexcept
+{
+	return sButtonsPressed[button] && !sPrevButtons[button];
 }
 
 bool Events::IsDragging() noexcept

@@ -10,7 +10,7 @@ class Events
 	static float			sLastXPos;
 	static float			sLastYPos;
 	static float			sLastScroll;
-	static std::bitset<5>	sButtonsPressed;
+	static std::bitset<5>	sButtonsPressed, sPrevButtons;
 	static bool				sDragging;
 
 	static std::bitset<400> sKeysPressed, sPrevKeys;
@@ -156,6 +156,7 @@ public:
 	static void Update() noexcept;
 
 	static bool IsButtonDown(int button) noexcept;
+	static bool IsButtonDownOnce(int button) noexcept;
 	static bool IsDragging() noexcept;
 	static float GetX() noexcept;
 	static float GetY() noexcept;

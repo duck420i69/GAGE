@@ -161,6 +161,7 @@
     </ClCompile>
     <ClCompile Include="EnemyType.cpp" />
     <ClCompile Include="WaveManager.cpp" />
+    <ClCompile Include="TowerType.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -296,6 +297,15 @@
       <Filter>Source\TowerDefence\Tower</Filter>
     </ClInclude>
     <ClInclude Include="BasicTower.h">
+      <Filter>Source\TowerDefence\Tower</Filter>
+    </ClInclude>
+    <ClInclude Include="TowerType.h">
+      <Filter>Source\TowerDefence\Tower</Filter>
+    </ClInclude>
+    <ClInclude Include="TowerTexture.h">
+      <Filter>Source\TowerDefence\Tower</Filter>
+    </ClInclude>
+    <ClInclude Include="TowerMap.h">
       <Filter>Source\TowerDefence\Tower</Filter>
     </ClInclude>
   </ItemGroup>

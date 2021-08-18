@@ -25,4 +25,5 @@ public:
 	inline const float& GetEnemySpawnDelay() const noexcept { return mEnemySpawnDelay; }
 	inline float& GetEnemySpawnDelay() noexcept { return mEnemySpawnDelay; }
 	inline const std::vector<EnemyType>& GetEnemies() const noexcept { return mEnemies; }
+	inline std::vector<EnemyType>& GetEnemies() noexcept { return mEnemies; }
 };

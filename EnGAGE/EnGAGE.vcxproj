@@ -171,6 +171,7 @@
     </ClCompile>
     <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="TileType.cpp" />
+    <ClCompile Include="TowerType.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="WaveManager.cpp" />
     <ClCompile Include="Widget.cpp" />
@@ -217,6 +218,9 @@
     <ClInclude Include="SpriteRenderer.h" />
     <ClInclude Include="TileType.h" />
     <ClInclude Include="Tower.h" />
+    <ClInclude Include="TowerMap.h" />
+    <ClInclude Include="TowerTexture.h" />
+    <ClInclude Include="TowerType.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Wave.h" />
     <ClInclude Include="WaveManager.h" />

@@ -81,7 +81,7 @@ void SpriteRenderer::Render(const std::vector<Enemy>& enemies) const noexcept
 		shader->UploadMat4x4("uModel", glm::value_ptr(model));
 		e.GetTexture().lock()->Bind();
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-	
+
 	}
 }
 
@@ -117,11 +117,13 @@ void SpriteRenderer::Render(unsigned int width, unsigned int height, const std::
 	}
 }
 
-void SpriteRenderer::Render(const std::vector<Tower>& tower)
+void SpriteRenderer::Render(const std::vector<std::unique_ptr<Tower>>& towers)
 {
 	auto shader = mShader.lock();
-	
-	std::for_each(tower.cbegin(), tower.cend(), [&](const Tower& t) {
+
+	for (const auto& tower : towers) {
+		if (!tower) continue;
+		const auto& t = *tower;
 		auto base_texture = t.GetBaseTexture().lock();
 		auto cannon_texture = t.GetCannonTexture().lock();
 		glm::mat4 model;
@@ -142,7 +144,7 @@ void SpriteRenderer::Render(const std::vector<Tower>& tower)
 		//Render cannon second
 		cannon_texture->Bind();
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-		});
+	}
 }
 
 void SpriteRenderer::EndRender() const noexcept
@@ -151,24 +153,13 @@ void SpriteRenderer::EndRender() const noexcept
 	glUseProgram(0);
 }
 
-void SpriteRenderer::RenderOpaque(unsigned int x, unsigned int y, const std::weak_ptr<Tile>& tile)
-{
-	auto shader = mShader.lock();
-	glm::mat4 model;
-	model = glm::translate(glm::mat4(1.0f), { x, y, 0 });
-	shader->UploadMat4x4("uModel", glm::value_ptr(model));
-	shader->UploadFloat("uAlpha", 0.5f);
-	tile.lock()->GetTexture().lock()->Bind();
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-}
 
-void SpriteRenderer::RenderOpaque(unsigned int x, unsigned int y, const std::weak_ptr<LogicTile>& tile)
-{
+void SpriteRenderer::RenderOpaque(unsigned int x, unsigned int y, const std::weak_ptr<Texture>& texture) {
 	auto shader = mShader.lock();
 	glm::mat4 model;
 	model = glm::translate(glm::mat4(1.0f), { x, y, 0 });
 	shader->UploadMat4x4("uModel", glm::value_ptr(model));
 	shader->UploadFloat("uAlpha", 0.5f);
-	tile.lock()->GetTexture().lock()->Bind();
+	texture.lock()->Bind();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }

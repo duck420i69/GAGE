@@ -94,9 +94,9 @@ void EditScene::Render() noexcept
 	mSpriteRenderer.Render(mMap.GetWidth(), mMap.GetHeight(), mMap.GetTiles());
 	mSpriteRenderer.Render(mMap.GetWidth(), mMap.GetHeight(), mMap.GetLogicTiles());
 	if(mCurrentMode == Mode::DRAW)
-		mSpriteRenderer.RenderOpaque(mPlayer.GetCursor().x, mPlayer.GetCursor().y, mCurrentBrush);
+		mSpriteRenderer.RenderOpaque(mPlayer.GetCursor().x, mPlayer.GetCursor().y, mCurrentBrush.lock()->GetTexture());
 	else if(mCurrentMode == Mode::LOGIC)
-		mSpriteRenderer.RenderOpaque(mPlayer.GetCursor().x, mPlayer.GetCursor().y, mCurrentLogicBrush);
+		mSpriteRenderer.RenderOpaque(mPlayer.GetCursor().x, mPlayer.GetCursor().y, mCurrentLogicBrush.lock()->GetTexture());
 
 	mSpriteRenderer.EndRender();
 }
@@ -121,7 +121,9 @@ void EditScene::ImGui() noexcept
 			if (ImGui::BeginMenu(u8"Load")) {
 				for (const auto& entry : std::filesystem::directory_iterator("Assets/Saves/")) {
 					if (ImGui::Selectable(entry.path().u8string().c_str()) && entry.exists()) {
-						SaveManager::Load(entry.path().u8string(), mMap, mWaves);
+						WaveManager wave_manager;
+						SaveManager::Load(entry.path().u8string(), mMap, wave_manager);
+						mWaves = std::move(wave_manager.GetWaves());
 					}
 				}
 				ImGui::EndMenu();
@@ -260,6 +262,9 @@ void EditScene::ImGui() noexcept
 				ImGui::SameLine();
 				
 			}
+			if (ImGui::Button("Remove") && current_wave) {
+				current_wave->GetEnemies().pop_back();
+			}
 			ImGui::NewLine();
 			if (current_wave) {
 				
@@ -304,8 +309,12 @@ void EditScene::ImGui() noexcept
 		ImGui::Text(u8"Sao lưu máp");
 		ImGui::InputText(u8"Tên máp", map_name, sizeof(char) * MAX_MAP_NAME_LENGTH);
 		if (ImGui::Button(u8"Sao lưu")) {
-			if (strlen(map_name) != 0)
-				SaveManager::Save("Assets/Saves/" + std::string(map_name), mMap, mWaves);
+			if (strlen(map_name) != 0) {
+				WaveManager wave_manager;
+				wave_manager.SetWaves(mWaves);
+				SaveManager::Save("Assets/Saves/" + std::string(map_name), mMap, wave_manager);
+
+			}
 		}
 		ImGui::EndPopup();
 	}

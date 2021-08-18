@@ -4,7 +4,7 @@
 #include "Logger.h"
 #include "TileType.h"
 
-void SaveManager::Save(const std::string& file_name, const TileMap& map, const std::vector<Wave>& waves)
+void SaveManager::Save(const std::string& file_name, const TileMap& map, const WaveManager& wave_manager)
 {
 	try {
 		std::ofstream file;
@@ -35,8 +35,8 @@ void SaveManager::Save(const std::string& file_name, const TileMap& map, const s
 		}
 		file << "\n";
 		
-		file << waves.size() << "\n";
-		for (const auto& wave : waves) {
+		file << wave_manager.GetWaves().size() << "\n";
+		for (const auto& wave : wave_manager.GetWaves()) {
 			file << wave.GetEnemySpeed() << "\n";
 			file << wave.GetEnemySpawnDelay() << "\n";
 			file << wave.GetEnemies().size() << "\n";
@@ -53,7 +53,7 @@ void SaveManager::Save(const std::string& file_name, const TileMap& map, const s
 	}
 }
 
-void SaveManager::Load(const std::string& file_name, TileMap& map, std::vector<Wave>& waves)
+void SaveManager::Load(const std::string& file_name, TileMap& map, WaveManager& wave_manager)
 {
 	try {
 		std::ifstream file;
@@ -81,8 +81,8 @@ void SaveManager::Load(const std::string& file_name, TileMap& map, std::vector<W
 				logic_tiles.push_back(logic_tile_array[value]);
 			}
 		}
-		waves.clear();
-
+		
+		std::vector<Wave> waves;
 		unsigned int num_waves;
 		file >> num_waves;
 		waves.reserve(num_waves);
@@ -104,6 +104,7 @@ void SaveManager::Load(const std::string& file_name, TileMap& map, std::vector<W
 		}
 
 		map.Load(width, height, tiles, logic_tiles);
+		wave_manager.SetWaves(waves);
 	}
 	catch (std::ios_base::failure& e) {
 		Logger::error("Editor failed to load save file: {}, ios error: {}", file_name, e.what());

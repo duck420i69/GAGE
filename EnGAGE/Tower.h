@@ -10,9 +10,11 @@
 #include <chrono>
 
 class Tower {
+	using TexturePtr = std::weak_ptr<Texture>;
+
 	glm::vec2 mPosition;
-	std::weak_ptr<Texture> mBaseTexture;
-	std::weak_ptr<Texture> mCannonTexture;
+	TexturePtr mBaseTexture;
+	TexturePtr mCannonTexture;
 	float mRange;
 	float mCannonRotation = 0;
 
@@ -21,26 +23,19 @@ class Tower {
 protected:
 	bool mTargetLocked;
 public:
-	Tower(const glm::vec2& pos, const std::weak_ptr<Texture>& base_texture,
-		const std::weak_ptr<Texture>& cannon_texture, float range, float firing_delay) noexcept :
+	Tower(const glm::vec2& pos, float range, float firing_delay) noexcept :
 		mPosition(pos),
-		mBaseTexture(base_texture),
-		mCannonTexture(cannon_texture),
 		mRange(range),
 		mFiringDelay(firing_delay)
 	{}
-
-	inline void OnShoot() noexcept {
-
-	}
-
-	
 
 	inline void Update(const std::vector<Enemy>& enemies, float delta) noexcept {
 
 		static constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
 
 		bool has_enemy = !enemies.empty();
+		if (!has_enemy) return;
+
 		glm::vec2 direction;
 		float length_min_squared = FLOAT_MAX;
 		std::for_each(enemies.begin(), enemies.end(),
@@ -64,19 +59,21 @@ public:
 			mAccumulatedTime += delta;
 
 			if (mAccumulatedTime >= mFiringDelay) {
-				OnShoot();
+				Logger::info("yo i shot myself");
 				mAccumulatedTime = 0.0f;
 			}
 		}
 
 	}
-
 	inline void SetRotation(float rotation) noexcept { mCannonRotation = rotation; }
 	inline void SetRange(float range) noexcept { mRange = range; }
 
 	inline const glm::vec2& GetPos() const noexcept { return mPosition; }
-	inline const std::weak_ptr<Texture>& GetBaseTexture() const noexcept { return mBaseTexture; }
-	inline const std::weak_ptr<Texture>& GetCannonTexture() const noexcept { return mCannonTexture; }
+	inline const TexturePtr& GetBaseTexture() const noexcept { return mBaseTexture; }
+	inline const TexturePtr& GetCannonTexture() const noexcept { return mCannonTexture; }
 	inline const float& GetRotation() const noexcept { return mCannonRotation; }
 	inline const float& GetRange() const noexcept { return mRange; }
+protected:
+	inline void SetBaseTex(const TexturePtr& tex) noexcept { mBaseTexture = tex; }
+	inline void SetCannonTex(const TexturePtr& tex) noexcept { mCannonTexture = tex; }
 };
