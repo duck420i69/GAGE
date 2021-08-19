@@ -44,47 +44,47 @@ std::weak_ptr<Texture> TileManager::GetTexture(LogicTileType type) noexcept
 	return {};
 }
 
-std::unique_ptr<Tile> TileManager::Get(TileType type) noexcept
+Tile TileManager::Get(TileType type) noexcept
 {
 	auto texture = GetTexture(type);
 	switch (type)
 	{
 	case TileType::NONE:
-		return std::move(std::make_unique<Tile>(Tile{ "Empty tile", texture, (unsigned int)type }));
+		return Tile{ "Empty tile", texture, (unsigned int)type };
 	case TileType::DIRT:
-		return std::move(std::make_unique<Tile>(Tile{ "Dirt tile", texture, (unsigned int)type }));
+		return Tile{ "Dirt tile", texture, (unsigned int)type };
 	case TileType::GRASS:
-		return std::move(std::make_unique<Tile>(Tile{ "Grass tile", texture, (unsigned int)type }));
+		return Tile{ "Grass tile", texture, (unsigned int)type };
 	}
-	return nullptr;
+	return {};
 }
 
-std::unique_ptr<Tile> TileManager::Get(LogicTileType type) noexcept
+Tile TileManager::Get(LogicTileType type) noexcept
 {
 	auto texture = GetTexture(type);
 	switch (type)
 	{
 	case LogicTileType::NONE:
-		return std::move(std::make_unique<Tile>(Tile{ "Logic empty tile", texture, (unsigned int)type }));
+		return Tile{ "Logic empty tile", texture, (unsigned int)type };
 	case LogicTileType::SPAWN_UP:
-		return std::move(std::make_unique<Tile>(Tile{ "Spawn up", texture, (unsigned int)type }));
+		return Tile{ "Spawn up", texture, (unsigned int)type };
 	case LogicTileType::SPAWN_DOWN:
-		return std::move(std::make_unique<Tile>(Tile{ "Spawn down", texture, (unsigned int)type }));
+		return Tile{ "Spawn down", texture, (unsigned int)type };
 	case LogicTileType::SPAWN_LEFT:
-		return std::move(std::make_unique<Tile>(Tile{ "Spawn left", texture, (unsigned int)type }));
+		return Tile{ "Spawn left", texture, (unsigned int)type };
 	case LogicTileType::SPAWN_RIGHT:
-		return std::move(std::make_unique<Tile>(Tile{ "Spawn right", texture, (unsigned int)type }));
+		return Tile{ "Spawn right", texture, (unsigned int)type };
 	case LogicTileType::CHECKPOINT_UP:
-		return std::move(std::make_unique<Tile>(Tile{ "Checkpoint up", texture, (unsigned int)type }));
+		return Tile{ "Checkpoint up", texture, (unsigned int)type };
 	case LogicTileType::CHECKPOINT_DOWN:
-		return std::move(std::make_unique<Tile>(Tile{ "Checkpoint down", texture, (unsigned int)type }));
+		return Tile{ "Checkpoint down", texture, (unsigned int)type };
 	case LogicTileType::CHECKPOINT_LEFT:
-		return std::move(std::make_unique<Tile>(Tile{ "Checkpoint left", texture, (unsigned int)type }));
+		return Tile{ "Checkpoint left", texture, (unsigned int)type };
 	case LogicTileType::CHECKPOINT_RIGHT:
-		return std::move(std::make_unique<Tile>(Tile{ "Checkpoint right", texture, (unsigned int)type }));
+		return Tile{ "Checkpoint right", texture, (unsigned int)type };
 	}
 
-	return nullptr;
+	return {};
 }
 
 bool TileManager::NotLogicNone(LogicTileType type) noexcept

@@ -19,7 +19,7 @@ void SaveManager::Save(const std::string& file_name, const TileMap& map, const W
 		for (unsigned int y = 0; y < height; y++) {
 			for (unsigned int x = 0; x < width; x++) {
 				size_t pos = x + y * (size_t)width;
-				file << (unsigned int)tiles[pos]->type << " ";
+				file << (unsigned int)tiles[pos].type << " ";
 			}
 			file << "\n";
 		}
@@ -27,7 +27,7 @@ void SaveManager::Save(const std::string& file_name, const TileMap& map, const W
 		for (unsigned int y = 0; y < height; y++) {
 			for (unsigned int x = 0; x < width; x++) {
 				size_t pos = x + y * (size_t)width;
-				file << (unsigned int)logic_tiles[pos]->type << " ";
+				file << (unsigned int)logic_tiles[pos].type << " ";
 			}
 			file << "\n";
 		}
@@ -58,15 +58,15 @@ void SaveManager::Load(const std::string& file_name, TileMap& map, WaveManager& 
 		file.exceptions(std::ifstream::badbit | std::ifstream::failbit);
 		file.open(file_name);
 		unsigned int width, height;
-		std::vector<std::unique_ptr<Tile>> tiles;
-		std::vector<std::unique_ptr<Tile>> logic_tiles;
+		std::vector<Tile> tiles;
+		std::vector<Tile> logic_tiles;
 		file >> width;
 		file >> height;
 		for (unsigned int y = 0; y < height; y++) {
 			for (unsigned int x = 0; x < width; x++) {
 				unsigned int value;
 				file >> value;
-				tiles.emplace_back(std::move(TileManager::Get((TileType)value)));
+				tiles.push_back(TileManager::Get((TileType)value));
 			}
 		}
 
@@ -74,7 +74,7 @@ void SaveManager::Load(const std::string& file_name, TileMap& map, WaveManager& 
 			for (unsigned int x = 0; x < width; x++) {
 				unsigned int value;
 				file >> value;
-				logic_tiles.emplace_back(std::move(TileManager::Get((LogicTileType)value)));
+				logic_tiles.push_back(TileManager::Get((LogicTileType)value));
 			}
 		}
 		

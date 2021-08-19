@@ -85,7 +85,7 @@ void SpriteRenderer::Render(const std::vector<Enemy>& enemies) const noexcept
 	}
 }
 
-void SpriteRenderer::Render(unsigned int width, unsigned int height, const std::vector<std::unique_ptr<Tile>>& tiles) const noexcept
+void SpriteRenderer::Render(unsigned int width, unsigned int height, const std::vector<Tile>& tiles) const noexcept
 {
 	auto shader = mShader.lock();
 
@@ -93,11 +93,11 @@ void SpriteRenderer::Render(unsigned int width, unsigned int height, const std::
 	for (unsigned int y = 0; y < height; y++) {
 		for (unsigned int x = 0; x < width; x++) {
 			const auto& tile = tiles[x + y * width];
-			if (tile->type == (unsigned int)TileType::NONE || tile->type == (unsigned int)LogicTileType::NONE)
+			if (tile.type == (unsigned int)TileType::NONE || tile.type == (unsigned int)LogicTileType::NONE)
 				continue;
 			model = glm::translate(glm::mat4(1.0f), { x, y, 0 });
 			shader->UploadMat4x4("uModel", glm::value_ptr(model));
-			tile->texture.lock()->Bind();
+			tile.texture.lock()->Bind();
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 		}
 	}

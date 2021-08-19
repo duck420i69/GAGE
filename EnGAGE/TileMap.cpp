@@ -20,13 +20,15 @@ void TileMap::LoadNew(unsigned int width, unsigned int height, TileType tile, Lo
 	this->mHeight = height;
 
 	size_t capacity = (size_t)mWidth * (size_t)mHeight;
+	mTiles.reserve(capacity);
+	mLogicTiles.reserve(capacity);
 	for (unsigned int i = 0; i < mWidth * mHeight; i++) {
 		mTiles.push_back(TileManager::Get(tile));
 		mLogicTiles.push_back(TileManager::Get(logic_tile));
 	}
 }
 
-void TileMap::Load(unsigned int width, unsigned int height, TileArray& tiles, LogicTileArray& logic_tiles) noexcept
+void TileMap::Load(unsigned int width, unsigned int height, std::vector<Tile>& tiles, std::vector<Tile>& logic_tiles) noexcept
 {
 	this->mTiles.clear();
 	this->mLogicTiles.clear();
@@ -40,15 +42,13 @@ void TileMap::Load(unsigned int width, unsigned int height, TileArray& tiles, Lo
 void TileMap::PlaceTile(unsigned int x, unsigned  int y, TileType tile)
 {
 	if (x < 0 || y < 0 || x >= mWidth || y >= mHeight) return;
-	mTiles[x + y * mWidth].reset(nullptr);
-	mTiles[x + y * mWidth] = std::move(TileManager::Get(tile));
+	mTiles[x + y * mWidth] = TileManager::Get(tile);
 }
 
 void TileMap::PlaceLogicTile(unsigned int x, unsigned int y, LogicTileType tile)
 {
 	if (x < 0 || y < 0 || x >= mWidth || y >= mHeight) return;
-	mLogicTiles[x + y * mWidth].reset(nullptr);
-	mLogicTiles[x + y * mWidth] = std::move(TileManager::Get(tile));
+	mLogicTiles[x + y * mWidth] = TileManager::Get(tile);
 }
 
 

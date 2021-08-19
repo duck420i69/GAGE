@@ -152,7 +152,7 @@ void EditScene::ImGui() noexcept
 					}
 					if (ImGui::IsItemHovered()) {
 						ImGui::BeginTooltip();
-						ImGui::Text("%s", TileManager::Get((TileType)i)->name.c_str());
+						ImGui::Text("%s", TileManager::Get((TileType)i).name.c_str());
 						ImGui::EndTooltip();
 					}
 					ImGui::SameLine();
@@ -173,7 +173,7 @@ void EditScene::ImGui() noexcept
 					}
 					if (ImGui::IsItemHovered()) {
 						ImGui::BeginTooltip();
-						ImGui::Text("%s", TileManager::Get((LogicTileType)i)->name.c_str());
+						ImGui::Text("%s", TileManager::Get((LogicTileType)i).name.c_str());
 						ImGui::EndTooltip();
 					}
 					ImGui::SameLine();
@@ -282,7 +282,7 @@ void EditScene::ImGui() noexcept
 		ImGui::InputInt(u8"Chiều rộng", &width);
 		ImGui::InputInt(u8"Chiều cao", &height);
 		if (ImGui::Button(u8"Tạo")) {
-			mMap.LoadNew(width, height, TileType::NONE, LogicTileType::NONE);
+			mMap.LoadNew(width, height, TileType::GRASS, LogicTileType::NONE);
 		}
 		ImGui::EndPopup();
 	}
