@@ -153,15 +153,21 @@
     <ClCompile Include="TileType.cpp">
       <Filter>Source\TowerDefence\Tile</Filter>
     </ClCompile>
-    <ClCompile Include="SpriteRenderer.cpp">
-      <Filter>Source\TowerDefence\Tile</Filter>
-    </ClCompile>
     <ClCompile Include="SaveManager.cpp">
       <Filter>Source\TowerDefence</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyType.cpp" />
-    <ClCompile Include="WaveManager.cpp" />
-    <ClCompile Include="TowerType.cpp" />
+    <ClCompile Include="TowerType.cpp">
+      <Filter>Source\TowerDefence\Tower</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemyType.cpp">
+      <Filter>Source\TowerDefence\Wave</Filter>
+    </ClCompile>
+    <ClCompile Include="WaveManager.cpp">
+      <Filter>Source\TowerDefence\Wave</Filter>
+    </ClCompile>
+    <ClCompile Include="SpriteRenderer.cpp">
+      <Filter>Source\TowerDefence</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -266,12 +272,6 @@
     <ClInclude Include="TileType.h">
       <Filter>Source\TowerDefence\Tile</Filter>
     </ClInclude>
-    <ClInclude Include="LogicTile.h">
-      <Filter>Source\TowerDefence\Tile</Filter>
-    </ClInclude>
-    <ClInclude Include="SpriteRenderer.h">
-      <Filter>Source\TowerDefence\Tile</Filter>
-    </ClInclude>
     <ClInclude Include="Point.h">
       <Filter>Source\TowerDefence\Tile</Filter>
     </ClInclude>
@@ -296,9 +296,6 @@
     <ClInclude Include="Tower.h">
       <Filter>Source\TowerDefence\Tower</Filter>
     </ClInclude>
-    <ClInclude Include="BasicTower.h">
-      <Filter>Source\TowerDefence\Tower</Filter>
-    </ClInclude>
     <ClInclude Include="TowerType.h">
       <Filter>Source\TowerDefence\Tower</Filter>
     </ClInclude>
@@ -307,6 +304,15 @@
     </ClInclude>
     <ClInclude Include="TowerMap.h">
       <Filter>Source\TowerDefence\Tower</Filter>
+    </ClInclude>
+    <ClInclude Include="TileTypeEnum.h">
+      <Filter>Source\TowerDefence\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="LogicTileTypeEnum.h">
+      <Filter>Source\TowerDefence\Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="SpriteRenderer.h">
+      <Filter>Source\TowerDefence</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

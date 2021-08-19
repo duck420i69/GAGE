@@ -1,9 +1,9 @@
 #pragma once
 
 #include <glm/vec2.hpp>
-#include "TileType.h"
+#include "LogicTileTypeEnum.h"
 
 struct CheckPoint {
 	glm::ivec2 pos;
-	std::weak_ptr<LogicTile> tile;
+	LogicTileType tile;
 };

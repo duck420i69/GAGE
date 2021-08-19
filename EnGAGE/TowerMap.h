@@ -30,9 +30,14 @@ public:
 	}
 
 	void PlaceTower(unsigned int x, unsigned int y, TowerType type) noexcept {
+		if (x < 0 || y < 0 || x >= mWidth || y >= mHeight) return;
 		std::unique_ptr<Tower> tower_ptr = nullptr;
 		TowerTypeInstance::Generate(type, tower_ptr, { x, y });
 		mTowers[x + y * mWidth] = std::move(tower_ptr);
+	}
+
+	void RemoveTower(unsigned int x, unsigned int y) noexcept {
+		mTowers[x + y * mWidth] = nullptr;
 	}
 
 	inline const std::vector<std::unique_ptr<Tower>>& GetTowers() const noexcept { return mTowers; }

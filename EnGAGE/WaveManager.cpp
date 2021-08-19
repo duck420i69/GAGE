@@ -9,11 +9,11 @@ void WaveManager::Load(const TileMap& map) noexcept
 {
 	for (unsigned int y = 0; y < map.GetHeight(); y++) {
 		for (unsigned int x = 0; x < map.GetWidth(); x++) {
-			const auto& logic_tile = map.GetLogicTiles()[x + y * map.GetWidth()];
-			if (TileType::IsLogicSpawn(logic_tile)) {
+			const auto& logic_tile = (LogicTileType)map.GetLogicTiles()[x + y * map.GetWidth()]->type;
+			if (TileManager::IsLogicSpawn(logic_tile)) {
 				mSpawnPoints.push_back(CheckPoint{ glm::vec2{x, y }, logic_tile });
 			}
-			else if (TileType::IsCheckpoint(logic_tile)) {
+			else if (TileManager::IsCheckPoint(logic_tile)) {
 				mCheckPoints.push_back(CheckPoint{ glm::vec2{x, y }, logic_tile });
 			}
 		}

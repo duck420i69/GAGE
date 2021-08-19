@@ -179,7 +179,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Asset.h" />
-    <ClInclude Include="BasicTower.h" />
     <ClInclude Include="EditScene.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyType.h" />
@@ -187,7 +186,7 @@
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Logger.h" />
-    <ClInclude Include="LogicTile.h" />
+    <ClInclude Include="LogicTileTypeEnum.h" />
     <ClInclude Include="MenuScene.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Point.h" />
@@ -217,6 +216,7 @@
     <ClInclude Include="thirdparty\stb_image\stb_image.h" />
     <ClInclude Include="SpriteRenderer.h" />
     <ClInclude Include="TileType.h" />
+    <ClInclude Include="TileTypeEnum.h" />
     <ClInclude Include="Tower.h" />
     <ClInclude Include="TowerMap.h" />
     <ClInclude Include="TowerTexture.h" />

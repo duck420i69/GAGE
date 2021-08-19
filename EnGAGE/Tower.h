@@ -23,8 +23,10 @@ class Tower {
 protected:
 	bool mTargetLocked;
 public:
-	Tower(const glm::vec2& pos, float range, float firing_delay) noexcept :
+	Tower(const glm::vec2& pos, const TexturePtr& base_texture, const TexturePtr& cannon_texture, float range, float firing_delay) noexcept :
 		mPosition(pos),
+		mBaseTexture(base_texture),
+		mCannonTexture(cannon_texture),
 		mRange(range),
 		mFiringDelay(firing_delay)
 	{}

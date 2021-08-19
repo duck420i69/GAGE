@@ -1,12 +1,25 @@
 #pragma once
 
 #include "Tile.h"
-#include "LogicTile.h"
 
 #include <memory>
 #include <glm/vec2.hpp>
 
-class TileType
+#include "TileTypeEnum.h"
+#include "LogicTileTypeEnum.h"
+
+namespace TileManager {
+	std::weak_ptr<Texture> GetTexture(TileType type) noexcept;
+	std::weak_ptr<Texture> GetTexture(LogicTileType type) noexcept;
+	std::unique_ptr<Tile> Get(TileType type) noexcept;
+	std::unique_ptr<Tile> Get(LogicTileType type) noexcept;
+	bool NotLogicNone(LogicTileType type) noexcept;
+	bool IsLogicSpawn(LogicTileType type) noexcept;
+	bool IsCheckPoint(LogicTileType type) noexcept;
+	glm::vec2 GetLogicDir(LogicTileType tile) noexcept;
+}
+
+/*class TileType
 {
 public:
 	static constexpr unsigned int NUM_TYPES = 3;
@@ -26,4 +39,4 @@ public:
 	static bool IsLogicSpawn(const std::weak_ptr<LogicTile>& tile) noexcept;
 	static bool IsCheckpoint(const std::weak_ptr<LogicTile>& tile) noexcept;
 	static glm::vec2 GetLogicDir(const std::weak_ptr<LogicTile>& tile) noexcept;
-};
+};*/

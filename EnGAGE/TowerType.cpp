@@ -2,7 +2,6 @@
 #include "TowerType.h"
 
 #include "Asset.h"
-#include "BasicTower.h"
 
 TowerTexture TowerTypeTexture::Generate(TowerType e)
 {
@@ -19,10 +18,12 @@ TowerTexture TowerTypeTexture::Generate(TowerType e)
 
 void TowerTypeInstance::Generate(TowerType e, std::unique_ptr<Tower>& instance, const glm::vec2& pos)
 {
+	TowerTexture tex = TowerTypeTexture::Generate(e);
+
 	switch (e)
 	{
 	case TowerType::BASIC:
-		instance = std::make_unique<BasicTower>(pos);
+		instance = std::make_unique<Tower>(pos, tex.base_texture, tex.cannon_texture, 6.0f, 1.0f);
 		break;
 	}
 }

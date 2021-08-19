@@ -8,10 +8,7 @@
 #include "Globals.h"
 #include "Asset.h"
 
-#include "TileType.h"
 #include "MenuScene.h"
-
-
 
 #include <GLFW/glfw3.h>
 
@@ -25,11 +22,12 @@ int main()
 	Widget::Init();
 
 	{
-		TileType::Load();
 		Globals::ChangeScene<MenuScene>();
+
 
 		double start_time = glfwGetTime();
 		double end_time = glfwGetTime();
+		
 		while (!Window::IsCloseRequested())
 		{
 			end_time = glfwGetTime();

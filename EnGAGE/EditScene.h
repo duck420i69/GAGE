@@ -18,12 +18,10 @@ class EditScene : public Scene {
 	Camera mPlayer;
 
 	std::vector<Wave> mWaves;
-	std::weak_ptr<Tile> mCurrentBrush;
-	std::weak_ptr<LogicTile> mCurrentLogicBrush;
-	Mode				mCurrentMode;
+	TileType mCurrentBrush = TileType::GRASS;
+	LogicTileType mCurrentLogicBrush = LogicTileType::SPAWN_UP;
+	Mode				mCurrentMode = Mode::DRAW;
 public:
-	EditScene() noexcept;
-	~EditScene() noexcept;
 	void Update(float delta) noexcept override;
 	void Render() noexcept override;
 	void ImGui() noexcept override;

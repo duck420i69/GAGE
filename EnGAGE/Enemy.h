@@ -3,6 +3,7 @@
 #include "Texture.h"
 #include "EnemyType.h"
 #include "CheckPoint.h"
+#include "TileType.h"
 
 #include <memory>
 #include <glm/vec2.hpp>
@@ -21,19 +22,19 @@ public:
 	{
 		mTexture = EnemyTypeTexture::Get(type);
 		mPos = spawn_point.pos;
-		mVel = TileType::GetLogicDir(spawn_point.tile);
+		mVel = TileManager::GetLogicDir(spawn_point.tile);
 	}
 
 	inline void Update(float delta,  unsigned int map_width, unsigned int map_height, const float& speed) noexcept {
 		mPos.x += mVel.x * delta * speed;
 		mPos.y += mVel.y * delta * speed;
 
-		constexpr float EPSILON = 0.25f;
+		constexpr float EPSILON = 0.15f;
 
 		auto it = mCheckPoints.begin();
 		while (it != mCheckPoints.end()) {
 			if (std::abs(it->pos.x - mPos.x) < EPSILON && std::abs(it->pos.y - mPos.y) < EPSILON) {
-				mVel = TileType::GetLogicDir(it->tile);
+				mVel = TileManager::GetLogicDir(it->tile);
 				mPos = it->pos;
 				it = mCheckPoints.erase(it);
 			}

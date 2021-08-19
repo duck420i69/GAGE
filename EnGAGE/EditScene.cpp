@@ -12,14 +12,7 @@
 
 #include <Windows.h>
 
-EditScene::EditScene() noexcept :
-	mCurrentBrush(TileType::GetArray()[1]), mCurrentLogicBrush(TileType::GetLogicArray()[1]), mCurrentMode(Mode::DRAW)
-{
-}
 
-EditScene::~EditScene() noexcept
-{
-}
 
 void EditScene::SwitchMode() noexcept
 {
@@ -37,9 +30,9 @@ void EditScene::SwitchMode() noexcept
 void EditScene::RotateSprite() noexcept
 {
 	//Xoay sprite
-	if (mCurrentMode == Mode::LOGIC && Events::IsKeyDownOnce(Events::KEY_R)) {
+	/*if (mCurrentMode == Mode::LOGIC && Events::IsKeyDownOnce(Events::KEY_R)) {
 		auto logic_tile = mMap.GetLogicTile(mPlayer.GetCursor().x, mPlayer.GetCursor().y);
-		if (TileType::NotLogicNone(logic_tile)) {
+		if (TileManager::NotLogicNone(logic_tile)) {
 			if (TileType::IsLogicSpawn(logic_tile)) {
 				static unsigned int logic_spawn_tile_count = 0;
 				mMap.PlaceLogicTile(mPlayer.GetCursor().x, mPlayer.GetCursor().y, TileType::GetLogicArray()[logic_spawn_tile_count % 4 + 1]);
@@ -51,27 +44,26 @@ void EditScene::RotateSprite() noexcept
 				logic_checkpoint_tile_count++;
 			}
 		}
-	}
+	}*/
 }
 
 void EditScene::Draw() noexcept
 {
 	ImGuiIO& io = ImGui::GetIO();
 	if (mMap.GetWidth() != 0 && mMap.GetHeight() != 0 && !io.WantCaptureMouse) {
-		if (mCurrentBrush.lock() && mCurrentMode == Mode::DRAW) {
+		if (mCurrentMode == Mode::DRAW) {
 			if (Events::IsButtonDown(0)) {
 				mMap.PlaceTile(mPlayer.GetCursor().x, mPlayer.GetCursor().y, mCurrentBrush);
 			}
 			else if (Events::IsButtonDown(1)) {
 				mMap.PlaceTile(mPlayer.GetCursor().x, mPlayer.GetCursor().y, TileType::NONE);
 			}
-		}
-		if (mCurrentLogicBrush.lock() && mCurrentMode == Mode::LOGIC) {
+		} else if (mCurrentMode == Mode::LOGIC) {
 			if (Events::IsButtonDown(0)) {
 				mMap.PlaceLogicTile(mPlayer.GetCursor().x, mPlayer.GetCursor().y, mCurrentLogicBrush);
 			}
 			else if (Events::IsButtonDown(1)) {
-				mMap.PlaceLogicTile(mPlayer.GetCursor().x, mPlayer.GetCursor().y, TileType::LOGIC_NONE);
+				mMap.PlaceLogicTile(mPlayer.GetCursor().x, mPlayer.GetCursor().y, LogicTileType::NONE);
 			}
 		}
 	}
@@ -93,10 +85,7 @@ void EditScene::Render() noexcept
 	mSpriteRenderer.Prepare();
 	mSpriteRenderer.Render(mMap.GetWidth(), mMap.GetHeight(), mMap.GetTiles());
 	mSpriteRenderer.Render(mMap.GetWidth(), mMap.GetHeight(), mMap.GetLogicTiles());
-	if(mCurrentMode == Mode::DRAW)
-		mSpriteRenderer.RenderOpaque(mPlayer.GetCursor().x, mPlayer.GetCursor().y, mCurrentBrush.lock()->GetTexture());
-	else if(mCurrentMode == Mode::LOGIC)
-		mSpriteRenderer.RenderOpaque(mPlayer.GetCursor().x, mPlayer.GetCursor().y, mCurrentLogicBrush.lock()->GetTexture());
+
 
 	mSpriteRenderer.EndRender();
 }
@@ -150,21 +139,20 @@ void EditScene::ImGui() noexcept
 		if (ImGui::BeginMenu(u8"Edit")) {
 			if (ImGui::BeginMenu(u8"Brush")) {
 				//Selecting brush	
-				const auto tile_array = TileType::GetArray();
-				auto current_texture = mCurrentBrush.lock()->GetTexture().lock();
+				auto current_texture = TileManager::GetTexture(mCurrentBrush).lock();
 				ImGui::Image((ImTextureID)current_texture->GetID(),
 					ImVec2((float)current_texture->GetWidth(), (float)current_texture->GetHeight()));
-				for (unsigned int i = 1; i < TileType::NUM_TYPES; i++) {
-					auto texture = tile_array[i].lock()->GetTexture().lock();
+				for (unsigned int i = 1; i < (unsigned int)TileType::COUNT; i++) {
+					auto texture = TileManager::GetTexture((TileType)i).lock();
 					unsigned int texture_id = texture->GetID();
 					unsigned int width = texture->GetWidth();
 					unsigned int height = texture->GetHeight();
 					if (ImGui::ImageButton((ImTextureID)texture_id, ImVec2((float)width, (float)height))) {
-						mCurrentBrush = tile_array[i];
+						mCurrentBrush = (TileType)i;
 					}
 					if (ImGui::IsItemHovered()) {
 						ImGui::BeginTooltip();
-						ImGui::Text("%s", tile_array[i].lock()->GetName().c_str());
+						ImGui::Text("%s", TileManager::Get((TileType)i)->name.c_str());
 						ImGui::EndTooltip();
 					}
 					ImGui::SameLine();
@@ -172,21 +160,20 @@ void EditScene::ImGui() noexcept
 				ImGui::NewLine();
 				ImGui::Separator();
 				//Selecting logic brush	
-				const auto logic_tile_array = TileType::GetLogicArray();
-				auto current_logic_texture = mCurrentLogicBrush.lock()->GetTexture().lock();
+				auto current_logic_texture = TileManager::GetTexture(mCurrentLogicBrush).lock();
 				ImGui::Image((ImTextureID)current_logic_texture->GetID(),
 					ImVec2((float)current_logic_texture->GetWidth(), (float)current_logic_texture->GetHeight()));
-				for (unsigned int i = 1; i < TileType::NUM_LOGIC_TYPES; i++) {
-					auto texture = logic_tile_array[i].lock()->GetTexture().lock();
+				for (unsigned int i = 1; i < (unsigned int)LogicTileType::COUNT; i++) {
+					auto texture = TileManager::GetTexture((LogicTileType)i).lock();
 					unsigned int texture_id = texture->GetID();
 					unsigned int width = texture->GetWidth();
 					unsigned int height = texture->GetHeight();
 					if (ImGui::ImageButton((ImTextureID)texture_id, ImVec2((float)width, (float)height))) {
-						mCurrentLogicBrush = logic_tile_array[i];
+						mCurrentLogicBrush = LogicTileType(i);
 					}
 					if (ImGui::IsItemHovered()) {
 						ImGui::BeginTooltip();
-						ImGui::Text("%s", logic_tile_array[i].lock()->GetName().c_str());
+						ImGui::Text("%s", TileManager::Get((LogicTileType)i)->name.c_str());
 						ImGui::EndTooltip();
 					}
 					ImGui::SameLine();
@@ -295,7 +282,7 @@ void EditScene::ImGui() noexcept
 		ImGui::InputInt(u8"Chiều rộng", &width);
 		ImGui::InputInt(u8"Chiều cao", &height);
 		if (ImGui::Button(u8"Tạo")) {
-			mMap.LoadNew(width, height, TileType::NONE, TileType::LOGIC_NONE);
+			mMap.LoadNew(width, height, TileType::NONE, LogicTileType::NONE);
 		}
 		ImGui::EndPopup();
 	}

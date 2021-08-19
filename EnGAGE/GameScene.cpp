@@ -24,15 +24,20 @@ void GameScene::Update(float delta) noexcept
 	mWaveManager.Update(delta, mMap);
 	mTowerMap.Update(delta, mWaveManager.GetEnemies());
 
+	auto& io = ImGui::GetIO();
 	if (Events::IsKeyDownOnce(Events::KEY_ESCAPE) || mWaveManager.IsGameOver()) {
 		Globals::ChangeScene<MenuScene>();
 		return;
 	}
 	
-	if (Events::IsButtonDownOnce(0)) {
-		mTowerMap.PlaceTower(mPlayer.GetCursor().x, mPlayer.GetCursor().y, mCurrentTower);
+	if (!io.WantCaptureMouse) {
+		if (Events::IsButtonDownOnce(0)) {
+			mTowerMap.PlaceTower(mPlayer.GetCursor().x, mPlayer.GetCursor().y, mCurrentTower);
+		}
+		else if (Events::IsButtonDownOnce(1)) {
+			mTowerMap.RemoveTower(mPlayer.GetCursor().x, mPlayer.GetCursor().y);
+		}
 	}
-	
 }
 
 void GameScene::Render() noexcept
@@ -50,7 +55,7 @@ void GameScene::Render() noexcept
 void GameScene::ImGui() noexcept
 {
 	ImGui::Begin(u8"Game");
-	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	ImGui::Text("Application average FPS: %.1f", ImGui::GetIO().Framerate);
 	ImGui::Text("Current round: %u", mWaveManager.GetRound());
 	if (ImGui::Button(u8"Start round")) {
 		mWaveManager.StartRound();
@@ -64,4 +69,5 @@ void GameScene::ImGui() noexcept
 		}
 	}
 	ImGui::End();
+
 }

@@ -2,7 +2,6 @@
 
 #include "Shader.h"
 #include "Tile.h"
-#include "LogicTile.h"
 #include "Enemy.h"
 #include "Tower.h"
 
@@ -24,8 +23,7 @@ public:
 	void Update(const Camera& player) noexcept;
 	void Prepare() const noexcept;
 	void Render(const std::vector<Enemy>& enemies) const noexcept;
-	void Render(unsigned int width, unsigned int height, const std::vector<std::weak_ptr<Tile>>& tiles) const noexcept;
-	void Render(unsigned int width, unsigned int height, const std::vector<std::weak_ptr<LogicTile>>& tiles) const noexcept;
+	void Render(unsigned int width, unsigned int height, const std::vector<std::unique_ptr<Tile>>& tiles) const noexcept;
 	void Render(const std::vector<std::unique_ptr<Tower>>& towers);
 	void EndRender() const noexcept;
 
