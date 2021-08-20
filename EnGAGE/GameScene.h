@@ -7,6 +7,7 @@
 #include "WaveManager.h"
 #include "TowerType.h"
 #include "TowerMap.h"
+#include "Projectile.h"
 
 class GameScene : public Scene {
 	
@@ -14,6 +15,7 @@ class GameScene : public Scene {
 	SpriteRenderer mSpriteRenderer;
 	WaveManager mWaveManager;
 	Camera mPlayer;
+	ProjectileManager mProjectileManager;
 
 	bool mOpenPauseMenu = false;
 

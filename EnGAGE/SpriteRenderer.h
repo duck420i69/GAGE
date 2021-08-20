@@ -24,7 +24,8 @@ public:
 	void Prepare() const noexcept;
 	void Render(const std::vector<Enemy>& enemies) const noexcept;
 	void Render(unsigned int width, unsigned int height, const std::vector<Tile>& tiles) const noexcept;
-	void Render(const std::vector<std::unique_ptr<Tower>>& towers);
+	void Render(const std::vector<Tower>& towers);
+	void Render(const std::vector<Projectile>& projectiles);
 	void EndRender() const noexcept;
 
 	void RenderOpaque(unsigned int x, unsigned int y, const std::weak_ptr<Texture>& texture);

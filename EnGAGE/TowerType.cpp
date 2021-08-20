@@ -16,14 +16,15 @@ TowerTexture TowerTypeTexture::Generate(TowerType e)
 	return {};
 }
 
-void TowerTypeInstance::Generate(TowerType e, std::unique_ptr<Tower>& instance, const glm::vec2& pos)
+Tower TowerTypeInstance::Generate(TowerType e, const glm::vec2& pos)
 {
 	TowerTexture tex = TowerTypeTexture::Generate(e);
 
 	switch (e)
 	{
 	case TowerType::BASIC:
-		instance = std::make_unique<Tower>(pos, tex.base_texture, tex.cannon_texture, 6.0f, 1.0f);
-		break;
+		return Tower{ TowerType::BASIC, pos, tex.base_texture, tex.cannon_texture, 12.0f, 0.04f, ProjectileType::CANNON_BALL, 24.0f, 1.0f };
 	}
+
+	return Tower{ TowerType::NONE, glm::vec2(), std::weak_ptr<Texture>(), std::weak_ptr<Texture>(), 0, 0, ProjectileType::NONE, 0, 0 };
 }

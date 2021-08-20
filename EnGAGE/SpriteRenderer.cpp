@@ -104,32 +104,43 @@ void SpriteRenderer::Render(unsigned int width, unsigned int height, const std::
 }
 
 
-void SpriteRenderer::Render(const std::vector<std::unique_ptr<Tower>>& towers)
+void SpriteRenderer::Render(const std::vector<Tower>& towers)
 {
 	auto shader = mShader.lock();
 
-	for (const auto& tower : towers) {
-		if (!tower) continue;
-		const auto& t = *tower;
-		auto base_texture = t.GetBaseTexture().lock();
-		auto cannon_texture = t.GetCannonTexture().lock();
+	for (const Tower& tower : towers) {
+		if (tower.type == TowerType::NONE) continue;
+
+		auto base_texture = tower.base_texture.lock();
+		auto cannon_texture = tower.cannon_texture.lock();
 		glm::mat4 model;
-		model = glm::translate(glm::mat4(1.0f), { t.GetPos().x, t.GetPos().y, 0 });
+		model = glm::translate(glm::mat4(1.0f), { tower.position.x, tower.position.y, 0 });
 		shader->UploadMat4x4("uModel", glm::value_ptr(model));
 
-		//Render base first
+		//Render base
 		base_texture->Bind();
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		//Update the matrix to rotate the cannon first
-		model = glm::translate(glm::mat4(1.0f), { t.GetPos().x + 0.5f, t.GetPos().y + 0.5f, 0 });
-		model = glm::rotate(model, glm::radians(t.GetRotation()), { 0, 0, 1 });
+		//Update the matrix to rotate the cannon
+		model = glm::translate(glm::mat4(1.0f), { tower.position.x + 0.5f, tower.position.y + 0.5f, 0 });
+		model = glm::rotate(model, glm::radians(tower.cannon_rotation), { 0, 0, 1 });
 		model = glm::translate(model, { -0.5f, -0.5f, 0 });
 
 		shader->UploadMat4x4("uModel", glm::value_ptr(model));
 
-		//Render cannon second
+		//Render cannon
 		cannon_texture->Bind();
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+	}
+}
+
+void SpriteRenderer::Render(const std::vector<Projectile>& projectiles) {
+	auto shader = mShader.lock();
+	glm::mat4 model;
+	for (const auto& projectile : projectiles) {
+		model = glm::translate(glm::mat4(1.0f), { projectile.pos.x, projectile.pos.y, 0 });
+		shader->UploadMat4x4("uModel", glm::value_ptr(model));
+		projectile.texture.lock()->Bind();
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 	}
 }
@@ -143,10 +154,14 @@ void SpriteRenderer::EndRender() const noexcept
 
 void SpriteRenderer::RenderOpaque(unsigned int x, unsigned int y, const std::weak_ptr<Texture>& texture) {
 	auto shader = mShader.lock();
+	auto texture_ = texture.lock();
+	
+	if (!texture_) return;
+
 	glm::mat4 model;
 	model = glm::translate(glm::mat4(1.0f), { x, y, 0 });
 	shader->UploadMat4x4("uModel", glm::value_ptr(model));
 	shader->UploadFloat("uAlpha", 0.5f);
-	texture.lock()->Bind();
+	texture_->Bind();
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 }

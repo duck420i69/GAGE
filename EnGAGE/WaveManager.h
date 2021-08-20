@@ -20,6 +20,7 @@ class WaveManager {
 	unsigned int mEnemyIndex = 0;
 	bool mWaveFull = false;
 	bool mGameOver = false;
+	unsigned int mCurrentWaveEnemieCount = 0;
 public:
 	void Load(const TileMap& map) noexcept;
 	void Update(float delta, const TileMap& map) noexcept;
@@ -29,6 +30,7 @@ public:
 	inline void StartRound() noexcept { mRoundStart = true; }
 	inline const unsigned int& GetRound() const noexcept { return mRound; }
 	inline const std::vector<Enemy>& GetEnemies() const noexcept { return mEnemies; }
+	inline std::vector<Enemy>& GetEnemies() noexcept { return mEnemies; }
 	inline const std::vector<Wave>& GetWaves() const noexcept { return mWaves; }
 	inline std::vector<Wave>& GetWaves() noexcept { return mWaves; }
 

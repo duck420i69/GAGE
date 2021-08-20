@@ -3,7 +3,8 @@
 
 #include "TileType.h"
 
-
+static std::mt19937 eng;
+static std::uniform_int_distribution<unsigned int> health(1, 10);
 
 void WaveManager::Load(const TileMap& map) noexcept
 {
@@ -27,12 +28,13 @@ void WaveManager::Update(float delta, const TileMap& map) noexcept
 		return;
 	}
 	const Wave* wave = &mWaves[mRound];
+
 	if (mRoundStart && !mWaveFull) {
 		mAccumulatedTime += delta;
 		if (mAccumulatedTime > wave->GetEnemySpawnDelay()) {
 			//Spawn enemy
 			for (const auto& spawn_point : mSpawnPoints) {
-				mEnemies.emplace_back(wave->GetEnemies()[mEnemyIndex], spawn_point, mCheckPoints);
+				mEnemies.emplace_back(wave->GetEnemies()[mEnemyIndex], health(eng), spawn_point, mCheckPoints);
 			}
 			mAccumulatedTime = 0.0f;
 			mEnemyIndex++;
@@ -49,7 +51,7 @@ void WaveManager::Update(float delta, const TileMap& map) noexcept
 		if (!it->Alive()) {
 			it = mEnemies.erase(it);
 
-			if (mEnemies.empty()) {
+			if (mEnemies.empty() && mWaveFull) {
 				mWaveFull = false;
 				mRoundStart = false;
 				mEnemyIndex = 0;

@@ -55,6 +55,9 @@
     <Filter Include="Source\TowerDefence\Tower">
       <UniqueIdentifier>{d78cdfb3-919d-45d5-bc4d-393d95e22dd9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\TowerDefence\Projectile">
+      <UniqueIdentifier>{19cd7ee0-4121-4cac-8784-e66974d12b58}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -167,6 +170,12 @@
     </ClCompile>
     <ClCompile Include="SpriteRenderer.cpp">
       <Filter>Source\TowerDefence</Filter>
+    </ClCompile>
+    <ClCompile Include="Projectile.cpp">
+      <Filter>Source\TowerDefence\Projectile</Filter>
+    </ClCompile>
+    <ClCompile Include="ProjectileType.cpp">
+      <Filter>Source\TowerDefence\Projectile</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -313,6 +322,15 @@
     </ClInclude>
     <ClInclude Include="SpriteRenderer.h">
       <Filter>Source\TowerDefence</Filter>
+    </ClInclude>
+    <ClInclude Include="ProjectileType.h">
+      <Filter>Source\TowerDefence\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="Projectile.h">
+      <Filter>Source\TowerDefence\Projectile</Filter>
+    </ClInclude>
+    <ClInclude Include="TowerTypeEnum.h">
+      <Filter>Source\TowerDefence\Tower</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

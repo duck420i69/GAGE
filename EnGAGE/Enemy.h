@@ -14,11 +14,13 @@ class Enemy
 	glm::vec2 mPos = {0, 0}, mVel = { 0, 0 };
 	std::weak_ptr<Texture> mTexture;
 	std::vector<CheckPoint> mCheckPoints;
+	int mHealth;
 	bool mAlive = true;
 public:
-	Enemy(EnemyType type, const CheckPoint& spawn_point, const std::vector<CheckPoint>& checkpoints) noexcept :
+	Enemy(EnemyType type, int health, const CheckPoint& spawn_point, const std::vector<CheckPoint>& checkpoints) noexcept :
 		mType(type), 
-		mCheckPoints(checkpoints)
+		mCheckPoints(checkpoints),
+		mHealth(health)
 	{
 		mTexture = EnemyTypeTexture::Get(type);
 		mPos = spawn_point.pos;
@@ -49,8 +51,15 @@ public:
 		}
 	}
 
+	inline void DoDamange(unsigned int amount) noexcept {
+		mHealth -= amount;
+		if (mHealth < 0)
+			mAlive = false;
+	}
+
 	inline const float& GetX() const noexcept { return mPos.x; }
 	inline const float& GetY() const noexcept { return mPos.y; }
+	inline const glm::vec2& GetPos() const noexcept { return mPos; }
 	inline const bool& Alive() const noexcept { return mAlive; }
 	inline const std::weak_ptr<Texture>& GetTexture() const noexcept { return mTexture; }
 };

@@ -16,6 +16,7 @@
 void TileMap::LoadNew(unsigned int width, unsigned int height, TileType tile, LogicTileType logic_tile) noexcept
 {
 	this->mTiles.clear();
+	this->mLogicTiles.clear();
 	this->mWidth = width;
 	this->mHeight = height;
 
