@@ -4,7 +4,7 @@
 #include "TileType.h"
 
 static std::mt19937 eng;
-static std::uniform_int_distribution<unsigned int> health(1, 10);
+static std::uniform_int_distribution<unsigned int> health(1, 100);
 
 void WaveManager::Load(const TileMap& map) noexcept
 {

@@ -28,7 +28,8 @@ public:
 	}
 
 	void Update(float delta, const std::vector<Enemy>& enemies, ProjectileManager& projectile_manager) noexcept {
-		static constexpr float TARGET_PADDING = 0.5f;
+		static constexpr float ROT_SPEED = 1.5f;
+		static constexpr float MAX_ROT = 360.0f;
 		static constexpr float FLOAT_MAX = std::numeric_limits<float>::max();
 		for (auto& tower : mTowers) {
 
@@ -56,13 +57,17 @@ public:
 				direction.x /= real_length;
 				direction.y /= real_length;
 				tower.cannon_rotation = glm::degrees(glm::atan(direction.y, direction.x) - glm::pi<float>() / 2.0f);
+
 				tower.accumulated_time += delta;
 
 				if (tower.accumulated_time >= tower.firing_delay) {
 					projectile_manager.Spawn(tower.projectile_type, tower.position, direction, tower.projectile_speed, tower.damage);
+					tower.cannon_rotation += 5.0f;
 					tower.accumulated_time = 0.0f;
 				}
 			}
+			
+			
 		}
 	}
 

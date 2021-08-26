@@ -32,8 +32,8 @@ void MenuScene::ImGui() noexcept
 
 	if (ImGui::BeginPopup("StartGame")) {
 		for (const auto& entry : std::filesystem::directory_iterator("Assets/Saves/")) {
-			if (ImGui::Selectable(entry.path().u8string().c_str()) && entry.exists()) {
-				Globals::ChangeScene<GameScene>(entry.path().u8string());
+			if (ImGui::Selectable(entry.path().string().c_str()) && entry.exists()) {
+				Globals::ChangeScene<GameScene>(entry.path().string());
 			}
 		}
 

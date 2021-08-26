@@ -56,10 +56,10 @@ void GameScene::Render() noexcept
 
 void GameScene::ImGui() noexcept
 {
-	ImGui::Begin(u8"Game");
+	ImGui::Begin("Game");
 	ImGui::Text("Application average FPS: %.1f", ImGui::GetIO().Framerate);
 	ImGui::Text("Current round: %u", mWaveManager.GetRound());
-	if (ImGui::Button(u8"Start round")) {
+	if (ImGui::Button("Start round")) {
 		mWaveManager.StartRound();
 	}
 

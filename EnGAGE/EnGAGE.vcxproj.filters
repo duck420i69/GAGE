@@ -58,6 +58,9 @@
     <Filter Include="Source\TowerDefence\Projectile">
       <UniqueIdentifier>{19cd7ee0-4121-4cac-8784-e66974d12b58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\TowerDefence\PostProcess">
+      <UniqueIdentifier>{bc0beb11-8789-4501-aef1-3d6175709512}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">

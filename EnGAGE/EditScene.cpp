@@ -99,28 +99,28 @@ void EditScene::ImGui() noexcept
 	bool open_save_popup = false;
 
 	if (ImGui::BeginMainMenuBar()) {
-		if (ImGui::BeginMenu(u8"File")) {
+		if (ImGui::BeginMenu("File")) {
 
-			if (ImGui::MenuItem(u8"New")) {
+			if (ImGui::MenuItem("New")) {
 				open_new_popup = true;
 			}
-			if (ImGui::MenuItem(u8"Save")) {
+			if (ImGui::MenuItem("Save")) {
 				open_save_popup = true;
 			}
-			if (ImGui::BeginMenu(u8"Load")) {
+			if (ImGui::BeginMenu("Load")) {
 				for (const auto& entry : std::filesystem::directory_iterator("Assets/Saves/")) {
-					if (ImGui::Selectable(entry.path().u8string().c_str()) && entry.exists()) {
+					if (ImGui::Selectable(entry.path().string().c_str()) && entry.exists()) {
 						WaveManager wave_manager;
-						SaveManager::Load(entry.path().u8string(), mMap, wave_manager);
+						SaveManager::Load(entry.path().string(), mMap, wave_manager);
 						mWaves = std::move(wave_manager.GetWaves());
 					}
 				}
 				ImGui::EndMenu();
 			}
 
-			if (ImGui::BeginMenu(u8"Xóa")) {
+			if (ImGui::BeginMenu("Delete")) {
 				for (const auto& entry : std::filesystem::directory_iterator("Assets/Saves/")) {
-					if (ImGui::Selectable(entry.path().u8string().c_str()) && entry.exists()) {
+					if (ImGui::Selectable(entry.path().string().c_str()) && entry.exists()) {
 						std::filesystem::remove(entry);
 					}
 				}
@@ -128,7 +128,7 @@ void EditScene::ImGui() noexcept
 			}
 
 
-			if (ImGui::Button(u8"Tắt editor")) {
+			if (ImGui::Button("Close editor")) {
 				Globals::ChangeScene<MenuScene>();
 				ImGui::EndMenu();
 				ImGui::EndMainMenuBar();
@@ -136,8 +136,8 @@ void EditScene::ImGui() noexcept
 			}
 			ImGui::EndMenu();
 		}
-		if (ImGui::BeginMenu(u8"Edit")) {
-			if (ImGui::BeginMenu(u8"Brush")) {
+		if (ImGui::BeginMenu("Edit")) {
+			if (ImGui::BeginMenu("Brush")) {
 				//Selecting brush	
 				auto current_texture = TileManager::GetTexture(mCurrentBrush).lock();
 				ImGui::Image((ImTextureID)current_texture->GetID(),
@@ -201,7 +201,7 @@ void EditScene::ImGui() noexcept
 
 
 		//Wave
-		if (ImGui::BeginMenu(u8"Wave")) {
+		if (ImGui::BeginMenu("Wave")) {
 			std::vector<std::string> items;
 
 			for (unsigned int i = 0; i < mWaves.size(); i++) {
@@ -211,11 +211,11 @@ void EditScene::ImGui() noexcept
 			const std::string& combo_preview_value = items.empty() ? "" : items[item_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)
 
 
-			if (ImGui::Button(u8"New")) {
+			if (ImGui::Button("New")) {
 				mWaves.emplace_back();
 			}
 			ImGui::SameLine();
-			if (ImGui::Button(u8"Erase") && !mWaves.empty() && !combo_preview_value.empty()) {
+			if (ImGui::Button("Erase") && !mWaves.empty() && !combo_preview_value.empty()) {
 				mWaves.erase(mWaves.begin() + item_current_idx);
 				item_current_idx = 0;
 			}
@@ -274,28 +274,28 @@ void EditScene::ImGui() noexcept
 		ImGui::EndMainMenuBar();
 	}
 	if (open_new_popup)
-		ImGui::OpenPopup(u8"NewMap");
-	if (ImGui::BeginPopup(u8"NewMap")) {
+		ImGui::OpenPopup("NewMap");
+	if (ImGui::BeginPopup("NewMap")) {
 		//Create new empty map
 		static int width = 10, height = 10;
-		ImGui::Text(u8"Tạo map");
-		ImGui::InputInt(u8"Chiều rộng", &width);
-		ImGui::InputInt(u8"Chiều cao", &height);
-		if (ImGui::Button(u8"Tạo")) {
+		ImGui::Text("New Map");
+		ImGui::InputInt("width", &width);
+		ImGui::InputInt("height", &height);
+		if (ImGui::Button("create")) {
 			mMap.LoadNew(width, height, TileType::GRASS, LogicTileType::NONE);
 		}
 		ImGui::EndPopup();
 	}
 
 	if (open_save_popup)
-		ImGui::OpenPopup(u8"SaveMap");
-	if (ImGui::BeginPopup(u8"SaveMap")) {
+		ImGui::OpenPopup("SaveMap");
+	if (ImGui::BeginPopup("SaveMap")) {
 		//Save current map to file
 		static constexpr unsigned int MAX_MAP_NAME_LENGTH = 256;
 		static char map_name[MAX_MAP_NAME_LENGTH];
-		ImGui::Text(u8"Sao lưu máp");
-		ImGui::InputText(u8"Tên máp", map_name, sizeof(char) * MAX_MAP_NAME_LENGTH);
-		if (ImGui::Button(u8"Sao lưu")) {
+		ImGui::Text("Save");
+		ImGui::InputText("map name", map_name, sizeof(char) * MAX_MAP_NAME_LENGTH);
+		if (ImGui::Button("Save")) {
 			if (strlen(map_name) != 0) {
 				WaveManager wave_manager;
 				wave_manager.SetWaves(mWaves);
