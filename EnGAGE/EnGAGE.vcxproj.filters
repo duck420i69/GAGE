@@ -22,15 +22,6 @@
     <Filter Include="Assets\Shaders">
       <UniqueIdentifier>{473fef64-72c4-463c-b93b-d1543619d54f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Thirdparty">
-      <UniqueIdentifier>{5709e21f-ecc6-4285-8f46-d93ec30090ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Thirdparty\ImGui">
-      <UniqueIdentifier>{c8f2ae52-569c-49fa-81aa-00b2d35944fb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Thirdparty\stb_image">
-      <UniqueIdentifier>{d5017fd9-0c93-4448-91f9-d4d728bb0be9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Assets\Textures">
       <UniqueIdentifier>{23af4e75-c1ba-4103-85b9-a7360b922fb7}</UniqueIdentifier>
     </Filter>
@@ -72,45 +63,6 @@
     <ClCompile Include="Texture.cpp">
       <Filter>Source\Core\Render</Filter>
     </ClCompile>
-    <ClCompile Include="thirdparty\imgui\GraphEditor.cpp">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="thirdparty\imgui\ImCurveEdit.cpp">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="thirdparty\imgui\ImGradient.cpp">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="thirdparty\imgui\imgui.cpp">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="thirdparty\imgui\imgui_demo.cpp">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="thirdparty\imgui\imgui_draw.cpp">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="thirdparty\imgui\imgui_impl_glfw.cpp">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="thirdparty\imgui\imgui_impl_opengl3.cpp">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="thirdparty\imgui\imgui_tables.cpp">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="thirdparty\imgui\imgui_widgets.cpp">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="thirdparty\imgui\ImGuizmo.cpp">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="thirdparty\imgui\ImSequencer.cpp">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="thirdparty\stb_image\stb_image.cpp">
-      <Filter>Thirdparty\stb_image</Filter>
-    </ClCompile>
     <ClCompile Include="Globals.cpp">
       <Filter>Source\Miscs</Filter>
     </ClCompile>
@@ -148,51 +100,6 @@
     </ClInclude>
     <ClInclude Include="Texture.h">
       <Filter>Source\Core\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="thirdparty\imgui\GraphEditor.h">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="thirdparty\imgui\imconfig.h">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="thirdparty\imgui\ImCurveEdit.h">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="thirdparty\imgui\ImGradient.h">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="thirdparty\imgui\imgui.h">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="thirdparty\imgui\imgui_impl_glfw.h">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="thirdparty\imgui\imgui_impl_opengl3.h">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="thirdparty\imgui\imgui_internal.h">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="thirdparty\imgui\ImGuizmo.h">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="thirdparty\imgui\ImSequencer.h">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="thirdparty\imgui\imstb_rectpack.h">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="thirdparty\imgui\imstb_textedit.h">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="thirdparty\imgui\imstb_truetype.h">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="thirdparty\imgui\ImZoomSlider.h">
-      <Filter>Thirdparty\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="thirdparty\stb_image\stb_image.h">
-      <Filter>Thirdparty\stb_image</Filter>
     </ClInclude>
     <ClInclude Include="Globals.h">
       <Filter>Source\Miscs</Filter>

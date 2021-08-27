@@ -1,5 +1,5 @@
-[submodule "thirdparty/glfw"]
-	path = thirdparty/glfw
+[submodule "Thirdparty/glfw"]
+	path = Thirdparty/glfw
 	url = https://github.com/glfw/glfw
 [submodule "Thirdparty/spdlog"]
 	path = Thirdparty/spdlog
