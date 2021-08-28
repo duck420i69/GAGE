@@ -96,7 +96,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Asset.cpp" />
     <ClCompile Include="Events.cpp" />
     <ClCompile Include="glad.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -110,23 +109,27 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Widget.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Asset.h" />
+    <ClInclude Include="Bindable.h" />
+    <ClInclude Include="Box.h" />
+    <ClInclude Include="Drawable.h" />
     <ClInclude Include="Events.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="IndexBufferObject.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="MenuScene.h" />
     <ClInclude Include="Opengl.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
-    <ClInclude Include="Texture.h" />
+    <ClInclude Include="UniformBufferObject.h" />
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="VertexBufferObject.h" />
+    <ClInclude Include="VertexLayout.h" />
     <ClInclude Include="Widget.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

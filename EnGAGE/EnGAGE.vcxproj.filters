@@ -28,6 +28,12 @@
     <Filter Include="Source\Core\Scene">
       <UniqueIdentifier>{33da281c-e8cb-454e-8e92-5cefadb36249}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\Render\Bindable">
+      <UniqueIdentifier>{df800278-baf5-4795-8823-89c344e03266}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Core\Render\Drawable">
+      <UniqueIdentifier>{3f36e6e4-3309-4cf9-864c-4a5fdb47a7ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -57,17 +63,8 @@
     <ClCompile Include="Utils.cpp">
       <Filter>Source\Core\Utils</Filter>
     </ClCompile>
-    <ClCompile Include="Shader.cpp">
-      <Filter>Source\Core\Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
-      <Filter>Source\Core\Render</Filter>
-    </ClCompile>
     <ClCompile Include="Globals.cpp">
       <Filter>Source\Miscs</Filter>
-    </ClCompile>
-    <ClCompile Include="Asset.cpp">
-      <Filter>Source\Core\Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -95,17 +92,35 @@
     <ClInclude Include="Utils.h">
       <Filter>Source\Core\Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
-      <Filter>Source\Core\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Source\Core\Render</Filter>
-    </ClInclude>
     <ClInclude Include="Globals.h">
       <Filter>Source\Miscs</Filter>
     </ClInclude>
-    <ClInclude Include="Asset.h">
-      <Filter>Source\Core\Utils</Filter>
+    <ClInclude Include="MenuScene.h">
+      <Filter>Source\Core\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Bindable.h">
+      <Filter>Source\Core\Render\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexBufferObject.h">
+      <Filter>Source\Core\Render\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="UniformBufferObject.h">
+      <Filter>Source\Core\Render\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="Drawable.h">
+      <Filter>Source\Core\Render\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="IndexBufferObject.h">
+      <Filter>Source\Core\Render\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Source\Core\Render\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="Box.h">
+      <Filter>Source\Core\Render\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexLayout.h">
+      <Filter>Source\Core\Render\Bindable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

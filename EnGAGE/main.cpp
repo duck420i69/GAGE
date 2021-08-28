@@ -6,36 +6,43 @@
 #include "Events.h"
 #include "Logger.h"
 #include "Globals.h"
-#include "Asset.h"
 
 #include <GLFW/glfw3.h>
 
+#include "MenuScene.h"
 
 int main()
 {
-	Window::Create(Globals::gScreenWidth, Globals::gScreenHeight, Globals::gScreenTitle);
+	Window::Create(Globals::screen_width, Globals::screen_height, Globals::screen_title);
 	Events::Init();
 	Opengl::Init();
 	Widget::Init();
 
-	double start_time = glfwGetTime();
-	double end_time = glfwGetTime();
+	Globals::ChangeScene<MenuScene>();
+
+	float start_time = glfwGetTime();
+	float end_time = start_time;
 	while (!Window::IsCloseRequested())
 	{
 		end_time = glfwGetTime();
-		double dt = end_time - start_time;
+		float dt = end_time - start_time;
 		start_time = end_time;
 
-		
-
+	
 		Opengl::Clear();
 		Widget::Prepare();
+
+		if (Globals::current_scene) {
+			Globals::current_scene->ImGui();
+			Globals::current_scene->Update(dt);
+			Globals::current_scene->Render();
+		}
 
 		Widget::Render();
 		Events::Update();
 		Window::Update();
 	}
+	Opengl::Destroy();
 	Widget::Destroy();
 	Window::Destroy();
-	Asset::Destroy();
 }
