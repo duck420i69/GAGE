@@ -9,14 +9,12 @@ class VertexBufferObject final : public Bindable {
 
 	VertexArray va;
 	VertexBuffer vb;
-	unsigned int stride;
 public:
 
 	template<typename T>
 	VertexBufferObject(const std::vector<T>& vertices) noexcept :
 		va(Opengl::CreateVertexArray()),
-		vb(Opengl::CreateVertexBuffer(sizeof(T) * vertices.size(), vertices.data())),
-		stride(sizeof(T))
+		vb(Opengl::CreateVertexBuffer(sizeof(T) * vertices.size(), vertices.data()))
 	{}
 
 	void Bind() const noexcept override {

@@ -29,7 +29,6 @@ int main()
 		start_time = end_time;
 
 	
-		Opengl::Clear();
 		Widget::Prepare();
 
 		if (Globals::current_scene) {

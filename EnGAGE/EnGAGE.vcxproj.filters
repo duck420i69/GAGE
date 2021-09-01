@@ -113,7 +113,7 @@
     <ClInclude Include="IndexBufferObject.h">
       <Filter>Source\Core\Render\Bindable</Filter>
     </ClInclude>
-    <ClInclude Include="Shader.h">
+    <ClInclude Include="ShaderObject.h">
       <Filter>Source\Core\Render\Bindable</Filter>
     </ClInclude>
     <ClInclude Include="Box.h">
@@ -121,6 +121,24 @@
     </ClInclude>
     <ClInclude Include="VertexLayout.h">
       <Filter>Source\Core\Render\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformUBuf.h">
+      <Filter>Source\Core\Render\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="DrawableBase.h">
+      <Filter>Source\Core\Render\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureObject.h">
+      <Filter>Source\Core\Render\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="Sampler.h">
+      <Filter>Source\Core\Render\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="Sheet.h">
+      <Filter>Source\Core\Render\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Source\Core\Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

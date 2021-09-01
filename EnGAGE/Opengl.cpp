@@ -22,8 +22,9 @@ void MessageCallbackFn(
 
 std::vector<VertexArray> Opengl::s_vaos;
 std::vector<VertexBuffer> Opengl::s_vbos;
-std::unordered_map<std::string, Texture> Opengl::s_texture_map;
-std::unordered_map<std::string, ShaderProgram> Opengl::s_shader_map;
+std::vector<Texture> Opengl::s_textures;
+std::vector<ShaderProgram> Opengl::s_shaders;
+glm::mat4x4 Opengl::s_projection = glm::mat4x4(1.0f), Opengl::s_camera = glm::mat4x4(1.0f);
 
 void Opengl::Init() noexcept
 {
@@ -32,20 +33,26 @@ void Opengl::Init() noexcept
 		glDebugMessageCallback(MessageCallbackFn, nullptr);
 #	endif // !NDEBUG
 
-	int texture_units;
+	int texture_units, uniform_binding, uniform_block_size;
 	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &texture_units);
+	glGetIntegerv(GL_MAX_UNIFORM_BUFFER_BINDINGS, &uniform_binding);
+	glGetIntegerv(GL_MAX_UNIFORM_BLOCK_SIZE, &uniform_block_size);
 
 	Logger::info("Max texture image units: {}", texture_units);
+	Logger::info("Max uniform buffer bindings: {}", uniform_binding);
+	Logger::info("Max uniform buffer block size: {}", uniform_block_size);
 
 	//Enable n stuffs
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_DEPTH_TEST);
+	
 }
 
 void Opengl::Clear() noexcept
 {
 	glViewport(0, 0, Window::GetWidth(), Window::GetHeight());
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 }
 
@@ -53,6 +60,10 @@ void Opengl::Destroy() noexcept
 {
 	glDeleteVertexArrays(s_vaos.size(), s_vaos.data());
 	glDeleteBuffers(s_vbos.size(), s_vbos.data());
+	glDeleteTextures(s_textures.size(), s_textures.data());
+	for(const auto& program : s_shaders)
+		glDeleteProgram(program);
+	Logger::info("Clearing gpu memory !");
 }
 
 VertexArray Opengl::CreateVertexArray() noexcept
@@ -100,39 +111,21 @@ UniformBuffer Opengl::CreateUniformBuffer(const unsigned int slot, const uint64_
 	glBindBuffer(GL_UNIFORM_BUFFER, vbo);
 	glBufferData(GL_UNIFORM_BUFFER, size, data, opengl_usage);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-	glBindBufferRange(GL_UNIFORM_BUFFER, slot, vbo, 0, size);
+	glBindBufferBase(GL_UNIFORM_BUFFER, slot, vbo);
 	s_vbos.push_back(vbo);
 	return vbo;
 }
 
-Texture Opengl::LoadTexture(const std::string& path) noexcept
+Texture Opengl::LoadTexture(const std::string& path, int* out_width, int* out_height) noexcept
 {
-	if (s_texture_map.count(path) == 0) {
-		//Load new texture
-		Texture texture;
-		LoadTextureInternal(path, &texture);
-		s_texture_map[path] = texture;
-		return texture;
-	}
-	else {
-		//Get already loaded texture
-		return s_texture_map[path];
-	}
+	Logger::info("Loading texture: {}", path);
+	return LoadTextureInternal(path, out_width, out_height);
 }
 
 ShaderProgram Opengl::LoadShader(const std::string& path) noexcept
 {
-	if (s_shader_map.count(path) == 0) {
-		//Load new shader
-		ShaderProgram shader = LoadShaderProgramInternal(path + "_VS.glsl", path + "_FS.glsl");
-		s_shader_map[path] = shader;
-		return shader;
-	}
-	else {
-		//Get already loaded shader
-		return s_shader_map[path];
-	}
-
+	Logger::info("Loading shader: {}", path);
+	return LoadShaderProgramInternal(path + "_VS.glsl", path + "_FS.glsl");
 }
 
 void Opengl::Layout(const unsigned int slot, const unsigned int size, const unsigned int stride, const unsigned int offset) noexcept
@@ -152,9 +145,10 @@ void Opengl::BindVertexBuffer(const VertexBuffer vb) noexcept
 	glBindBuffer(GL_ARRAY_BUFFER, vb);
 }
 
-void Opengl::BindUniformBuffer(const UniformBuffer ub) noexcept
+void Opengl::BindUniformBuffer(const UniformBuffer ub, const uint32_t slot) noexcept
 {
-	glBindBuffer(GL_UNIFORM_BUFFER, ub);
+	//glBindBuffer(GL_UNIFORM_BUFFER, ub);
+	glBindBufferBase(GL_UNIFORM_BUFFER, slot, ub);
 }
 
 void Opengl::BindIndexBuffer(const VertexBuffer ib) noexcept
@@ -167,6 +161,23 @@ void Opengl::BindProgram(const ShaderProgram program) noexcept
 	glUseProgram(program);
 }
 
+void Opengl::BindTexture(const Texture tex, const unsigned int slot) noexcept
+{
+	glActiveTexture(GL_TEXTURE0 + slot);
+	glBindTexture(GL_TEXTURE_2D, tex);
+}
+
+void Opengl::TextureParameters(const TextureFilter min_filter, const TextureFilter mag_filter, const TextureWrap wrap)
+{
+	auto gl_min_filter = GetTextureFilter(min_filter);
+	auto gl_mag_filter = GetTextureFilter(mag_filter);
+	auto gl_wrap = GetTextureWrap(wrap);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_min_filter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_min_filter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_wrap);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_wrap);
+}
+
 void Opengl::UpdateUniformBuffer(const UniformBuffer ub, const uint64_t size, const void* data) noexcept
 {
 	glBindBuffer(GL_UNIFORM_BUFFER, ub);
@@ -177,6 +188,26 @@ void Opengl::UpdateUniformBuffer(const UniformBuffer ub, const uint64_t size, co
 void Opengl::DrawIndexed(const uint64_t count) noexcept
 {
 	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
+}
+
+void Opengl::SetProjection(const glm::mat4x4& proj) noexcept
+{
+	s_projection = proj;
+}
+
+const glm::mat4x4& Opengl::GetProjection() noexcept
+{
+	return s_projection;
+}
+
+void Opengl::SetCamera(const glm::mat4x4& cam) noexcept
+{
+	s_camera = cam;
+}
+
+const glm::mat4x4& Opengl::GetCamera() noexcept
+{
+	return s_camera;
 }
 
 unsigned int Opengl::GetBufferUsage(const BufferUsage usage) noexcept
@@ -192,13 +223,52 @@ unsigned int Opengl::GetBufferUsage(const BufferUsage usage) noexcept
 	return GL_STATIC_DRAW;
 }
 
-void Opengl::LoadTextureInternal(const std::string& path, Texture* texture) noexcept
+unsigned int Opengl::GetTextureFilter(const TextureFilter filter) noexcept
 {
+	switch (filter)
+	{
+	case TextureFilter::LINEAR:
+		return GL_LINEAR;
+	case TextureFilter::NEAREST:
+		return GL_NEAREST;
+	case TextureFilter::NEAREST_MIPMAP_NEAREST:
+		return GL_NEAREST_MIPMAP_NEAREST;
+	case TextureFilter::LINEAR_MIPMAP_NEAREST:
+		return GL_LINEAR_MIPMAP_NEAREST;
+	case TextureFilter::NEAREST_MIPMAP_LINEAR:
+		return GL_NEAREST_MIPMAP_LINEAR;
+	case TextureFilter::LINEAR_MIPMAP_LINEAR:
+		return GL_LINEAR_MIPMAP_LINEAR;
+	}
+
+	return GL_NEAREST;
+}
+
+unsigned int Opengl::GetTextureWrap(const TextureWrap filter) noexcept
+{
+	switch (filter)
+	{
+	case TextureWrap::REPEAT:
+		return GL_REPEAT;
+	case TextureWrap::MIRRORED_REPEAT:
+		return GL_MIRRORED_REPEAT;
+	case TextureWrap::CLAMP_TO_EDGE:
+		return GL_CLAMP_TO_EDGE;
+	case TextureWrap::CLAMP_TO_BORDER:
+		return GL_CLAMP_TO_BORDER;
+	}
+	return GL_REPEAT;;
+}
+
+Texture Opengl::LoadTextureInternal(const std::string& path, int* out_width, int* out_height) noexcept
+{
+	Texture texture = 0;
+	int width = 0, height = 0;
 	try
 	{
 		stbi_uc* image_data = nullptr;
 		int bpp = 0;
-		image_data = stbi_load(path.c_str(), &texture->width, &texture->height, &bpp, STBI_rgb_alpha);
+		image_data = stbi_load(path.c_str(), &width, &height, &bpp, STBI_rgb_alpha);
 		if (!image_data)
 		{
 			std::stringstream ss;
@@ -207,25 +277,28 @@ void Opengl::LoadTextureInternal(const std::string& path, Texture* texture) noex
 
 			throw std::runtime_error(ss.str());
 		}
-		glGenTextures(1, &texture->id);
-		glBindTexture(GL_TEXTURE_2D, texture->id);
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 		glHint(GL_TEXTURE_COMPRESSION_HINT, GL_NICEST);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA, texture->width, texture->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 
 		stbi_image_free(image_data);
-
-		Logger::info("Creating texture: {}", path);
 	}
 	catch (std::exception& e)
 	{
 		Logger::error("Texture exception thrown: {}", e.what());
 	}
+	if (out_width)
+		*out_width = width;
+	if (out_height)
+		*out_height = height;
+	return texture;
 }
 
 uint32_t Opengl::LoadShaderInternal(const std::string& path, uint32_t type) noexcept

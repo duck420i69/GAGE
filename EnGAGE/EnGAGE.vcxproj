@@ -116,7 +116,9 @@
   <ItemGroup>
     <ClInclude Include="Bindable.h" />
     <ClInclude Include="Box.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Drawable.h" />
+    <ClInclude Include="DrawableBase.h" />
     <ClInclude Include="Events.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="IndexBufferObject.h" />
@@ -124,8 +126,12 @@
     <ClInclude Include="MenuScene.h" />
     <ClInclude Include="Opengl.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Sampler.h" />
     <ClInclude Include="Scene.h" />
-    <ClInclude Include="Shader.h" />
+    <ClInclude Include="ShaderObject.h" />
+    <ClInclude Include="Sheet.h" />
+    <ClInclude Include="TextureObject.h" />
+    <ClInclude Include="TransformUBuf.h" />
     <ClInclude Include="UniformBufferObject.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="VertexBufferObject.h" />

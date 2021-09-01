@@ -5,6 +5,7 @@
 #include "Logger.h"
 
 #include <GLFW/glfw3.h>
+#include <imgui.h>
 
 float			Events::sXPos = 0;
 float			Events::sYPos = 0;
@@ -27,6 +28,11 @@ void Events::Init() noexcept
 	glfwSetCursorPosCallback(Window::GetWindow(),
 		[](GLFWwindow* w, double x, double y)
 		{
+			ImGuiIO& io = ImGui::GetIO();
+			if (io.WantCaptureMouse) {
+				return;
+			}
+
 			sXPos = (float)x;
 			sYPos = (float)y;
 			sDragging = sButtonsPressed[MOUSE_BUTTON_LEFT] || sButtonsPressed[MOUSE_BUTTON_RIGHT];
@@ -34,6 +40,11 @@ void Events::Init() noexcept
 	glfwSetMouseButtonCallback(Window::GetWindow(),
 		[](GLFWwindow* window, int button, int action, int mods)
 		{
+			ImGuiIO& io = ImGui::GetIO();
+			if (io.WantCaptureMouse) {
+				return;
+			}
+
 			if (action == GLFW_PRESS)
 				sButtonsPressed[button] = true;
 			else if (action == GLFW_RELEASE) {
@@ -44,6 +55,11 @@ void Events::Init() noexcept
 	glfwSetKeyCallback(Window::GetWindow(),
 		[](GLFWwindow* window, int key, int scancode, int action, int mods)
 		{
+			ImGuiIO& io = ImGui::GetIO();
+			if (io.WantCaptureKeyboard) {
+				return;
+			}
+
 			if (action == GLFW_PRESS)
 				sKeysPressed[key] = true;
 			else if (action == GLFW_RELEASE)
