@@ -21,34 +21,51 @@ public:
 		std::uniform_real_distribution<float>& a,
 		std::uniform_real_distribution<float>& d, 
 		std::uniform_real_distribution<float>& o, 
-		std::uniform_real_distribution<float>& r ) noexcept :
+		std::uniform_real_distribution<float>& r ,
+		const glm::vec3& mat_color) noexcept :
 		dpitch(a(rng)), dyaw(a(rng)), droll(a(rng)),
 		dpitch2(d(rng)), dyaw2(d(rng)), droll2(d(rng)),
 		r(r(rng))
 	{
 		if (!IsStaticInited()) {
-			struct Vertex {
-				float x, y, z;
-				float r, g, b;
+			struct Vertex {			
+				struct {
+					float x, y, z;
+				} pos;
+				struct {
+					float x, y, z;
+				} normal;
 			};
 
 			std::vector<Vertex> vertices = {
-				{ -1.0f,-1.0f,-1.0f, 1, 0, 0 },
-				{ 1.0f,-1.0f,-1.0f, 0, 1, 0},
-				{ -1.0f,1.0f,-1.0f ,0, 0, 1},
-				{ 1.0f,1.0f,-1.0f ,1, 1, 0},
-				{ -1.0f,-1.0f,1.0f,0, 1, 1 },
-				{ 1.0f,-1.0f,1.0f,1, 0, 1 },
-				{ -1.0f,1.0f,1.0f, 1, 0, 0 },
-				{ 1.0f,1.0f,1.0f,0, 0, 0 },
+				{-0.5, -0.5, 0.5, 0, 0, 1},
+				{0.5, -0.5, 0.5, 0, 0, 1},
+				{-0.5, 0.5, 0.5, 0, 0, 1},
+				{0.5, 0.5, 0.5, 0, 0, 1},
+				{-0.5, 0.5, 0.5, 0, 1, 0},
+				{0.5, 0.5, 0.5, 0, 1, 0},
+				{-0.5, 0.5, -0.5, 0, 1, 0},
+				{0.5, 0.5, -0.5, 0, 1, 0},
+				{-0.5, 0.5, -0.5, 0, 0, -1},
+				{0.5, 0.5, -0.5,  0, 0, -1},
+				{-0.5, -0.5, -0.5, 0, 0, -1},
+				{0.5, -0.5, -0.5,  0, 0, -1},
+				{-0.5, -0.5, -0.5, 0, -1, 0,},
+				{0.5, -0.5, -0.5, 0, -1, 0},
+				{-0.5, -0.5, 0.5, 0, -1, 0},
+				{0.5, -0.5, 0.5, 0, -1, 0},
+				{0.5, -0.5, 0.5, 1, 0, 0},
+				{0.5, -0.5, -0.5, 1, 0, 0},
+				{0.5, 0.5, 0.5, 1, 0, 0},
+				{0.5, 0.5, -0.5, 1, 0, 0},
+				{-0.5, -0.5, -0.5, -1, 0, 0},
+				{-0.5, -0.5, 0.5, -1, 0, 0},
+				{-0.5, 0.5, -0.5, -1, 0, 0},
+				{-0.5, 0.5, 0.5,-1, 0, 0},
+
 			};
 			std::vector<unsigned int> indices = {
-				0,2,1, 2,3,1,
-				1,3,5, 3,7,5,
-				2,6,3, 3,6,7,
-				4,5,7, 4,7,6,
-				0,4,2, 2,4,6,
-				0,1,4, 1,5,4
+				0, 1, 2, 2, 1, 3, 4, 5, 6, 6, 5, 7, 8, 9, 10, 10, 9, 11, 12, 13, 14, 14, 13, 15, 16, 17, 18, 18, 17, 19, 20, 21, 22, 22, 21, 23
 			};
 
 			std::vector<VertexLayout::Layout> layout = {
@@ -58,12 +75,24 @@ public:
 
 			this->AddStaticBind(std::make_unique<VertexBufferObject>(vertices));
 			this->AddStaticBind(std::make_unique<VertexLayout>(layout));
-			this->AddStaticBind(std::make_unique<ShaderObject>("Assets/Shaders/default"));
+			this->AddStaticBind(std::make_unique<ShaderObject>("Assets/Shaders/phong"));
 			this->AddStaticIndexBuffer(std::make_unique<IndexBufferObject>(indices));
 		}
 		else {
 			this->SetIndexFromStatic();
 			this->AddBind(std::make_unique<TransformUBuf>(*this));
+
+			//Material per instance
+			struct MaterialUBuf {
+				alignas(16) glm::vec3 color;
+				float specular_intensity;
+				int specular_power;
+				float padding[2];
+			} material;
+			material.color = mat_color;
+			material.specular_intensity = 0.6f;
+			material.specular_power = 30;
+			this->AddBind(std::make_unique<UniformBufferObject<MaterialUBuf>>(2, material));
 		}
 	}
 

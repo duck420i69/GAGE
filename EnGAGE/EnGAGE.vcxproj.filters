@@ -34,6 +34,9 @@
     <Filter Include="Source\Core\Render\Drawable">
       <UniqueIdentifier>{3f36e6e4-3309-4cf9-864c-4a5fdb47a7ce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\Render\Light">
+      <UniqueIdentifier>{44f75690-5a0e-42cb-8676-ba4f188146b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -140,6 +143,9 @@
     <ClInclude Include="Camera.h">
       <Filter>Source\Core\Render</Filter>
     </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Source\Core\Render\Light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\default_FS.glsl">
@@ -150,6 +156,18 @@
     </None>
     <None Include="Assets\save">
       <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Shaders\uv_FS.glsl">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\uv_VS.glsl">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\phong_VS.glsl">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\phong_FS.glsl">
+      <Filter>Assets\Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

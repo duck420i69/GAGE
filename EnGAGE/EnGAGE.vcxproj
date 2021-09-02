@@ -126,6 +126,7 @@
     <ClInclude Include="MenuScene.h" />
     <ClInclude Include="Opengl.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="PointLight.h" />
     <ClInclude Include="Sampler.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ShaderObject.h" />
@@ -143,6 +144,10 @@
     <None Include="Assets\save" />
     <None Include="assets\shaders\default_FS.glsl" />
     <None Include="assets\shaders\default_VS.glsl" />
+    <None Include="Assets\Shaders\phong_FS.glsl" />
+    <None Include="Assets\Shaders\phong_VS.glsl" />
+    <None Include="Assets\Shaders\uv_FS.glsl" />
+    <None Include="Assets\Shaders\uv_VS.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Textures\ignore_this.png" />

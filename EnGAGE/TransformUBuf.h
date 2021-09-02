@@ -9,7 +9,13 @@
 
 //Default slot 0 to transform cbuf
 class TransformUBuf final : public Bindable {
-	static std::unique_ptr<UniformBufferObject<glm::mat4x4>> s_buff;
+
+	struct TransformBuf {
+		glm::mat4x4 model;
+		glm::mat4x4 modelViewProj;
+	};
+
+	static std::unique_ptr<UniformBufferObject<TransformBuf>> s_buff;
 	const Drawable& mParent;
 
 public:
@@ -17,14 +23,15 @@ public:
 		mParent(parent)
 	{
 		if (!s_buff) {
-			s_buff = std::make_unique< UniformBufferObject < glm::mat4x4>>(0, glm::mat4(1.0));
+			s_buff = std::make_unique< UniformBufferObject < TransformBuf>>(0, TransformBuf{ glm::mat4(1.0), glm::mat4(1.0f) });
 		}
 	}
 
 	void Bind() const noexcept override {
-		s_buff->Update(Opengl::GetProjection() * Opengl::GetCamera() * mParent.GetTransform());
+		glm::mat4 model_view = Opengl::GetCamera() * mParent.GetTransform();
+		s_buff->Update({ model_view, Opengl::GetProjection() * model_view });
 		s_buff->Bind();
 	}
 };
 
-std::unique_ptr< UniformBufferObject<glm::mat4x4>> TransformUBuf::s_buff;
+std::unique_ptr< UniformBufferObject<TransformUBuf::TransformBuf>> TransformUBuf::s_buff;

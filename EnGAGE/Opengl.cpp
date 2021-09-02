@@ -17,6 +17,7 @@ void MessageCallbackFn(
 	const GLchar* message,
 	const void* user_param)
 {
+	if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) return;
 	Logger::info("{}", message);
 }
 
