@@ -11,8 +11,13 @@
 
 #include "MenuScene.h"
 
+#include "AssimpTest.h"
+
 int main()
 {
+	if (!AssimpTest("Assets/Models/test.obj"))
+		return EXIT_FAILURE;
+
 	Window::Create(Globals::screen_width, Globals::screen_height, Globals::screen_title);
 	Events::Init();
 	Opengl::Init();

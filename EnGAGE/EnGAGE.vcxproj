@@ -55,7 +55,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\glad\include;$(SolutionDir)Thirdparty\glfw\include;$(ProjectDir)thirdparty;$(SolutionDir)Thirdparty\glm;$(SolutionDir)Thirdparty\spdlog\include;$(SolutionDir)Thirdparty\imgui;$(SolutionDir)Thirdparty\imgui\backends;$(SolutionDir)stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\glad\include;$(SolutionDir)Thirdparty\glfw\include;$(ProjectDir)thirdparty;$(SolutionDir)Thirdparty\glm;$(SolutionDir)Thirdparty\spdlog\include;$(SolutionDir)Thirdparty\imgui;$(SolutionDir)Thirdparty\imgui\backends;$(SolutionDir)stb;$(SolutionDir)assimp\include;$(SolutionDir)Thirdparty\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -78,7 +78,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)\glad\include;$(SolutionDir)Thirdparty\glfw\include;$(ProjectDir)thirdparty;$(SolutionDir)Thirdparty\glm;$(SolutionDir)Thirdparty\spdlog\include;$(SolutionDir)Thirdparty\imgui;$(SolutionDir)Thirdparty\imgui\backends;$(SolutionDir)stb;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\glad\include;$(SolutionDir)Thirdparty\glfw\include;$(ProjectDir)thirdparty;$(SolutionDir)Thirdparty\glm;$(SolutionDir)Thirdparty\spdlog\include;$(SolutionDir)Thirdparty\imgui;$(SolutionDir)Thirdparty\imgui\backends;$(SolutionDir)stb;$(SolutionDir)assimp\include;$(SolutionDir)Thirdparty\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -96,6 +96,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AssimpTest.cpp" />
     <ClCompile Include="Events.cpp" />
     <ClCompile Include="glad.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -114,6 +115,7 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AssimpTest.h" />
     <ClInclude Include="Bindable.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="Camera.h" />
@@ -156,6 +158,12 @@
     <Image Include="Assets\Textures\testImage2.png" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\assimp\code\assimp.vcxproj">
+      <Project>{7b14fbdd-c03d-3aa0-a3ae-cc069e95dc5e}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\assimp\contrib\zlib\zlibstatic.vcxproj">
+      <Project>{a6fc28ac-c09f-37c9-b288-f34eced2da52}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\glad\glad.vcxproj">
       <Project>{85ba4265-4837-4224-a21a-7e826d2c7351}</Project>
     </ProjectReference>

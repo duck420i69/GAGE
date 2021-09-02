@@ -69,6 +69,9 @@
     <ClCompile Include="Globals.cpp">
       <Filter>Source\Miscs</Filter>
     </ClCompile>
+    <ClCompile Include="AssimpTest.cpp">
+      <Filter>Source\Miscs</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -145,6 +148,9 @@
     </ClInclude>
     <ClInclude Include="PointLight.h">
       <Filter>Source\Core\Render\Light</Filter>
+    </ClInclude>
+    <ClInclude Include="AssimpTest.h">
+      <Filter>Source\Miscs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
