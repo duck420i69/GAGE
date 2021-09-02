@@ -1,15 +1,15 @@
-[submodule "Thirdparty/glfw"]
-	path = Thirdparty/glfw
+[submodule "thirdparty/glfw"]
+	path = thirdparty/glfw
 	url = https://github.com/glfw/glfw
-[submodule "Thirdparty/spdlog"]
-	path = Thirdparty/spdlog
+[submodule "thirdparty/spdlog"]
+	path = thirdparty/spdlog
 	url = https://github.com/gabime/spdlog
-[submodule "Thirdparty/glm"]
-	path = Thirdparty/glm
+[submodule "thirdparty/glm"]
+	path = thirdparty/glm
 	url = https://github.com/g-truc/glm
-[submodule "Thirdparty/imgui"]
-	path = Thirdparty/imgui
+[submodule "thirdparty/imgui"]
+	path = thirdparty/imgui
 	url = https://github.com/ocornut/imgui
-[submodule "Thirdparty/assimp"]
-	path = Thirdparty/assimp
+[submodule "thirdparty/assimp"]
+	path = thirdparty/assimp
 	url = https://github.com/assimp/assimp
