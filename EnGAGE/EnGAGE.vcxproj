@@ -117,7 +117,6 @@
   <ItemGroup>
     <ClInclude Include="AssimpTest.h" />
     <ClInclude Include="Bindable.h" />
-    <ClInclude Include="Box.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Drawable.h" />
     <ClInclude Include="DrawableBase.h" />
@@ -129,13 +128,11 @@
     <ClInclude Include="MenuScene.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Opengl.h" />
-    <ClInclude Include="OrbitDrawable.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Sampler.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ShaderObject.h" />
-    <ClInclude Include="Sheet.h" />
     <ClInclude Include="TextureObject.h" />
     <ClInclude Include="TransformUBuf.h" />
     <ClInclude Include="UniformBufferObject.h" />

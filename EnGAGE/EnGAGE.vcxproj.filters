@@ -122,9 +122,6 @@
     <ClInclude Include="ShaderObject.h">
       <Filter>Source\Core\Render\Bindable</Filter>
     </ClInclude>
-    <ClInclude Include="Box.h">
-      <Filter>Source\Core\Render\Drawable</Filter>
-    </ClInclude>
     <ClInclude Include="VertexLayoutObject.h">
       <Filter>Source\Core\Render\Bindable</Filter>
     </ClInclude>
@@ -140,9 +137,6 @@
     <ClInclude Include="Sampler.h">
       <Filter>Source\Core\Render\Bindable</Filter>
     </ClInclude>
-    <ClInclude Include="Sheet.h">
-      <Filter>Source\Core\Render\Drawable</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Source\Core\Render</Filter>
     </ClInclude>
@@ -151,9 +145,6 @@
     </ClInclude>
     <ClInclude Include="AssimpTest.h">
       <Filter>Source\Miscs</Filter>
-    </ClInclude>
-    <ClInclude Include="OrbitDrawable.h">
-      <Filter>Source\Core\Render\Drawable</Filter>
     </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>Source\Core\Render\Drawable</Filter>
