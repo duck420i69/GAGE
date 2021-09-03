@@ -5,6 +5,7 @@
 #include "Box.h"
 #include "Camera.h"
 #include "PointLight.h"
+#include "Model.h"
 
 #include <imgui.h>
 
@@ -23,9 +24,14 @@ public:
 		std::uniform_real_distribution<float> c(0.0f, 1.0f);
 		std::uniform_real_distribution<float> r(6.0f, 24.0f);
 
-		for (unsigned int i = 0; i < 570; i++) {
+		for (unsigned int i = 0; i < 1500; i++) {
 			mDrawables.push_back(std::make_unique<Box>(rng, a, d, o ,r, glm::vec3(c(rng), c(rng), c(rng))));
 		}
+
+		for (unsigned int i = 0; i < 1500; i++) {
+			mDrawables.push_back(std::make_unique<Model>(rng, a, d, o, r, glm::vec3(c(rng), c(rng), c(rng))));
+		}
+		
 		
 		Opengl::SetProjection(glm::perspective(glm::radians(75.0f), 16.0f / 9.0f, 0.5f, 100.0f));
 	}

@@ -1,20 +1,15 @@
 #pragma once
 
-#include "DrawableBase.h"
 
 #include "VertexBufferObject.h"
 #include "VertexLayout.h"
 #include "TransformUBuf.h"
 #include "ShaderObject.h"
 
-#include <glm/gtc/matrix_transform.hpp>
+#include "OrbitDrawable.h"
 
-class Box final : public DrawableBase<Box> {
-	float pitch = 0, yaw = 0, roll = 0;
-	float pitch2 = 0, yaw2 = 0, roll2 = 0;
-	float r;
-	float dpitch, dyaw, droll;
-	float dpitch2, dyaw2, droll2;
+class Box final : public OrbitDrawable<Box> {
+	
 
 public:
 	Box(std::mt19937& rng,
@@ -23,9 +18,7 @@ public:
 		std::uniform_real_distribution<float>& o, 
 		std::uniform_real_distribution<float>& r ,
 		const glm::vec3& mat_color) noexcept :
-		dpitch(a(rng)), dyaw(a(rng)), droll(a(rng)),
-		dpitch2(d(rng)), dyaw2(d(rng)), droll2(d(rng)),
-		r(r(rng))
+		OrbitDrawable(rng, a, d, o, r)
 	{
 		if (!IsStaticInited()) {
 			struct Vertex {			
@@ -96,29 +89,5 @@ public:
 		}
 	}
 
-	inline void Update(float dt) noexcept override {
-		pitch += dpitch * dt;
-		pitch2 += dpitch2 * dt;
-		yaw += dyaw * dt;
-		yaw2 += dyaw2 * dt;
-		roll += droll * dt;
-		roll2 += droll2 * dt;
-	};
-
-	inline glm::mat4x4 GetTransform() const noexcept override {
-		glm::mat4x4 result (1.0f);
-
-		result = glm::rotate(result, roll2, { 0, 0, 1 });
-		result = glm::rotate(result, yaw2, { 0, 1, 0 });
-		result = glm::rotate(result, pitch2, { 1, 0, 0 });
-
-		result = glm::translate(result, { r, 0, 0 });
-
-		result = glm::rotate(result, roll, { 0, 0, 1 });
-		result = glm::rotate(result, yaw, { 0, 1, 0 });
-		result = glm::rotate(result, pitch, { 1, 0, 0 });
-
-
-		return result;
-	};
+	
 };

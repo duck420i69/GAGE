@@ -152,6 +152,12 @@
     <ClInclude Include="AssimpTest.h">
       <Filter>Source\Miscs</Filter>
     </ClInclude>
+    <ClInclude Include="OrbitDrawable.h">
+      <Filter>Source\Core\Render\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Source\Core\Render\Drawable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\default_FS.glsl">
