@@ -32,9 +32,6 @@ public:
 		}
 		Opengl::DrawIndexed(mIndexBuffer->GetCount());
 	}
-
-
-
 	virtual void Update(float dt) noexcept = 0;
 	virtual glm::mat4x4 GetTransform() const noexcept = 0;
 

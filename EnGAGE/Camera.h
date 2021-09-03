@@ -17,7 +17,7 @@ public:
 
 	void SpawnControlWindow() noexcept {
 		ImGui::Begin("Camera");
-		ImGui::DragFloat("R", &r);
+		ImGui::DragFloat("R", &r, 0.1f);
 		ImGui::DragFloat("A", &a);
 		ImGui::DragFloat("B", &b);
 
