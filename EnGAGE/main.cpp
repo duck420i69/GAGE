@@ -11,10 +11,11 @@
 
 #include "MenuScene.h"
 
+#include "DynamicVertex.h"
+
 
 int main()
 {
-
 
 	Window::Create(Globals::screen_width, Globals::screen_height, Globals::screen_title);
 	Events::Init();

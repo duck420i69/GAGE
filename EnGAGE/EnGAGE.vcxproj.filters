@@ -125,7 +125,7 @@
     <ClInclude Include="Box.h">
       <Filter>Source\Core\Render\Drawable</Filter>
     </ClInclude>
-    <ClInclude Include="VertexLayout.h">
+    <ClInclude Include="VertexLayoutObject.h">
       <Filter>Source\Core\Render\Bindable</Filter>
     </ClInclude>
     <ClInclude Include="TransformUBuf.h">
@@ -157,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>Source\Core\Render\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicVertex.h">
+      <Filter>Source\Core\Render\Bindable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

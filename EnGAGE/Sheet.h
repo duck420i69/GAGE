@@ -3,7 +3,7 @@
 #include "DrawableBase.h"
 
 #include "VertexBufferObject.h"
-#include "VertexLayout.h"
+#include "VertexLayoutObject.h"
 #include "TransformUBuf.h"
 #include "ShaderObject.h"
 #include "Sampler.h"
@@ -45,13 +45,13 @@ public:
 				0, 2, 3
 			};
 
-			std::vector<VertexLayout::Layout> layout = {
+			std::vector<VertexLayoutObject::Layout> layout = {
 				{0, 3, sizeof(Vertex), 0},
 				{1, 2, sizeof(Vertex), sizeof(float) * 2},
 			};
 
 			this->AddStaticBind(std::make_unique<VertexBufferObject>(vertices));
-			this->AddStaticBind(std::make_unique<VertexLayout>(layout));
+			this->AddStaticBind(std::make_unique<VertexLayoutObject>(layout));
 			this->AddStaticBind(std::make_unique<ShaderObject>("Assets/Shaders/uv"));
 			this->AddStaticBind(std::make_unique<TextureObject>("Assets/Textures/ignore_this.png"));
 			this->AddStaticBind(std::make_unique<Sampler>(Opengl::TextureFilter::NEAREST, Opengl::TextureFilter::NEAREST, Opengl::TextureWrap::REPEAT));

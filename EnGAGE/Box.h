@@ -2,7 +2,7 @@
 
 
 #include "VertexBufferObject.h"
-#include "VertexLayout.h"
+#include "VertexLayoutObject.h"
 #include "TransformUBuf.h"
 #include "ShaderObject.h"
 
@@ -61,13 +61,13 @@ public:
 				0, 1, 2, 2, 1, 3, 4, 5, 6, 6, 5, 7, 8, 9, 10, 10, 9, 11, 12, 13, 14, 14, 13, 15, 16, 17, 18, 18, 17, 19, 20, 21, 22, 22, 21, 23
 			};
 
-			std::vector<VertexLayout::Layout> layout = {
+			std::vector<VertexLayoutObject::Layout> layout = {
 				{0, 3, sizeof(Vertex), 0},
 				{1, 3, sizeof(Vertex), sizeof(float) * 3},
 			};
 
 			this->AddStaticBind(std::make_unique<VertexBufferObject>(vertices));
-			this->AddStaticBind(std::make_unique<VertexLayout>(layout));
+			this->AddStaticBind(std::make_unique<VertexLayoutObject>(layout));
 			this->AddStaticBind(std::make_unique<ShaderObject>("Assets/Shaders/phong"));
 			this->AddStaticIndexBuffer(std::make_unique<IndexBufferObject>(indices));
 		}

@@ -121,6 +121,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Drawable.h" />
     <ClInclude Include="DrawableBase.h" />
+    <ClInclude Include="DynamicVertex.h" />
     <ClInclude Include="Events.h" />
     <ClInclude Include="Globals.h" />
     <ClInclude Include="IndexBufferObject.h" />
@@ -140,7 +141,7 @@
     <ClInclude Include="UniformBufferObject.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="VertexBufferObject.h" />
-    <ClInclude Include="VertexLayout.h" />
+    <ClInclude Include="VertexLayoutObject.h" />
     <ClInclude Include="Widget.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>

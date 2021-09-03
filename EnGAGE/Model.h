@@ -1,9 +1,10 @@
 #pragma once
 
 #include "VertexBufferObject.h"
-#include "VertexLayout.h"
+#include "VertexLayoutObject.h"
 #include "TransformUBuf.h"
 #include "ShaderObject.h"
+#include "DynamicVertex.h"
 
 #include "OrbitDrawable.h"
 
@@ -22,22 +23,20 @@ public:
 		OrbitDrawable(rng, a, d, o, r)
 	{
 		if (!IsStaticInited()) {
-			struct Vertex {
-				glm::vec3 pos;
-				glm::vec3 normal;
-			};
+			
+			namespace dv = DynamicVertex;
+
+			dv::VertexLayout layout;
+			layout.Append(dv::VertexLayout::Type::Position3D).Append(dv::VertexLayout::Type::Normal);
+			dv::VertexBuffer buf(layout);
 
 			Assimp::Importer importer;
 
 			const auto pModel = importer.ReadFile("Assets/Models/suzanne.obj", aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
 			const auto pMesh = pModel->mMeshes[0];
-
-			std::vector<Vertex> vertices;
-			vertices.reserve(pMesh->mNumVertices);
-
 			for (unsigned int i = 0; i < pMesh->mNumVertices; i++) {
-				vertices.push_back({ {pMesh->mVertices[i].x, pMesh->mVertices[i].y, pMesh->mVertices[i].z}, 
-					{pMesh->mNormals[i].x, pMesh->mNormals[i].y, pMesh->mNormals[i].z} });
+				buf.EmplaceBack( glm::vec3{pMesh->mVertices[i].x, pMesh->mVertices[i].y, pMesh->mVertices[i].z},
+					glm::vec3{pMesh->mNormals[i].x, pMesh->mNormals[i].y, pMesh->mNormals[i].z} );
 			}
 
 			std::vector<unsigned int> indices;
@@ -49,13 +48,10 @@ public:
 				indices.push_back(face.mIndices[2]);
 			}
 
-			std::vector<VertexLayout::Layout> layout = {
-				{0, 3, sizeof(Vertex), 0},
-				{1, 3, sizeof(Vertex), sizeof(float) * 3},
-			};
+			
 
-			this->AddStaticBind(std::make_unique<VertexBufferObject>(vertices));
-			this->AddStaticBind(std::make_unique<VertexLayout>(layout));
+			this->AddStaticBind(std::make_unique<VertexBufferObject>(buf));
+			this->AddStaticBind(std::make_unique<VertexLayoutObject>(layout));
 			this->AddStaticBind(std::make_unique<ShaderObject>("Assets/Shaders/phong"));
 			this->AddStaticIndexBuffer(std::make_unique<IndexBufferObject>(indices));
 		}
