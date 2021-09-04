@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{b692dc25-883d-479f-95c9-e38c32f18d6b}</ProjectGuid>
+    <RootNamespace>zlibstatic</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <TargetExt>.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;WIN32_LEAN_AND_MEAN;NO_FSEEKO;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)thirdparty\assimp\include;$(SolutionDir)thirdparty\assimp\code;$(SolutionDir)thirdparty\assimp\.;$(SolutionDir)thirdparty\assimp\contrib\zlib;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4131;4127;4244</DisableSpecificWarnings>
+      <UseFullPaths>false</UseFullPaths>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;WIN32_LEAN_AND_MEAN;NO_FSEEKO;_CRT_SECURE_NO_DEPRECATE;_CRT_NONSTDC_NO_DEPRECATE;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)thirdparty\assimp\include;$(SolutionDir)thirdparty\assimp\code;$(SolutionDir)thirdparty\assimp\.;$(SolutionDir)thirdparty\assimp\contrib\zlib;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4131;4127;4244</DisableSpecificWarnings>
+      <UseFullPaths>false</UseFullPaths>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\thirdparty\assimp\contrib\zlib\adler32.c" />
+    <ClCompile Include="..\thirdparty\assimp\contrib\zlib\compress.c" />
+    <ClCompile Include="..\thirdparty\assimp\contrib\zlib\crc32.c" />
+    <ClCompile Include="..\thirdparty\assimp\contrib\zlib\deflate.c" />
+    <ClCompile Include="..\thirdparty\assimp\contrib\zlib\gzclose.c" />
+    <ClCompile Include="..\thirdparty\assimp\contrib\zlib\gzlib.c" />
+    <ClCompile Include="..\thirdparty\assimp\contrib\zlib\gzread.c" />
+    <ClCompile Include="..\thirdparty\assimp\contrib\zlib\gzwrite.c" />
+    <ClCompile Include="..\thirdparty\assimp\contrib\zlib\infback.c" />
+    <ClCompile Include="..\thirdparty\assimp\contrib\zlib\inffast.c" />
+    <ClCompile Include="..\thirdparty\assimp\contrib\zlib\inflate.c" />
+    <ClCompile Include="..\thirdparty\assimp\contrib\zlib\inftrees.c" />
+    <ClCompile Include="..\thirdparty\assimp\contrib\zlib\trees.c" />
+    <ClCompile Include="..\thirdparty\assimp\contrib\zlib\uncompr.c" />
+    <ClCompile Include="..\thirdparty\assimp\contrib\zlib\zutil.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\thirdparty\assimp\contrib\zlib\crc32.h" />
+    <ClInclude Include="..\thirdparty\assimp\contrib\zlib\deflate.h" />
+    <ClInclude Include="..\thirdparty\assimp\contrib\zlib\gzguts.h" />
+    <ClInclude Include="..\thirdparty\assimp\contrib\zlib\inffast.h" />
+    <ClInclude Include="..\thirdparty\assimp\contrib\zlib\inffixed.h" />
+    <ClInclude Include="..\thirdparty\assimp\contrib\zlib\inflate.h" />
+    <ClInclude Include="..\thirdparty\assimp\contrib\zlib\inftrees.h" />
+    <ClInclude Include="..\thirdparty\assimp\contrib\zlib\trees.h" />
+    <ClInclude Include="..\thirdparty\assimp\contrib\zlib\zlib.h" />
+    <ClInclude Include="..\thirdparty\assimp\contrib\zlib\zutil.h" />
+    <ClInclude Include="zconf.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

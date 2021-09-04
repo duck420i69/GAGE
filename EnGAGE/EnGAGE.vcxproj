@@ -158,11 +158,8 @@
     <Image Include="Assets\Textures\testImage2.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\assimp\code\assimp.vcxproj">
-      <Project>{7b14fbdd-c03d-3aa0-a3ae-cc069e95dc5e}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\assimp\contrib\zlib\zlibstatic.vcxproj">
-      <Project>{a6fc28ac-c09f-37c9-b288-f34eced2da52}</Project>
+    <ProjectReference Include="..\assimp\assimp.vcxproj">
+      <Project>{4a9cae3c-2ca8-4c07-a365-860e15020331}</Project>
     </ProjectReference>
     <ProjectReference Include="..\glad\glad.vcxproj">
       <Project>{85ba4265-4837-4224-a21a-7e826d2c7351}</Project>
