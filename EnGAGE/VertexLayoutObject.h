@@ -19,12 +19,10 @@ public:
 
 private:
 	std::vector<Layout> layouts;
+	const DynamicVertex::VertexLayout* dyn_layout;
 public:
-
-	VertexLayoutObject(const std::vector<Layout>& layouts) noexcept :
-		layouts(layouts){}
-
-	VertexLayoutObject(const DynamicVertex::VertexLayout& dyn_layout) noexcept
+	VertexLayoutObject(const DynamicVertex::VertexLayout& dyn_layout) noexcept :
+		dyn_layout(&dyn_layout)
 	{
 		const auto& elements = dyn_layout.GetElements();
 
@@ -38,9 +36,21 @@ public:
 		}
 	}
 
-	virtual void Bind() const noexcept override {
+	void Bind() const noexcept override {
 		for (const auto& layout : layouts) {
 			Opengl::Layout(layout.slot, layout.size, layout.stride, layout.offset);
 		}
 	}
+
+	static std::string GenerateUID(const DynamicVertex::VertexLayout& dyn_layout) noexcept {
+		using namespace std::string_literals;
+		return typeid(VertexLayoutObject).name() + "#"s + dyn_layout.GetCode();
+	}
+
+
+	std::string GetUID() const noexcept override {
+		return GenerateUID(*dyn_layout);
+	}
+
+
 };

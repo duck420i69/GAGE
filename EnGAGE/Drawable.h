@@ -11,10 +11,7 @@
 
 
 class Drawable {
-	template<class T>
-	friend class DrawableBase;
-
-	std::vector<std::unique_ptr<Bindable>> mBinds;
+	std::vector<std::shared_ptr<Bindable>> mBinds;
 protected:
 	const IndexBufferObject* mIndexBuffer = nullptr;
 public:
@@ -26,25 +23,18 @@ public:
 		for (auto& b : mBinds) {
 			b->Bind();
 		}
-		auto& static_binds = GetStaticBind();
-		for (auto& b : static_binds) {
-			b->Bind();
-		}
 		Opengl::DrawIndexed(mIndexBuffer->GetCount());
 	}
-	virtual void Update(float dt) noexcept = 0;
-	virtual glm::mat4x4 GetTransform() const noexcept = 0;
 
-protected:
-	void AddIndexBuffer(std::unique_ptr<IndexBufferObject> ibuf) noexcept {
-		mIndexBuffer = ibuf.get();
-		mBinds.push_back(std::move(ibuf));
-	}
+	void AddBind(std::shared_ptr<Bindable> bind) noexcept {
 
-	void AddBind(std::unique_ptr<Bindable> bind) noexcept {
+		if (typeid(*bind) == typeid(IndexBufferObject)) {
+			assert(mIndexBuffer == nullptr && "IndexBufferObject already added !");
+			mIndexBuffer = &static_cast<IndexBufferObject&>(*bind);
+		}
+
 		mBinds.push_back(std::move(bind));
 	}
 
-private:
-	virtual const std::vector<std::unique_ptr<Bindable>>& GetStaticBind() const noexcept = 0;
+	virtual glm::mat4x4 GetTransform() const noexcept = 0;
 };

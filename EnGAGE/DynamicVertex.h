@@ -23,27 +23,33 @@ namespace DynamicVertex {
 		template<> struct Map<Type::Position2D>
 		{
 			using SysType = glm::vec2;
+			static constexpr const char* code = "P2";
 		};
 
 		template<> struct Map<Type::Position3D>
 		{
 			using SysType = glm::vec3;
+			static constexpr const char* code = "P3";
 		};
 		template<> struct Map<Type::Texture2D>
 		{
 			using SysType = glm::vec2;
+			static constexpr const char* code = "T2";
 		};
 		template<> struct Map<Type::Normal>
 		{
 			using SysType = glm::vec3;
+			static constexpr const char* code = "N";
 		};
 		template<> struct Map<Type::Color3>
 		{
 			using SysType = glm::vec3;
+			static constexpr const char* code = "C3";
 		};
 		template<> struct Map<Type::Color4>
 		{
 			using SysType = glm::vec4;
+			static constexpr const char* code = "C4";
 		};
 
 		class Element {
@@ -75,6 +81,25 @@ namespace DynamicVertex {
 				}
 				return 0u;
 			}
+
+			constexpr const char* GetCode() const noexcept {
+				switch (type)
+				{
+				case Type::Position2D:
+					return Map<Type::Position2D>::code;
+				case Type::Position3D:
+					return Map<Type::Position3D>::code;
+				case Type::Texture2D:
+					return Map<Type::Texture2D>::code;
+				case Type::Normal:
+					return Map<Type::Normal>::code;
+				case Type::Color3:
+					return Map<Type::Color3>::code;
+				case Type::Color4:
+					return Map<Type::Color4>::code;
+				}
+				return "";
+			}
 		};
 	public:
 		template<Type T>
@@ -89,10 +114,10 @@ namespace DynamicVertex {
 		}
 
 		const Element& ResolveByIndex(size_t i) const noexcept;
-
 		VertexLayout& Append(Type T) noexcept;
-
 		size_t Size() const noexcept;
+		std::string GetCode() const noexcept;
+
 
 		inline size_t GetElementCount() const noexcept { return elements.size(); }
 		inline const std::vector<Element>& GetElements() const noexcept { return elements; }

@@ -47,6 +47,8 @@ public:
 	static UniformBuffer CreateUniformBuffer(const unsigned int slot, const uint64_t size, const void* data, const BufferUsage usage = BufferUsage::DYNAMIC) noexcept;
 	static Texture LoadTexture(const std::string& path, int* out_width = nullptr, int* out_height = nullptr) noexcept;
 	static ShaderProgram LoadShader(const std::string& path) noexcept;
+	static ShaderProgram LoadShader(const std::string& vertex_path, const std::string& fragment_path) noexcept;
+	static void LoadUniformInteger(const ShaderProgram program, const std::string& name, const int i);
 
 	static void Layout(const unsigned int slot, const unsigned int size, const unsigned int stride, const unsigned int offset) noexcept;
 	static void BindVertexArray(const VertexArray va) noexcept;

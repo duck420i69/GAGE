@@ -27,8 +27,7 @@ public:
 		mYaw = 0.0f;
 	}
 	void Rotate(float dPitch, float dYaw) noexcept {
-		static constexpr glm::vec3 up = glm::vec3(0, 1, 0);
-		static constexpr glm::vec3 default_forward = glm::vec3(0, 0, -1);
+
 
 		mYaw += -dYaw * SENSITIVITY;
 		mPitch += -dPitch * SENSITIVITY;
@@ -36,9 +35,7 @@ public:
 		wrap_angle(mYaw);
 		clamp_angle(mPitch, -89.0f, 89.0f);
 
-		mForward = glm::rotate(default_forward, glm::radians(mYaw), up);
-		mRight = glm::cross(mForward, up);
-		mForward = glm::rotate(mForward, glm::radians(mPitch), mRight);
+
 	}
 
 	void MoveForward(float delta) noexcept {
@@ -62,7 +59,13 @@ public:
 		ImGui::End();
 	}
 
-	const glm::mat4 GetMatrix() const noexcept{
+	const glm::mat4 GetMatrix() noexcept{
+		static constexpr glm::vec3 up = glm::vec3(0, 1, 0);
+		static constexpr glm::vec3 default_forward = glm::vec3(0, 0, -1);
+		mForward = glm::rotate(default_forward, glm::radians(mYaw), up);
+		mRight = glm::cross(mForward, up);
+		mForward = glm::rotate(mForward, glm::radians(mPitch), mRight);
+
 		return glm::lookAt(mPos, mPos + mForward, glm::vec3(0, 1, 0));
 	}
 private:

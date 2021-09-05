@@ -129,6 +129,17 @@ ShaderProgram Opengl::LoadShader(const std::string& path) noexcept
 	return LoadShaderProgramInternal(path + "_VS.glsl", path + "_FS.glsl");
 }
 
+ShaderProgram Opengl::LoadShader(const std::string& vertex_path, const std::string& fragment_path) noexcept
+{
+	Logger::info("Loading shader: {}, {}", vertex_path, fragment_path);
+	return LoadShaderProgramInternal(vertex_path, fragment_path);
+}
+
+void Opengl::LoadUniformInteger(const ShaderProgram program, const std::string& name, const int i)
+{
+	glUniform1i(glGetUniformLocation(program, name.c_str()), i);
+}
+
 void Opengl::Layout(const unsigned int slot, const unsigned int size, const unsigned int stride, const unsigned int offset) noexcept
 {
 	glEnableVertexAttribArray(slot);
@@ -269,6 +280,7 @@ Texture Opengl::LoadTextureInternal(const std::string& path, int* out_width, int
 	{
 		stbi_uc* image_data = nullptr;
 		int bpp = 0;
+		stbi_set_flip_vertically_on_load(1);
 		image_data = stbi_load(path.c_str(), &width, &height, &bpp, STBI_rgb_alpha);
 		if (!image_data)
 		{
@@ -299,6 +311,7 @@ Texture Opengl::LoadTextureInternal(const std::string& path, int* out_width, int
 		*out_width = width;
 	if (out_height)
 		*out_height = height;
+	s_textures.push_back(texture);
 	return texture;
 }
 

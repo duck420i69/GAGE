@@ -20,7 +20,8 @@ class PointLight {
 	PointLightCBuf buf;
 	UniformBufferObject< PointLightCBuf> cbuf; //Uses slot 1
 public:
-	PointLight() noexcept : cbuf(1, buf) {
+	PointLight() noexcept : cbuf(1) {
+		cbuf.Update(buf);
 		Reset();
 	}
 

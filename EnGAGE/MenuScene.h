@@ -12,14 +12,15 @@
 #include <imgui.h>
 
 class MenuScene final : public Scene{
-	Model mNanoSuit;
+	Model mNanoSuit , mNanoSuit2;
 	Camera mCam;
 	PointLight mLight;
 	
 public:
 	MenuScene() noexcept :
 		mCam(),
-		mNanoSuit("Assets/Models/nano_suit.obj")
+		mNanoSuit("Assets/Models/nano_textured/nanosuit.obj"),
+		mNanoSuit2("Assets/Models/nano_textured/nanosuit.obj")
 	{		
 		Opengl::SetProjection(glm::perspective(glm::radians(75.0f), 16.0f / 9.0f, 0.5f, 100.0f));
 	}
@@ -49,11 +50,13 @@ public:
 		Opengl::Clear();
 		mLight.Bind(mCam.GetMatrix());	
 		mNanoSuit.Draw();
+		mNanoSuit2.Draw();
 	};
 	void ImGui() noexcept override {
 		mCam.SpawnControlWindow();
 		mLight.SpawnControlWindow();
 		mNanoSuit.RenderTree();
+		mNanoSuit2.RenderTree("Model2");
 
 	};
 

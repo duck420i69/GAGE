@@ -120,9 +120,9 @@
   <ItemGroup>
     <ClInclude Include="AssimpTest.h" />
     <ClInclude Include="Bindable.h" />
+    <ClInclude Include="BindableCodex.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Drawable.h" />
-    <ClInclude Include="DrawableBase.h" />
     <ClInclude Include="DynamicVertex.h" />
     <ClInclude Include="Events.h" />
     <ClInclude Include="Globals.h" />
@@ -150,6 +150,7 @@
     <None Include="assets\shaders\default_FS.glsl" />
     <None Include="assets\shaders\default_VS.glsl" />
     <None Include="Assets\Shaders\phong_FS.glsl" />
+    <None Include="Assets\Shaders\phong_specmap_FS.glsl" />
     <None Include="Assets\Shaders\phong_VS.glsl" />
     <None Include="Assets\Shaders\uv_FS.glsl" />
     <None Include="Assets\Shaders\uv_VS.glsl" />

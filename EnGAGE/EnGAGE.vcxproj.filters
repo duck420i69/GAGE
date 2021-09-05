@@ -75,9 +75,11 @@
     <ClCompile Include="DynamicVertex.cpp">
       <Filter>Source\Core\Render\Bindable</Filter>
     </ClCompile>
-    <ClCompile Include="Model.cpp" />
     <ClCompile Include="TransformUBuf.cpp">
       <Filter>Source\Core\Render\Bindable</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source\Core\Render\Drawable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -135,9 +137,6 @@
     <ClInclude Include="TransformUBuf.h">
       <Filter>Source\Core\Render\Bindable</Filter>
     </ClInclude>
-    <ClInclude Include="DrawableBase.h">
-      <Filter>Source\Core\Render\Drawable</Filter>
-    </ClInclude>
     <ClInclude Include="TextureObject.h">
       <Filter>Source\Core\Render\Bindable</Filter>
     </ClInclude>
@@ -157,6 +156,9 @@
       <Filter>Source\Core\Render\Drawable</Filter>
     </ClInclude>
     <ClInclude Include="DynamicVertex.h">
+      <Filter>Source\Core\Render\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="BindableCodex.h">
       <Filter>Source\Core\Render\Bindable</Filter>
     </ClInclude>
   </ItemGroup>
@@ -180,6 +182,9 @@
       <Filter>Assets\Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\phong_FS.glsl">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\phong_specmap_FS.glsl">
       <Filter>Assets\Shaders</Filter>
     </None>
   </ItemGroup>

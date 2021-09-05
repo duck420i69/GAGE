@@ -1,27 +1,11 @@
 #pragma once
+#include "Drawable.h"
 
-#include "VertexBufferObject.h"
-#include "VertexLayoutObject.h"
-#include "TransformUBuf.h"
-#include "ShaderObject.h"
-#include "DynamicVertex.h"
-#include "DrawableBase.h"
-
-#include <glm/gtc/type_ptr.hpp>
-
-#include <assimp/Importer.hpp>      // C++ importer interface
-#include <assimp/scene.h>           // Output data structure
-#include <assimp/postprocess.h>     // Post processing flags
-#include <imgui.h>
-
-#include <optional>
-
-class Mesh : public DrawableBase<Mesh> {
+class Mesh : public Drawable {
 	mutable glm::mat4x4 transform;
 public:
-	Mesh(std::vector<std::unique_ptr<Bindable>> bindptrs) noexcept;
+	Mesh(std::vector<std::shared_ptr<Bindable>> bindptrs) noexcept;
 	void Draw(glm::mat4x4 accumulated_transform) const noexcept;
-	void Update(float dt) noexcept override {}
 	inline glm::mat4x4 GetTransform() const noexcept override {
 		return transform;
 	}
@@ -71,7 +55,7 @@ public:
 	Model(const std::string& file_name) noexcept;
 	void RenderTree(const char* window_name = "Model") noexcept;
 	void Draw() const noexcept;
-	std::unique_ptr<Node> ParseNode(const aiNode& node) noexcept;
+	std::unique_ptr<Node> ParseNode(const struct aiNode& node) noexcept;
 
-	static std::unique_ptr<Mesh> ParseMesh(const aiMesh& mesh) noexcept;
+	static std::unique_ptr<Mesh> ParseMesh(const struct aiMesh& mesh, const struct aiMaterial* const* ppMaterial) noexcept;
 };

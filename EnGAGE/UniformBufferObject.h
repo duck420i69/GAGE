@@ -9,11 +9,6 @@ class UniformBufferObject final : public Bindable {
 	unsigned int slot;
 public:
 
-	UniformBufferObject(const unsigned int slot, const C& consts) noexcept : 
-		ub(Opengl::CreateUniformBuffer(slot, sizeof(C), &consts)),
-		slot(slot)
-	{}
-
 	UniformBufferObject(const unsigned int slot) noexcept : 
 		ub(Opengl::CreateUniformBuffer(slot, sizeof(C), nullptr)),
 		slot(slot)
@@ -28,4 +23,15 @@ public:
 	void Bind() const noexcept override {
 		Opengl::BindUniformBuffer(ub, slot);
 	}
+
+	static std::string GenerateUID(const unsigned int slot) noexcept {
+		using namespace std::string_literals;
+
+		return typeid(UniformBufferObject).name();
+	}
+
+	std::string GetUID() const noexcept override {
+		return GenerateUID(slot);
+	}
+
 };

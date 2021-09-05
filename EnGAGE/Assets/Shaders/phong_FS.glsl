@@ -11,7 +11,6 @@ layout(std140, binding = 1) uniform Light {
 };
 
 layout(std140, binding = 2) uniform Material {
-	vec3 mat_color;
 	float specular_intensity;
 	int specular_power;
 };
@@ -28,8 +27,11 @@ layout(std140, binding = 2) uniform Material {
 
 in vec3 FS_FragPosCam;
 in vec3 FS_Normal;
+in vec2 FS_UV;
 
 out vec4 out_Color;
+
+uniform sampler2D uDiffuse;
 
 void main()
 {
@@ -45,5 +47,5 @@ void main()
 	const vec3 r = -normalize(w * 2.0f - vToL);
 	const vec3 specular = att * (diffuse_color * diffuse_intensity) * specular_intensity * pow( max(0.0f, dot(r, normalize(FS_FragPosCam))), specular_power);
 
-	out_Color = vec4(clamp((diffuse + ambient_color + specular) * mat_color, 0.0f, 1.0f), 1.0f);
+	out_Color = vec4(clamp(((diffuse + ambient_color ) * texture(uDiffuse, FS_UV).rgb + specular), 0.0f, 1.0f) , 1.0f);
 }

@@ -23,7 +23,8 @@ public:
 		mParent(parent)
 	{
 		if (!s_buff) {
-			s_buff = std::make_unique< UniformBufferObject < TransformBuf>>(0, TransformBuf{ glm::mat4(1.0), glm::mat4(1.0f) });
+			s_buff = std::make_unique< UniformBufferObject < TransformBuf>>(0);
+			s_buff->Update(TransformBuf{ glm::mat4(1.0), glm::mat4(1.0f) });
 		}
 	}
 
