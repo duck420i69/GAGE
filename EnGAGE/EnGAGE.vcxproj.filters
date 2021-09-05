@@ -72,6 +72,13 @@
     <ClCompile Include="AssimpTest.cpp">
       <Filter>Source\Miscs</Filter>
     </ClCompile>
+    <ClCompile Include="DynamicVertex.cpp">
+      <Filter>Source\Core\Render\Bindable</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="TransformUBuf.cpp">
+      <Filter>Source\Core\Render\Bindable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">

@@ -9,42 +9,68 @@
 #include "Logger.h"
 
 class Camera {
-	mutable glm::mat4 mMatrix;
-	float r, a, b;
+	glm::vec3 mPos, mForward, mRight;
+	float mPitch, mYaw;
+
+	static constexpr float SENSITIVITY = 0.4f;
+	static constexpr float FLY_SPEED = 7.0f;
 public:
-	Camera(float r, float a, float b) noexcept :
-		r(r), a(a), b(b) {}
+	Camera() noexcept  {
+		Reset();
+	}
+
+	void Reset() noexcept {
+		mRight = { 1, 0, 0 };
+		mForward = {0, 0, -1};
+		mPos = { 0, 0, 0 };
+		mPitch = 0.0f;
+		mYaw = 0.0f;
+	}
+	void Rotate(float dPitch, float dYaw) noexcept {
+		static constexpr glm::vec3 up = glm::vec3(0, 1, 0);
+		static constexpr glm::vec3 default_forward = glm::vec3(0, 0, -1);
+
+		mYaw += -dYaw * SENSITIVITY;
+		mPitch += -dPitch * SENSITIVITY;
+
+		wrap_angle(mYaw);
+		clamp_angle(mPitch, -89.0f, 89.0f);
+
+		mForward = glm::rotate(default_forward, glm::radians(mYaw), up);
+		mRight = glm::cross(mForward, up);
+		mForward = glm::rotate(mForward, glm::radians(mPitch), mRight);
+	}
+
+	void MoveForward(float delta) noexcept {
+		mPos += mForward * FLY_SPEED * delta;
+	}
+
+	void MoveRight(float delta) noexcept {
+		mPos += mRight * FLY_SPEED * delta;
+	}
 
 	void SpawnControlWindow() noexcept {
 		ImGui::Begin("Camera");
-		ImGui::DragFloat("R", &r, 0.1f);
-		ImGui::DragFloat("A", &a);
-		ImGui::DragFloat("B", &b);
+		ImGui::DragFloat3("Position", &mPos.x, 0.1f);
+		ImGui::DragFloat("Pitch", &mPitch);
+		ImGui::DragFloat("Yaw", &mYaw);
 
 		if (ImGui::Button("Reset")) {
-			r = 1;
-			a = 0;
-			b = 0;
+			Reset();
 		}
 
 		ImGui::End();
-
-		if (b > 89) b = 89;
-		else if (b < -89) b = -89;
-
-		if (a > 360) a = -359;
-		else if (a < -360) a = 359;
 	}
 
-	const glm::mat4& GetMatrix() const noexcept{
-
-		glm::vec3 pos = glm::vec3{ r, 0.0f, 0.0f };
-		pos = glm::rotate(pos, glm::radians(b), { 0, 0, 1 });
-		pos = glm::rotate(pos, glm::radians(a), { 0, 1, 0 });
-
-
-		mMatrix = glm::lookAt(pos, glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-
-		return mMatrix;
+	const glm::mat4 GetMatrix() const noexcept{
+		return glm::lookAt(mPos, mPos + mForward, glm::vec3(0, 1, 0));
+	}
+private:
+	void wrap_angle(float& angle) {
+		if (angle > 360) angle = -359;
+		else if (angle < -360) angle = 359;
+	}
+	void clamp_angle(float& angle, const float min, const float max) {
+		angle = std::clamp(angle, min, max);
 	}
 };

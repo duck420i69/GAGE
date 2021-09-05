@@ -88,22 +88,13 @@ namespace DynamicVertex {
 			return elements.front();
 		}
 
-		const Element& ResolveByIndex(size_t i) const noexcept {
-			return elements[i];
-		}
+		const Element& ResolveByIndex(size_t i) const noexcept;
 
-		VertexLayout& Append(Type T) noexcept {
-			elements.emplace_back(T, Size());
-			return *this;
-		}
+		VertexLayout& Append(Type T) noexcept;
 
-		size_t Size() const noexcept {
-			return elements.empty() ? 0u : elements.back().GetOffsetAfter();
-		}
+		size_t Size() const noexcept;
 
-		size_t GetElementCount() const noexcept { return elements.size(); }
-
-
+		inline size_t GetElementCount() const noexcept { return elements.size(); }
 		inline const std::vector<Element>& GetElements() const noexcept { return elements; }
 	private:
 		std::vector<Element> elements;
@@ -116,11 +107,7 @@ namespace DynamicVertex {
 		const VertexLayout& layout;
 		
 	public:
-		explicit Vertex(char* pData, const VertexLayout& layout) noexcept :
-			pData(pData), layout(layout)
-		{
-			assert(pData != nullptr);
-		}
+		explicit Vertex(char* pData, const VertexLayout& layout) noexcept;
 		template<VertexLayout::Type DestType, typename SrcType>
 		void SetAttribute(char* pAttribute, SrcType&& val) noexcept {
 
@@ -193,12 +180,11 @@ namespace DynamicVertex {
 		std::vector<char> buffer;
 		VertexLayout layout;
 	public:
-		VertexBuffer(VertexLayout layout) noexcept :
-			layout(std::move(layout)) {}
+		VertexBuffer(VertexLayout layout) noexcept;
 		inline const VertexLayout& GetLayout() const noexcept { return layout; }
 		inline size_t Size() const noexcept { return buffer.size() / layout.Size(); }
 		inline size_t SizeBytes() const noexcept { return buffer.size(); }
-		inline const char* GetData() const noexcept {return buffer.data();}
+		inline const char* GetData() const noexcept { return buffer.data(); }
 
 		template<typename... Params>
 		void EmplaceBack(Params&&... params) noexcept {

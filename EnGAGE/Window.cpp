@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Window.h"
 
+#include <imgui.h>
+
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
@@ -8,6 +10,7 @@
 uint32_t Window::sWidth = 0, Window::sHeight = 0;
 GLFWwindow* Window::sWindow = nullptr;
 std::string Window::sTitle = "";
+bool Window::sCursorEnabled = true;
 
 void Window::Create(uint32_t width, uint32_t height, const std::string& title) noexcept
 {
@@ -28,8 +31,10 @@ void Window::Create(uint32_t width, uint32_t height, const std::string& title) n
 		assert(!"That bai khoi tao window !");
 	}
 	glfwMakeContextCurrent(sWindow);
-	glfwSwapInterval(1);
+	glfwSwapInterval(0);
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+
+	glfwSetInputMode(sWindow, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 }
 
 void Window::Destroy() noexcept
@@ -62,5 +67,34 @@ const uint32_t& Window::GetHeight() noexcept
 GLFWwindow* Window::GetWindow() noexcept
 {
 	return sWindow;
+}
+
+void Window::EnableCursor() noexcept
+{
+	sCursorEnabled = true;
+	glfwSetInputMode(sWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
+}
+
+void Window::ToggleCursor() noexcept
+{
+	sCursorEnabled = !sCursorEnabled;
+
+	if (sCursorEnabled)
+		EnableCursor();
+	else
+		DisableCursor();
+}
+
+void Window::DisableCursor() noexcept
+{
+	sCursorEnabled = false;
+	glfwSetInputMode(sWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouse;
+}
+
+bool Window::IsCursorEnabled() noexcept
+{
+	return sCursorEnabled;
 }
 
