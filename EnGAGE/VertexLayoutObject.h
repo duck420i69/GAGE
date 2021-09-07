@@ -28,10 +28,10 @@ public:
 
 		for (size_t i = 0; i < elements.size(); i++) {
 			Layout layout;
-			layout.slot = i;
-			layout.size = elements[i].Size() / sizeof(float);
-			layout.stride = dyn_layout.Size();
-			layout.offset = elements[i].GetOffset();
+			layout.slot = (unsigned int)i;
+			layout.size = (unsigned int)(elements[i].Size() / sizeof(float));
+			layout.stride = (unsigned int)dyn_layout.Size();
+			layout.offset = (unsigned int)elements[i].GetOffset();
 			layouts.push_back(layout);
 		}
 	}

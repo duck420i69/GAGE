@@ -31,8 +31,8 @@ public:
 		buf.diffuse_color = { 1.0f, 1.0f, 1.0f };
 		buf.diffuse_intensity = 1.0f;
 		buf.att_const = 1.0f;
-		buf.att_linear = 0.045;
-		buf.att_exponent = 0.0075;
+		buf.att_linear = 0.045f;
+		buf.att_exponent = 0.0075f;
 	}
 
 	inline void SpawnControlWindow() noexcept {
@@ -43,8 +43,8 @@ public:
 		ImGui::ColorEdit3("Diffuse Color", &buf.diffuse_color.x);
 		ImGui::SliderFloat("Diffuse Intensity", &buf.diffuse_intensity, 0, 1);
 		ImGui::SliderFloat("Attenuation constant", &buf.att_const, 0, 1);
-		ImGui::SliderFloat("Attenuation linear", &buf.att_linear, 0, 0.1, "%.3f");
-		ImGui::SliderFloat("Attenuation exponent", &buf.att_exponent, 0, 0.01, "%.7f");
+		ImGui::SliderFloat("Attenuation linear", &buf.att_linear, 0, 0.1f, "%.3f");
+		ImGui::SliderFloat("Attenuation exponent", &buf.att_exponent, 0, 0.01f, "%.7f");
 
 		if (ImGui::Button("Reset")) {
 			Reset();

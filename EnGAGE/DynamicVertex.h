@@ -16,6 +16,8 @@ namespace DynamicVertex {
 			Normal,
 			Color3,
 			Color4,
+			Tangent,
+			BiTangent
 		};
 
 		template<Type> struct Map;
@@ -51,6 +53,16 @@ namespace DynamicVertex {
 			using SysType = glm::vec4;
 			static constexpr const char* code = "C4";
 		};
+		template<> struct Map<Type::Tangent>
+		{
+			using SysType = glm::vec3;
+			static constexpr const char* code = "TA";
+		};
+		template<> struct Map<Type::BiTangent>
+		{
+			using SysType = glm::vec3;
+			static constexpr const char* code = "BTA";
+		};
 
 		class Element {
 		public:
@@ -78,6 +90,10 @@ namespace DynamicVertex {
 					return sizeof(Map<Type::Color3>::SysType);
 				case Type::Color4:
 					return sizeof(Map<Type::Color4>::SysType);
+				case Type::Tangent:
+					return sizeof(Map<Type::Tangent>::SysType);
+				case Type::BiTangent:
+					return sizeof(Map<Type::BiTangent>::SysType);
 				}
 				return 0u;
 			}
@@ -97,6 +113,10 @@ namespace DynamicVertex {
 					return Map<Type::Color3>::code;
 				case Type::Color4:
 					return Map<Type::Color4>::code;
+				case Type::Tangent:
+					return Map<Type::Tangent>::code;
+				case Type::BiTangent:
+					return Map<Type::BiTangent>::code;
 				}
 				return "";
 			}
@@ -181,6 +201,12 @@ namespace DynamicVertex {
 				break;
 			case VertexLayout::Type::Color4:
 				SetAttribute<VertexLayout::Type::Color4>(pAttribute, std::forward<T>(val));
+				break;
+			case VertexLayout::Type::Tangent:
+				SetAttribute<VertexLayout::Type::Tangent>(pAttribute, std::forward<T>(val));
+				break;
+			case VertexLayout::Type::BiTangent:
+				SetAttribute<VertexLayout::Type::BiTangent>(pAttribute, std::forward<T>(val));
 				break;
 			default:
 				assert(!"Bad element type");

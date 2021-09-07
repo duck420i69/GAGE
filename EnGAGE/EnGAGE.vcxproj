@@ -132,8 +132,8 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="Opengl.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Plane.h" />
     <ClInclude Include="PointLight.h" />
-    <ClInclude Include="Sampler.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ShaderObject.h" />
     <ClInclude Include="TextureObject.h" />
@@ -150,8 +150,12 @@
     <None Include="assets\shaders\default_FS.glsl" />
     <None Include="assets\shaders\default_VS.glsl" />
     <None Include="Assets\Shaders\phong_FS.glsl" />
+    <None Include="Assets\Shaders\phong_normalmap_VS.glsl" />
+    <None Include="Assets\Shaders\phong_normalspecmap_FS.glsl" />
     <None Include="Assets\Shaders\phong_specmap_FS.glsl" />
     <None Include="Assets\Shaders\phong_VS.glsl" />
+    <None Include="Assets\Shaders\phong_normalmap_FS.glsl" />
+    <None Include="Assets\Shaders\uniform_bindings.glsl" />
     <None Include="Assets\Shaders\uv_FS.glsl" />
     <None Include="Assets\Shaders\uv_VS.glsl" />
   </ItemGroup>

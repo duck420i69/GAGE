@@ -45,7 +45,7 @@ public:
 	static VertexBuffer CreateVertexBuffer(const uint64_t size, const void* data, const BufferUsage usage = BufferUsage::STATIC) noexcept;
 	static VertexBuffer CreateIndexBuffer(const uint64_t size, const unsigned int* data, const BufferUsage usage = BufferUsage::STATIC);
 	static UniformBuffer CreateUniformBuffer(const unsigned int slot, const uint64_t size, const void* data, const BufferUsage usage = BufferUsage::DYNAMIC) noexcept;
-	static Texture LoadTexture(const std::string& path, int* out_width = nullptr, int* out_height = nullptr) noexcept;
+	static Texture LoadTexture(const std::string& path, const Opengl::TextureFilter min_filter, const Opengl::TextureFilter mag_filter, const Opengl::TextureWrap wrap, int* out_width = nullptr, int* out_height = nullptr) noexcept;
 	static ShaderProgram LoadShader(const std::string& path) noexcept;
 	static ShaderProgram LoadShader(const std::string& vertex_path, const std::string& fragment_path) noexcept;
 	static void LoadUniformInteger(const ShaderProgram program, const std::string& name, const int i);
@@ -73,7 +73,7 @@ private:
 	static unsigned int GetTextureFilter(const TextureFilter filter) noexcept;
 	static unsigned int GetTextureWrap(const TextureWrap filter) noexcept;
 
-	static Texture LoadTextureInternal(const std::string& path, int* out_width, int* out_height) noexcept;
+	static Texture LoadTextureInternal(const std::string& path, const Opengl::TextureFilter min_filter, const Opengl::TextureFilter mag_filter, const Opengl::TextureWrap wrap, int* out_width, int* out_height) noexcept;
 
 	static uint32_t LoadShaderInternal(const std::string& path, uint32_t type) noexcept;
 	static ShaderProgram LoadShaderProgramInternal(const std::string& vertex_path, const std::string& fragment_path) noexcept;

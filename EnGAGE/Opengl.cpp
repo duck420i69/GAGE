@@ -10,7 +10,7 @@
 
 void MessageCallbackFn(
 	GLenum source,
-	GLenum type, 
+	GLenum type,
 	GLuint id,
 	GLenum severity,
 	GLsizei length,
@@ -30,8 +30,8 @@ glm::mat4x4 Opengl::s_projection = glm::mat4x4(1.0f), Opengl::s_camera = glm::ma
 void Opengl::Init() noexcept
 {
 #	ifndef NDEBUG
-		glEnable(GL_DEBUG_OUTPUT);
-		glDebugMessageCallback(MessageCallbackFn, nullptr);
+	glEnable(GL_DEBUG_OUTPUT);
+	glDebugMessageCallback(MessageCallbackFn, nullptr);
 #	endif // !NDEBUG
 
 	int texture_units, uniform_binding, uniform_block_size;
@@ -47,7 +47,7 @@ void Opengl::Init() noexcept
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
-	
+
 }
 
 void Opengl::Clear() noexcept
@@ -62,7 +62,7 @@ void Opengl::Destroy() noexcept
 	glDeleteVertexArrays(s_vaos.size(), s_vaos.data());
 	glDeleteBuffers(s_vbos.size(), s_vbos.data());
 	glDeleteTextures(s_textures.size(), s_textures.data());
-	for(const auto& program : s_shaders)
+	for (const auto& program : s_shaders)
 		glDeleteProgram(program);
 	Logger::info("Clearing gpu memory !");
 }
@@ -117,10 +117,10 @@ UniformBuffer Opengl::CreateUniformBuffer(const unsigned int slot, const uint64_
 	return vbo;
 }
 
-Texture Opengl::LoadTexture(const std::string& path, int* out_width, int* out_height) noexcept
+Texture Opengl::LoadTexture(const std::string& path, const Opengl::TextureFilter min_filter, const Opengl::TextureFilter mag_filter, const Opengl::TextureWrap wrap, int* out_width, int* out_height) noexcept
 {
 	Logger::info("Loading texture: {}", path);
-	return LoadTextureInternal(path, out_width, out_height);
+	return LoadTextureInternal(path, min_filter, mag_filter, wrap, out_width, out_height);
 }
 
 ShaderProgram Opengl::LoadShader(const std::string& path) noexcept
@@ -181,11 +181,18 @@ void Opengl::BindTexture(const Texture tex, const unsigned int slot) noexcept
 
 void Opengl::TextureParameters(const TextureFilter min_filter, const TextureFilter mag_filter, const TextureWrap wrap)
 {
+	assert(mag_filter != TextureFilter::NEAREST_MIPMAP_LINEAR && mag_filter != TextureFilter::NEAREST_MIPMAP_NEAREST &&
+		mag_filter != TextureFilter::LINEAR_MIPMAP_LINEAR && mag_filter != TextureFilter::LINEAR_MIPMAP_NEAREST && "Texture mag filter should only be NEAREST or LINEAR");
 	auto gl_min_filter = GetTextureFilter(min_filter);
 	auto gl_mag_filter = GetTextureFilter(mag_filter);
 	auto gl_wrap = GetTextureWrap(wrap);
+	if (min_filter == TextureFilter::LINEAR_MIPMAP_LINEAR || min_filter == TextureFilter::LINEAR_MIPMAP_NEAREST ||
+		min_filter == TextureFilter::NEAREST_MIPMAP_LINEAR || min_filter == TextureFilter::NEAREST_MIPMAP_NEAREST)
+	{
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_min_filter);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_min_filter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_mag_filter);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, gl_wrap);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, gl_wrap);
 }
@@ -272,7 +279,7 @@ unsigned int Opengl::GetTextureWrap(const TextureWrap filter) noexcept
 	return GL_REPEAT;;
 }
 
-Texture Opengl::LoadTextureInternal(const std::string& path, int* out_width, int* out_height) noexcept
+Texture Opengl::LoadTextureInternal(const std::string& path, const Opengl::TextureFilter min_filter, const Opengl::TextureFilter mag_filter, const Opengl::TextureWrap wrap, int* out_width, int* out_height) noexcept
 {
 	Texture texture = 0;
 	int width = 0, height = 0;
@@ -293,11 +300,10 @@ Texture Opengl::LoadTextureInternal(const std::string& path, int* out_width, int
 		glGenTextures(1, &texture);
 		glBindTexture(GL_TEXTURE_2D, texture);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		//glHint(GL_TEXTURE_COMPRESSION_HINT, GL_NICEST);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
 
-		glHint(GL_TEXTURE_COMPRESSION_HINT, GL_NICEST);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
+		TextureParameters(min_filter, mag_filter, wrap);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -317,12 +323,36 @@ Texture Opengl::LoadTextureInternal(const std::string& path, int* out_width, int
 
 uint32_t Opengl::LoadShaderInternal(const std::string& path, uint32_t type) noexcept
 {
+	std::ifstream file;
+	file.exceptions(std::ios::badbit);
 	try
 	{
-		std::string source = Utils::LoadFile(path); //throws IO exceptions
+		file.open(path);
 
+		std::stringstream source;
+		std::string line;
+		std::filesystem::path parent_dir(path);
+		while (std::getline(file , line)) {
+
+			if (line.find("#include") != std::string::npos) {
+				size_t pos = line.find_first_of("\"") + 1;
+				size_t size = line.size() - pos - 1;
+				auto include_file = line.substr(pos, size);
+				std::stringstream include_dir_src = Utils::LoadFile(parent_dir.parent_path().string() +
+					 + "/" + include_file);
+
+				source << include_dir_src.str() << "\n";
+			}
+			else {
+				source << line << "\n";
+			}
+		}
+
+		file.close();
+
+		std::string source_str = source.str();
 		uint32_t shader = glCreateShader(type);
-		const char* source_c_str = source.c_str();
+		const char* source_c_str = source_str.c_str();
 		glShaderSource(shader, 1, &source_c_str, nullptr);
 		glCompileShader(shader);
 
@@ -340,7 +370,7 @@ uint32_t Opengl::LoadShaderInternal(const std::string& path, uint32_t type) noex
 		}
 		return shader;
 	}
-	catch (std::ios::failure& e)
+	catch (const std::ios_base::failure& e)
 	{
 		Logger::error("Error loading shader file: {}, io: {}", path, e.what());
 	}

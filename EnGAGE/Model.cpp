@@ -7,7 +7,7 @@
 #include "TransformUBuf.h"
 #include "ShaderObject.h"
 #include "DynamicVertex.h"
-#include "Sampler.h"
+#include "Logger.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -104,14 +104,17 @@ glm::mat4x4 ModelWindow::GetTransform() const noexcept
 	return model;
 }
 
-Model::Model(const std::string& file_name) noexcept :
+Model::Model(const std::string& file_path) noexcept :
 	model_window(std::make_unique<ModelWindow>())
 {
+	Logger::info("Loading Assimp: {}", file_path);
 	Assimp::Importer importer;
-	const auto pScene = importer.ReadFile(file_name, aiProcess_Triangulate | aiProcess_JoinIdenticalVertices);
+	const auto pScene = importer.ReadFile(file_path,
+		aiProcess_Triangulate | aiProcess_JoinIdenticalVertices |
+		aiProcess_GenNormals | aiProcess_CalcTangentSpace);
 
 	for (size_t i = 0; i < pScene->mNumMeshes; i++) {
-		meshes.push_back(ParseMesh(*pScene->mMeshes[i], pScene->mMaterials));
+		meshes.push_back(ParseMesh(*pScene->mMeshes[i], pScene->mMaterials, file_path));
 	}
 	root = ParseNode(*pScene->mRootNode);
 }
@@ -150,24 +153,272 @@ std::unique_ptr<Node> Model::ParseNode(const aiNode& node) noexcept
 	return pNode;
 }
 
-std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* const* ppMaterial) noexcept
+std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* const* ppMaterial,
+	const std::filesystem::path& full_path) noexcept
 {
 	namespace dv = DynamicVertex;
 
 	std::vector<std::shared_ptr<Bindable>> bindables;
-	dv::VertexLayout layout;
-	layout.Append(dv::VertexLayout::Type::Position3D).Append(dv::VertexLayout::Type::Normal).Append(dv::VertexLayout::Type::Texture2D);
-	dv::VertexBuffer buf(layout);
 
 	const aiMaterial& mat = *ppMaterial[mesh.mMaterialIndex];
 
+	//Material
+	bool has_diffuse = false;
+	bool has_specular_map = false;
+	bool has_normal_map = false;
+	float shininess = 35.0f;
+	glm::vec3 mat_color = { 1, 1, 1 };
+	const std::string path = full_path.parent_path().string() + "\\";
+	if (mesh.mMaterialIndex >= 0) {
 
-	//Vertices
-	for (unsigned int i = 0; i < mesh.mNumVertices; i++) {
-		buf.EmplaceBack(
-			glm::vec3{ mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z },
-			glm::vec3{ mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z }, 
-			glm::vec2{ mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y });
+		auto min_filter = Opengl::TextureFilter::LINEAR_MIPMAP_LINEAR;
+		auto mag_filter = Opengl::TextureFilter::NEAREST;
+		auto wrap = Opengl::TextureWrap::REPEAT;
+
+		const aiMaterial& mat = *ppMaterial[mesh.mMaterialIndex];
+		aiString texture_file_name;
+
+		if (mat.GetTexture(aiTextureType_DIFFUSE, 0, &texture_file_name) == aiReturn_SUCCESS) {
+			bindables.push_back(BindableCodex::Resolve<TextureObject>(path + std::string(texture_file_name.C_Str()), min_filter, mag_filter, wrap, 0));
+			has_diffuse = true;
+		}
+		else {
+			aiColor3D c;
+			mat.Get(AI_MATKEY_COLOR_DIFFUSE, c);
+			mat_color.r = c.r;
+			mat_color.g = c.g;
+			mat_color.b = c.b;
+		}
+
+		if (mat.GetTexture(aiTextureType_SPECULAR, 0, &texture_file_name) == aiReturn_SUCCESS) {
+			bindables.push_back(BindableCodex::Resolve<TextureObject>(path + std::string(texture_file_name.C_Str()), min_filter, mag_filter, wrap, 1));
+			has_specular_map = true;
+		}
+		else {
+			mat.Get(AI_MATKEY_SHININESS, shininess);
+		}
+
+		if (mat.GetTexture(aiTextureType_NORMALS, 0, &texture_file_name) == aiReturn_SUCCESS) {
+			bindables.push_back(BindableCodex::Resolve<TextureObject>(path + std::string(texture_file_name.C_Str()), min_filter, mag_filter, wrap, 2));
+			has_normal_map = true;
+		}
+	}
+
+
+	const auto mesh_tag = path + "#" + mesh.mName.C_Str();
+
+
+	if (has_diffuse && has_specular_map && has_normal_map) {
+		dv::VertexLayout layout;
+		layout.
+			Append(dv::VertexLayout::Type::Position3D).
+			Append(dv::VertexLayout::Type::Normal).
+			Append(dv::VertexLayout::Type::Texture2D).
+			Append(dv::VertexLayout::Type::Tangent).
+			Append(dv::VertexLayout::Type::BiTangent);
+		dv::VertexBuffer buf(layout);
+
+		//Vertices
+		for (unsigned int i = 0; i < mesh.mNumVertices; i++) {
+			buf.EmplaceBack(
+				glm::vec3{ mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z },
+				glm::vec3{ mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z },
+				glm::vec2{ mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y },
+				glm::vec3{ mesh.mTangents[i].x, mesh.mTangents[i].y, mesh.mTangents[i].z },
+				glm::vec3{ mesh.mBitangents[i].x, mesh.mBitangents[i].y, mesh.mBitangents[i].z });
+
+		}
+
+		//Load shader
+
+		auto shader = BindableCodex::Resolve < ShaderObject>("Assets/Shaders/phong_normalmap_VS.glsl", "Assets/Shaders/phong_normalspecmap_FS.glsl");
+		shader->LoadTextureSlot("uDiffuse", 0);
+		shader->LoadTextureSlot("uSpecular", 1);
+		shader->LoadTextureSlot("uNormal", 2);
+
+
+		//Load bindables
+		bindables.push_back(std::move(shader));
+		bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, buf));
+		bindables.push_back(BindableCodex::Resolve<VertexLayoutObject>(layout));
+
+
+	}
+	else if (has_diffuse && has_normal_map) {
+		dv::VertexLayout layout;
+		layout.
+			Append(dv::VertexLayout::Type::Position3D).
+			Append(dv::VertexLayout::Type::Normal).
+			Append(dv::VertexLayout::Type::Texture2D).
+			Append(dv::VertexLayout::Type::Tangent).
+			Append(dv::VertexLayout::Type::BiTangent);
+		dv::VertexBuffer buf(layout);
+
+		//Vertices
+		for (unsigned int i = 0; i < mesh.mNumVertices; i++) {
+			buf.EmplaceBack(
+				glm::vec3{ mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z },
+				glm::vec3{ mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z },
+				glm::vec2{ mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y },
+				glm::vec3{ mesh.mTangents[i].x, mesh.mTangents[i].y, mesh.mTangents[i].z },
+				glm::vec3{ mesh.mBitangents[i].x, mesh.mBitangents[i].y, mesh.mBitangents[i].z });
+
+		}
+		//Load shader
+
+		auto shader = BindableCodex::Resolve < ShaderObject>("Assets/Shaders/phong_normalmap_VS.glsl", "Assets/Shaders/phong_normalmap_FS.glsl");
+		shader->LoadTextureSlot("uDiffuse", 0);
+		shader->LoadTextureSlot("uNormal", 2);
+
+
+		//Uniform buffer
+		struct MaterialUBuf {
+			float specular_intensity;
+			float specular_power;
+			int enable_normal;
+			float padding;
+		} material;
+		material.specular_intensity = 0.8f;
+		material.specular_power = shininess;
+		material.enable_normal = true;
+
+		auto mat_ubuf = std::make_shared<UniformBufferObject<MaterialUBuf>>(UniformBufferObject<MaterialUBuf>(2));
+		mat_ubuf->Update(material);
+
+		//Load bindables
+		bindables.push_back(mat_ubuf);
+		bindables.push_back(std::move(shader));
+		bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, buf));
+		bindables.push_back(BindableCodex::Resolve<VertexLayoutObject>(layout));
+	}
+	else if (has_diffuse && has_specular_map) {
+		dv::VertexLayout layout;
+		layout.
+			Append(dv::VertexLayout::Type::Position3D).
+			Append(dv::VertexLayout::Type::Normal).
+			Append(dv::VertexLayout::Type::Texture2D);
+		dv::VertexBuffer buf(layout);
+
+		//Vertices
+		for (unsigned int i = 0; i < mesh.mNumVertices; i++) {
+			buf.EmplaceBack(
+				glm::vec3{ mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z },
+				glm::vec3{ mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z },
+				glm::vec2{ mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y });
+
+		}
+		//Load shader
+
+		auto shader = BindableCodex::Resolve < ShaderObject>("Assets/Shaders/phong_VS.glsl", "Assets/Shaders/phong_specmap_FS.glsl");
+		shader->LoadTextureSlot("uDiffuse", 0);
+		shader->LoadTextureSlot("uSpecular", 1);
+
+
+		//Uniform buffer
+		struct MaterialUBuf {
+			float specular_intensity;
+			float specular_power;
+			float padding[2];
+		} material;
+		material.specular_intensity = 0.8f;
+		material.specular_power = shininess;
+
+		auto mat_ubuf = std::make_shared<UniformBufferObject<MaterialUBuf>>(UniformBufferObject<MaterialUBuf>(2));
+		mat_ubuf->Update(material);
+
+		//Load bindables
+		bindables.push_back(mat_ubuf);
+		bindables.push_back(std::move(shader));
+		bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, buf));
+		bindables.push_back(BindableCodex::Resolve<VertexLayoutObject>(layout));
+	}
+	else if (has_diffuse && !has_normal_map && !has_specular_map) {
+		dv::VertexLayout layout;
+		layout.
+			Append(dv::VertexLayout::Type::Position3D).
+			Append(dv::VertexLayout::Type::Normal).Append(dv::VertexLayout::Type::Texture2D);
+		dv::VertexBuffer buf(layout);
+
+		//Vertices
+		for (unsigned int i = 0; i < mesh.mNumVertices; i++) {
+			buf.EmplaceBack(
+				glm::vec3{ mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z },
+				glm::vec3{ mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z },
+				glm::vec2{ mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y });
+
+		}
+
+		//Load shader
+
+		auto shader = BindableCodex::Resolve < ShaderObject>("Assets/Shaders/phong_VS.glsl", "Assets/Shaders/phong_FS.glsl");
+
+
+		//Uniform buffer
+		struct MaterialUBuf {
+			glm::vec3 mat_color;
+			float specular_intensity;
+			float specular_power;
+			int has_texture;
+
+			float padding[2];
+		} material;
+		material.mat_color = mat_color;
+		material.specular_intensity = 0.8f;
+		material.specular_power = shininess;
+		material.has_texture = true;
+
+		auto mat_ubuf = std::make_shared<UniformBufferObject<MaterialUBuf>>(UniformBufferObject<MaterialUBuf>(2));
+		mat_ubuf->Update(material);
+
+		//Load bindables
+		bindables.push_back(mat_ubuf);
+		bindables.push_back(std::move(shader));
+		bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, buf));
+		bindables.push_back(BindableCodex::Resolve<VertexLayoutObject>(layout));
+	}
+	else if (!has_diffuse && !has_normal_map && !has_specular_map) {
+		dv::VertexLayout layout;
+		layout.
+			Append(dv::VertexLayout::Type::Position3D).
+			Append(dv::VertexLayout::Type::Normal).Append(dv::VertexLayout::Type::Texture2D);
+		dv::VertexBuffer buf(layout);
+
+		//Vertices
+		for (unsigned int i = 0; i < mesh.mNumVertices; i++) {
+			buf.EmplaceBack(
+				glm::vec3{ mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z },
+				glm::vec3{ mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z },
+				glm::vec2{ mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y });
+
+		}
+		//Load shader
+
+		auto shader = BindableCodex::Resolve < ShaderObject>("Assets/Shaders/phong_VS.glsl", "Assets/Shaders/phong_FS.glsl");
+
+
+		//Uniform buffer
+		struct MaterialUBuf {
+			glm::vec3 mat_color;
+			float specular_intensity;
+			float specular_power;
+			int has_texture;
+
+			float padding[2];
+		} material;
+		material.mat_color = mat_color;
+		material.specular_intensity = 0.18f;
+		material.specular_power = shininess;
+		material.has_texture = false;
+
+		auto mat_ubuf = std::make_shared<UniformBufferObject<MaterialUBuf>>(UniformBufferObject<MaterialUBuf>(2));
+		mat_ubuf->Update(material);
+
+		//Load bindables
+		bindables.push_back(mat_ubuf);
+		bindables.push_back(std::move(shader));
+		bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, buf));
+		bindables.push_back(BindableCodex::Resolve<VertexLayoutObject>(layout));
+
 	}
 
 	//Indices
@@ -179,56 +430,8 @@ std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* con
 		indices.push_back(face.mIndices[1]);
 		indices.push_back(face.mIndices[2]);
 	}
+	bindables.push_back(BindableCodex::Resolve<IndexBufferObject>(mesh_tag, indices));
 
-	//Material
-	bool has_specular_map = false;
-	float shininess = 35.0f;
-	if (mesh.mMaterialIndex >= 0) {
-		const aiMaterial& mat = *ppMaterial[mesh.mMaterialIndex];
-		aiString texture_file_name;
-		mat.GetTexture(aiTextureType_DIFFUSE, 0, &texture_file_name);
-		bindables.push_back(BindableCodex::Resolve<TextureObject>( "Assets/Models/nano_textured/" + std::string(texture_file_name.C_Str()), 0));
-		bindables.push_back(BindableCodex::Resolve<Sampler>(Opengl::TextureFilter::NEAREST, Opengl::TextureFilter::NEAREST, Opengl::TextureWrap::REPEAT));
-
-
-		if (mat.GetTexture(aiTextureType_SPECULAR, 0, &texture_file_name) == aiReturn_SUCCESS) {
-			bindables.push_back(BindableCodex::Resolve<TextureObject>("Assets/Models/nano_textured/" + std::string(texture_file_name.C_Str()), 1));
-			bindables.push_back(BindableCodex::Resolve<Sampler>(Opengl::TextureFilter::NEAREST, Opengl::TextureFilter::NEAREST, Opengl::TextureWrap::REPEAT));
-			has_specular_map = true;
-		}
-		else {
-			mat.Get(AI_MATKEY_SHININESS, shininess);
-		}
-	}
-
-	
-	bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh.mName.C_Str(), buf));
-	bindables.push_back(BindableCodex::Resolve<VertexLayoutObject>(layout));
-	std::shared_ptr<ShaderObject> shader;
-	
-	if (has_specular_map) {
-		shader = BindableCodex::Resolve < ShaderObject>("Assets/Shaders/phong_VS.glsl", "Assets/Shaders/phong_specmap_FS.glsl");
-	}
-	else {
-		shader = BindableCodex::Resolve < ShaderObject>("Assets/Shaders/phong_VS.glsl", "Assets/Shaders/phong_FS.glsl");
-	}
-	shader->LoadTextureSlot("uDiffuse", 0);
-	shader->LoadTextureSlot("uSpecular", 1);
-
-	bindables.push_back(std::move(shader));
-	bindables.push_back(BindableCodex::Resolve <IndexBufferObject>(mesh.mName.C_Str(), indices));
-
-	//Material per instance
-	struct MaterialUBuf {
-		float specular_intensity;
-		int specular_power;
-		float padding[2];
-	} material;
-	material.specular_intensity = 0.8f;
-	material.specular_power = shininess;
-	auto mat_ubuf = std::make_shared<UniformBufferObject<MaterialUBuf>>(UniformBufferObject<MaterialUBuf>(2));
-	mat_ubuf->Update(material);
-	bindables.push_back(mat_ubuf);
 
 	return std::make_unique<Mesh>(std::move(bindables));
 }

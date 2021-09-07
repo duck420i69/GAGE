@@ -52,10 +52,11 @@ class Model {
 	std::unique_ptr<ModelWindow> model_window;
 
 public:
-	Model(const std::string& file_name) noexcept;
+	Model(const std::string& file_path) noexcept;
 	void RenderTree(const char* window_name = "Model") noexcept;
 	void Draw() const noexcept;
 	std::unique_ptr<Node> ParseNode(const struct aiNode& node) noexcept;
 
-	static std::unique_ptr<Mesh> ParseMesh(const struct aiMesh& mesh, const struct aiMaterial* const* ppMaterial) noexcept;
+	static std::unique_ptr<Mesh> ParseMesh(const struct aiMesh& mesh, const struct aiMaterial* const* ppMaterial,
+		const std::filesystem::path& full_path) noexcept;
 };

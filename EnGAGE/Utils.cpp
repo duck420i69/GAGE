@@ -15,7 +15,7 @@ std::vector<std::string> Utils::SplitString(std::string str, const std::string& 
     return tokens;
 }
 
-std::string Utils::LoadFile(const std::string& path) noexcept(false)
+std::stringstream Utils::LoadFile(const std::string& path) noexcept(false)
 {
     std::stringstream ss;
     std::ifstream f;
@@ -23,6 +23,6 @@ std::string Utils::LoadFile(const std::string& path) noexcept(false)
 
     f.open(path);
     ss << f.rdbuf();
-    return ss.str();
+    return ss;
 }
 

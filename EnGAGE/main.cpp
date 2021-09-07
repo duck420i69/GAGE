@@ -24,11 +24,11 @@ int main()
 
 	Globals::ChangeScene<MenuScene>();
 
-	float start_time = glfwGetTime();
+	float start_time = (float)glfwGetTime();
 	float end_time = start_time;
 	while (!Window::IsCloseRequested())
 	{
-		end_time = glfwGetTime();
+		end_time = (float)glfwGetTime();
 		float dt = end_time - start_time;
 		start_time = end_time;
 

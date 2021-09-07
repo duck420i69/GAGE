@@ -140,9 +140,6 @@
     <ClInclude Include="TextureObject.h">
       <Filter>Source\Core\Render\Bindable</Filter>
     </ClInclude>
-    <ClInclude Include="Sampler.h">
-      <Filter>Source\Core\Render\Bindable</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Source\Core\Render</Filter>
     </ClInclude>
@@ -160,6 +157,9 @@
     </ClInclude>
     <ClInclude Include="BindableCodex.h">
       <Filter>Source\Core\Render\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="Plane.h">
+      <Filter>Source\Core\Render\Drawable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -185,6 +185,18 @@
       <Filter>Assets\Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\phong_specmap_FS.glsl">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\phong_normalmap_FS.glsl">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\phong_normalmap_VS.glsl">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\phong_normalspecmap_FS.glsl">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\uniform_bindings.glsl">
       <Filter>Assets\Shaders</Filter>
     </None>
   </ItemGroup>

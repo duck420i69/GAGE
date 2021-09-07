@@ -1,28 +1,13 @@
 #version 460 core
 
-layout(std140, binding = 1) uniform Light {
-	vec3 light_pos;
-	vec3 ambient_color;
-	vec3 diffuse_color;
-	float diffuse_intensity;
-	float att_const;
-	float att_linear;
-	float att_exponent;
-};
+#include "uniform_bindings.glsl"
 
 layout(std140, binding = 2) uniform Material {
+	vec3 mat_color;
 	float specular_intensity;
 	int specular_power;
+	bool has_texture;
 };
-
-
-//const vec3 mat_color = {0.7f, 0.7f, 0.9f};
-//const vec3 ambient_color = {0.05f, 0.05f, 0.05f};
-//const vec3 diffuse_color = {1.0f, 1.0f, 1.0f};
-//const float diffuse_intensity = 1.0f;
-//const float att_const = 1.0f;
-//const float att_linear = 0.045f;
-//const float att_exponent = 0.0075f;
 
 
 in vec3 FS_FragPosCam;
@@ -47,5 +32,13 @@ void main()
 	const vec3 r = -normalize(w * 2.0f - vToL);
 	const vec3 specular = att * (diffuse_color * diffuse_intensity) * specular_intensity * pow( max(0.0f, dot(r, normalize(FS_FragPosCam))), specular_power);
 
-	out_Color = vec4(clamp(((diffuse + ambient_color ) * texture(uDiffuse, FS_UV).rgb + specular), 0.0f, 1.0f) , 1.0f);
+	vec3 texture_color = vec3(1, 1, 1);
+
+	if(has_texture) {
+		texture_color = texture(uDiffuse, FS_UV).rgb;
+	} else {
+		texture_color = mat_color;
+	}
+
+	out_Color = vec4(clamp(((diffuse + ambient_color ) * texture_color  + specular), 0.0f, 1.0f) , 1.0f);
 }

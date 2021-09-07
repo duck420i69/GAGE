@@ -11,6 +11,7 @@
 class Camera {
 	glm::vec3 mPos, mForward, mRight;
 	float mPitch, mYaw;
+	float mSpeed;
 
 	static constexpr float SENSITIVITY = 0.4f;
 	static constexpr float FLY_SPEED = 7.0f;
@@ -25,6 +26,7 @@ public:
 		mPos = { 0, 0, 0 };
 		mPitch = 0.0f;
 		mYaw = 0.0f;
+		mSpeed = FLY_SPEED;
 	}
 	void Rotate(float dPitch, float dYaw) noexcept {
 
@@ -39,11 +41,11 @@ public:
 	}
 
 	void MoveForward(float delta) noexcept {
-		mPos += mForward * FLY_SPEED * delta;
+		mPos += mForward * mSpeed * delta;
 	}
 
 	void MoveRight(float delta) noexcept {
-		mPos += mRight * FLY_SPEED * delta;
+		mPos += mRight * mSpeed * delta;
 	}
 
 	void SpawnControlWindow() noexcept {
@@ -51,6 +53,7 @@ public:
 		ImGui::DragFloat3("Position", &mPos.x, 0.1f);
 		ImGui::DragFloat("Pitch", &mPitch);
 		ImGui::DragFloat("Yaw", &mYaw);
+		ImGui::DragFloat("Fly Speed", &mSpeed, 0.1f, 1.0f, 10.0f);
 
 		if (ImGui::Button("Reset")) {
 			Reset();
