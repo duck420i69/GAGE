@@ -6,16 +6,15 @@
 #include <memory>
 
 #include "Bindable.h"
-#include "IndexBufferObject.h"
 #include "Opengl.h"
 
 
 class Drawable {
 	std::vector<std::shared_ptr<Bindable>> mBinds;
 protected:
-	const IndexBufferObject* mIndexBuffer = nullptr;
+	const int mVertexCount = 0;
 public:
-	Drawable() = default;
+	Drawable(const int vertex_count) noexcept : mVertexCount(vertex_count) {};
 	Drawable(const Drawable&) = delete;
 	virtual ~Drawable() = default;
 
@@ -23,16 +22,10 @@ public:
 		for (auto& b : mBinds) {
 			b->Bind();
 		}
-		Opengl::DrawIndexed(mIndexBuffer->GetCount());
+		Opengl::DrawIndexed(mVertexCount);
 	}
 
 	void AddBind(std::shared_ptr<Bindable> bind) noexcept {
-
-		if (typeid(*bind) == typeid(IndexBufferObject)) {
-			assert(mIndexBuffer == nullptr && "IndexBufferObject already added !");
-			mIndexBuffer = &static_cast<IndexBufferObject&>(*bind);
-		}
-
 		mBinds.push_back(std::move(bind));
 	}
 

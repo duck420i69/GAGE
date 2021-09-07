@@ -3,7 +3,6 @@
 
 #include "TextureObject.h"
 #include "VertexBufferObject.h"
-#include "VertexLayoutObject.h"
 #include "TransformUBuf.h"
 #include "ShaderObject.h"
 #include "DynamicVertex.h"
@@ -16,7 +15,8 @@
 #include <assimp/postprocess.h>     // Post processing flags
 #include <imgui.h>
 
-Mesh::Mesh(std::vector<std::shared_ptr<Bindable>> bindptrs) noexcept
+Mesh::Mesh(std::vector<std::shared_ptr<Bindable>> bindptrs, const int vertex_count) noexcept :
+	Drawable(vertex_count)
 {
 
 	for (auto& pb : bindptrs) {
@@ -89,6 +89,7 @@ void ModelWindow::RenderTree(Node& root, const char* window_name) noexcept
 		TransformParams& transform = transforms[*selected_index];
 		ImGui::DragFloat3("Rotation", &transform.roll);
 		ImGui::DragFloat3("Position", &transform.x);
+		ImGui::DragFloat("Scale", &transform.scale, 0.01f);
 	}
 	ImGui::End();
 }
@@ -101,6 +102,7 @@ glm::mat4x4 ModelWindow::GetTransform() const noexcept
 	model = glm::rotate(model, glm::radians(transform.pitch), { 1, 0, 0 });
 	model = glm::rotate(model, glm::radians(transform.yaw), { 0, 1, 0 });
 	model = glm::rotate(model, glm::radians(transform.roll), { 0, 0, 1 });
+	model = glm::scale(model, { transform.scale, transform.scale, transform.scale });
 	return model;
 }
 
@@ -171,7 +173,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* con
 	const std::string path = full_path.parent_path().string() + "\\";
 	if (mesh.mMaterialIndex >= 0) {
 
-		auto min_filter = Opengl::TextureFilter::LINEAR_MIPMAP_LINEAR;
+		auto min_filter = Opengl::TextureFilter::LINEAR_MIPMAP_NEAREST;
 		auto mag_filter = Opengl::TextureFilter::NEAREST;
 		auto wrap = Opengl::TextureWrap::REPEAT;
 
@@ -206,6 +208,15 @@ std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* con
 
 
 	const auto mesh_tag = path + "#" + mesh.mName.C_Str();
+	//Indices
+	std::vector<unsigned int> indices;
+	indices.reserve((size_t)mesh.mNumFaces * 3);
+	for (unsigned int i = 0; i < mesh.mNumFaces; i++) {
+		const auto& face = mesh.mFaces[i];
+		indices.push_back(face.mIndices[0]);
+		indices.push_back(face.mIndices[1]);
+		indices.push_back(face.mIndices[2]);
+	}
 
 
 	if (has_diffuse && has_specular_map && has_normal_map) {
@@ -239,8 +250,8 @@ std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* con
 
 		//Load bindables
 		bindables.push_back(std::move(shader));
-		bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, buf));
-		bindables.push_back(BindableCodex::Resolve<VertexLayoutObject>(layout));
+		VertexBuffer ib = Opengl::CreateIndexBuffer(indices.size(), indices.data());
+		bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, layout, ib, buf));
 
 
 	}
@@ -278,7 +289,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* con
 			int enable_normal;
 			float padding;
 		} material;
-		material.specular_intensity = 0.8f;
+		material.specular_intensity = 15.8f;
 		material.specular_power = shininess;
 		material.enable_normal = true;
 
@@ -288,8 +299,8 @@ std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* con
 		//Load bindables
 		bindables.push_back(mat_ubuf);
 		bindables.push_back(std::move(shader));
-		bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, buf));
-		bindables.push_back(BindableCodex::Resolve<VertexLayoutObject>(layout));
+		VertexBuffer ib = Opengl::CreateIndexBuffer(indices.size(), indices.data());
+		bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, layout, ib, buf));
 	}
 	else if (has_diffuse && has_specular_map) {
 		dv::VertexLayout layout;
@@ -320,7 +331,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* con
 			float specular_power;
 			float padding[2];
 		} material;
-		material.specular_intensity = 0.8f;
+		material.specular_intensity = 15.8f;
 		material.specular_power = shininess;
 
 		auto mat_ubuf = std::make_shared<UniformBufferObject<MaterialUBuf>>(UniformBufferObject<MaterialUBuf>(2));
@@ -329,8 +340,8 @@ std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* con
 		//Load bindables
 		bindables.push_back(mat_ubuf);
 		bindables.push_back(std::move(shader));
-		bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, buf));
-		bindables.push_back(BindableCodex::Resolve<VertexLayoutObject>(layout));
+		VertexBuffer ib = Opengl::CreateIndexBuffer(indices.size(), indices.data());
+		bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, layout, ib, buf));
 	}
 	else if (has_diffuse && !has_normal_map && !has_specular_map) {
 		dv::VertexLayout layout;
@@ -363,7 +374,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* con
 			float padding[2];
 		} material;
 		material.mat_color = mat_color;
-		material.specular_intensity = 0.8f;
+		material.specular_intensity = 15.8f;
 		material.specular_power = shininess;
 		material.has_texture = true;
 
@@ -373,8 +384,8 @@ std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* con
 		//Load bindables
 		bindables.push_back(mat_ubuf);
 		bindables.push_back(std::move(shader));
-		bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, buf));
-		bindables.push_back(BindableCodex::Resolve<VertexLayoutObject>(layout));
+		VertexBuffer ib = Opengl::CreateIndexBuffer(indices.size(), indices.data());
+		bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, layout, ib, buf));
 	}
 	else if (!has_diffuse && !has_normal_map && !has_specular_map) {
 		dv::VertexLayout layout;
@@ -406,7 +417,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* con
 			float padding[2];
 		} material;
 		material.mat_color = mat_color;
-		material.specular_intensity = 0.18f;
+		material.specular_intensity = 15.8f;
 		material.specular_power = shininess;
 		material.has_texture = false;
 
@@ -416,22 +427,9 @@ std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* con
 		//Load bindables
 		bindables.push_back(mat_ubuf);
 		bindables.push_back(std::move(shader));
-		bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, buf));
-		bindables.push_back(BindableCodex::Resolve<VertexLayoutObject>(layout));
+		VertexBuffer ib = Opengl::CreateIndexBuffer(indices.size(), indices.data());
+		bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, layout, ib, buf));
 
 	}
-
-	//Indices
-	std::vector<unsigned int> indices;
-	indices.reserve((size_t)mesh.mNumFaces * 3);
-	for (unsigned int i = 0; i < mesh.mNumFaces; i++) {
-		const auto& face = mesh.mFaces[i];
-		indices.push_back(face.mIndices[0]);
-		indices.push_back(face.mIndices[1]);
-		indices.push_back(face.mIndices[2]);
-	}
-	bindables.push_back(BindableCodex::Resolve<IndexBufferObject>(mesh_tag, indices));
-
-
-	return std::make_unique<Mesh>(std::move(bindables));
+	return std::make_unique<Mesh>(std::move(bindables), indices.size());
 }

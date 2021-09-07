@@ -31,7 +31,7 @@ void Window::Create(uint32_t width, uint32_t height, const std::string& title) n
 		assert(!"That bai khoi tao window !");
 	}
 	glfwMakeContextCurrent(sWindow);
-	glfwSwapInterval(1);
+	glfwSwapInterval(0);
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
 	glfwSetInputMode(sWindow, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);

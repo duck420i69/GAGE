@@ -5,7 +5,6 @@
 #include "DynamicVertex.h"
 #include "BindableCodex.h"
 #include "VertexBufferObject.h"
-#include "VertexLayoutObject.h"
 #include "ShaderObject.h"
 #include "UniformBufferObject.h"
 #include "TextureObject.h"
@@ -20,7 +19,7 @@ class Plane final : public Drawable {
 	} material;
 	std::shared_ptr<UniformBufferObject<MaterialUBuf>> mMatBuf;
 public:
-	Plane() noexcept {
+	Plane() noexcept : Drawable(6) {
 		material.specular_intensity = 0.1f;
 		material.specular_power = 45;
 		material.enable_normal = true;
@@ -51,9 +50,8 @@ public:
 		shader->LoadTextureSlot("uDiffuse", 0);
 		shader->LoadTextureSlot("uNormal", 1);
 		AddBind(std::move(shader));
-		AddBind(BindableCodex::Resolve<VertexBufferObject>("plane_mesh", vbuf));
-		AddBind(BindableCodex::Resolve<IndexBufferObject>("plane_mesh", indices));
-		AddBind(BindableCodex::Resolve<VertexLayoutObject>(layout));
+		VertexBuffer ib = Opengl::CreateIndexBuffer(indices.size(), indices.data());
+		AddBind(BindableCodex::Resolve<VertexBufferObject>("plane_mesh", layout, ib, vbuf));
 
 		AddBind(std::make_unique<TransformUBuf>(*this));
 	}

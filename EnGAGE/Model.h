@@ -4,7 +4,7 @@
 class Mesh : public Drawable {
 	mutable glm::mat4x4 transform;
 public:
-	Mesh(std::vector<std::shared_ptr<Bindable>> bindptrs) noexcept;
+	Mesh(std::vector<std::shared_ptr<Bindable>> bindptrs, const int vertex_count) noexcept;
 	void Draw(glm::mat4x4 accumulated_transform) const noexcept;
 	inline glm::mat4x4 GetTransform() const noexcept override {
 		return transform;
@@ -36,6 +36,7 @@ class ModelWindow {
 		float x = 0.0f;
 		float y = 0.0f;
 		float z = 0.0f;
+		float scale = 1.0f;
 	};
 	Node* p_selected_node = nullptr;
 	std::optional<int> selected_index;

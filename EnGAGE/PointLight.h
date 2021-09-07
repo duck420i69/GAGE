@@ -27,7 +27,7 @@ public:
 
 	inline void Reset() noexcept {
 		buf.light_pos = { 0, 0, 0 };
-		buf.ambient_color = { 0.05f, 0.05f, 0.05f };
+		buf.ambient_color = { 0.5f, 0.5f, 0.5f };
 		buf.diffuse_color = { 1.0f, 1.0f, 1.0f };
 		buf.diffuse_intensity = 1.0f;
 		buf.att_const = 1.0f;

@@ -13,16 +13,16 @@
 #include <imgui.h>
 
 class MenuScene final : public Scene{
-	Model mNano, mGobber;
+	Model mNano,  mSponza;
 	Camera mCam;
 	PointLight mLight;
 public:
 	MenuScene() noexcept :
 		mCam(),
 		mNano("Assets/Models/nano_textured/nanosuit.obj"),
-		mGobber("Assets/Models/gobber/GoblinX.obj")
+		mSponza("Assets/Models/Sponza/sponza.obj")
 	{		
-		Opengl::SetProjection(glm::perspective(glm::radians(75.0f), 16.0f / 9.0f, 0.5f, 100.0f));
+		Opengl::SetProjection(glm::perspective(glm::radians(75.0f), 16.0f / 9.0f, 0.5f, 400.0f));
 	}
 	void Update(float delta) noexcept override {
 		if (Events::IsKeyDownOnce(Events::KEY_TAB)) {
@@ -50,11 +50,12 @@ public:
 		Opengl::Clear();
 		mLight.Bind(mCam.GetMatrix());	
 		mNano.Draw();
-		mGobber.Draw();
+		mSponza.Draw();
 	};
 	void ImGui() noexcept override {
 		mCam.SpawnControlWindow();
 		mLight.SpawnControlWindow();
+		mSponza.RenderTree("Sponza");
 	};
 
 	const char* GetName() const noexcept { return "Menu Scene"; }

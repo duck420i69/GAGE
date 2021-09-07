@@ -96,7 +96,7 @@ VertexBuffer Opengl::CreateIndexBuffer(const uint64_t size, const unsigned int* 
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, opengl_usage);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, size * sizeof(unsigned int), data, opengl_usage);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	s_vbos.push_back(vbo);
 	return vbo;
@@ -300,8 +300,12 @@ Texture Opengl::LoadTextureInternal(const std::string& path, const Opengl::Textu
 		glGenTextures(1, &texture);
 		glBindTexture(GL_TEXTURE_2D, texture);
 
-		//glHint(GL_TEXTURE_COMPRESSION_HINT, GL_NICEST);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
+		glHint(GL_TEXTURE_COMPRESSION_HINT, GL_FASTEST);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
+		//glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RED_RGTC1, width, height, 0, width * height * bpp, image_data);
+		GLfloat value;
+		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &value);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, value);
 
 		TextureParameters(min_filter, mag_filter, wrap);
 
