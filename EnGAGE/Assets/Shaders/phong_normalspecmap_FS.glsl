@@ -1,6 +1,7 @@
-#version 460 core
+#version 460
 
 #include "uniform_bindings.glsl"
+#include "light.glsl"
 
 in vec3 FS_FragPosCam;
 in vec3 FS_Normal;
@@ -17,7 +18,15 @@ uniform sampler2D uNormal;
 
 void main()
 {
+	vec4 texture_color =  texture(uDiffuse, FS_UV);
+	if(texture_color.a < 0.1) 
+		discard;
+
 	vec3 n = normalize(FS_Normal);
+	if(dot(n, FS_FragPosCam) > 0.0f) {
+		n = -n;
+	}
+
 	const mat3 tanToView = mat3(normalize(FS_Tangent), normalize(FS_Bitangent), n);
 
 	const vec3 normal_map = texture(uNormal, FS_UV).rgb;
@@ -32,19 +41,17 @@ void main()
 	const float distToL = length(vToL);
 	const vec3 dirToL = vToL / distToL;
 
-	const float att = 1.0f / (att_const + att_linear * distToL + att_exponent * (distToL * distToL));
-	const vec3 diffuse = diffuse_color * diffuse_intensity * att * max(0.0f, dot(dirToL, n));
+	const float att = Attenuate(att_const, att_linear, att_exponent, distToL);
+	const vec3 diffuse = CalDiffuse(diffuse_color, diffuse_intensity, dirToL, n ) * att;
 
 	const vec4 specular_sample = texture(uSpecular, FS_UV);
 	const vec3 specular_map_color = specular_sample.rgb;
-	const float specular_map_power = pow(2.0f, specular_sample.a * 5.0f);
+	const int specular_map_power = int(pow(2.0f, specular_sample.a * 13.0f));
 
-	const vec3 w = n * dot(vToL, n);
-	const vec3 r = -normalize(w * 2.0f - vToL);
-	const vec3 specular = att * (diffuse_color * diffuse_intensity) * pow( max(0.0f, dot(r, normalize(FS_FragPosCam))), specular_map_power);
+	const vec3 specular = att * CalSpecular(n, vToL, diffuse_color, diffuse_intensity, 1.8f, specular_map_power, FS_FragPosCam) * specular_map_color;
 
+	
+	const vec3 final_color = (diffuse + ambient_color) * texture_color.rgb + specular;
 
-	const vec3 final_color = (diffuse + ambient_color + specular_map_color * specular) * texture(uDiffuse, FS_UV).rgb;
-
-	out_Color = vec4(clamp(final_color, 0.0f, 1.0f) , 1.0f);
+	out_Color = vec4(clamp(final_color, 0.0f, 1.0f) , texture_color.a);
 }

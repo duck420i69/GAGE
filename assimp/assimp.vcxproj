@@ -90,6 +90,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir);$(SolutionDir)thirdparty\assimp\include;$(SolutionDir)thirdparty\assimp\code;$(SolutionDir)thirdparty\assimp\.;$(SolutionDir)thirdparty\assimp\contrib\zlib;$(SolutionDir)thirdparty\assimp\code\..\contrib\pugixml\src;$(SolutionDir)thirdparty\assimp\code\..\contrib\rapidjson\include;$(SolutionDir)thirdparty\assimp\code\..\contrib;$(SolutionDir)thirdparty\assimp\code\..\contrib\unzip;$(SolutionDir)thirdparty\assimp\code\..\contrib\openddlparser\include;$(SolutionDir)thirdparty\assimp\code\..\include;$(SolutionDir)thirdparty\assimp\code\..;$(SolutionDir)zlibstatic</AdditionalIncludeDirectories>
       <UseFullPaths>false</UseFullPaths>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -108,6 +109,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir);$(SolutionDir)thirdparty\assimp\include;$(SolutionDir)thirdparty\assimp\code;$(SolutionDir)thirdparty\assimp\.;$(SolutionDir)thirdparty\assimp\contrib\zlib;$(SolutionDir)thirdparty\assimp\code\..\contrib\pugixml\src;$(SolutionDir)thirdparty\assimp\code\..\contrib\rapidjson\include;$(SolutionDir)thirdparty\assimp\code\..\contrib;$(SolutionDir)thirdparty\assimp\code\..\contrib\unzip;$(SolutionDir)thirdparty\assimp\code\..\contrib\openddlparser\include;$(SolutionDir)thirdparty\assimp\code\..\include;$(SolutionDir)thirdparty\assimp\code\..;$(SolutionDir)zlibstatic</AdditionalIncludeDirectories>
       <UseFullPaths>false</UseFullPaths>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -126,6 +128,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir);$(SolutionDir)thirdparty\assimp\include;$(SolutionDir)thirdparty\assimp\code;$(SolutionDir)thirdparty\assimp\.;$(SolutionDir)thirdparty\assimp\contrib\zlib;$(SolutionDir)thirdparty\assimp\code\..\contrib\pugixml\src;$(SolutionDir)thirdparty\assimp\code\..\contrib\rapidjson\include;$(SolutionDir)thirdparty\assimp\code\..\contrib;$(SolutionDir)thirdparty\assimp\code\..\contrib\unzip;$(SolutionDir)thirdparty\assimp\code\..\contrib\openddlparser\include;$(SolutionDir)thirdparty\assimp\code\..\include;$(SolutionDir)thirdparty\assimp\code\..;$(SolutionDir)zlibstatic</AdditionalIncludeDirectories>
       <UseFullPaths>false</UseFullPaths>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,6 +147,7 @@
       <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir);$(SolutionDir)thirdparty\assimp\include;$(SolutionDir)thirdparty\assimp\code;$(SolutionDir)thirdparty\assimp\.;$(SolutionDir)thirdparty\assimp\contrib\zlib;$(SolutionDir)thirdparty\assimp\code\..\contrib\pugixml\src;$(SolutionDir)thirdparty\assimp\code\..\contrib\rapidjson\include;$(SolutionDir)thirdparty\assimp\code\..\contrib;$(SolutionDir)thirdparty\assimp\code\..\contrib\unzip;$(SolutionDir)thirdparty\assimp\code\..\contrib\openddlparser\include;$(SolutionDir)thirdparty\assimp\code\..\include;$(SolutionDir)thirdparty\assimp\code\..;$(SolutionDir)zlibstatic</AdditionalIncludeDirectories>
       <UseFullPaths>false</UseFullPaths>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

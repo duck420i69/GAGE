@@ -44,10 +44,8 @@ void Opengl::Init() noexcept
 	Logger::info("Max uniform buffer block size: {}", uniform_block_size);
 
 	//Enable n stuffs
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
-
+	glCullFace(GL_BACK);
 }
 
 void Opengl::Clear() noexcept
@@ -117,10 +115,10 @@ UniformBuffer Opengl::CreateUniformBuffer(const unsigned int slot, const uint64_
 	return vbo;
 }
 
-Texture Opengl::LoadTexture(const std::string& path, const Opengl::TextureFilter min_filter, const Opengl::TextureFilter mag_filter, const Opengl::TextureWrap wrap, int* out_width, int* out_height) noexcept
+Texture Opengl::LoadTexture(const std::string& path, const Opengl::TextureFilter min_filter, const Opengl::TextureFilter mag_filter, const Opengl::TextureWrap wrap, int* out_width, int* out_height, bool* has_alpha) noexcept
 {
 	Logger::info("Loading texture: {}", path);
-	return LoadTextureInternal(path, min_filter, mag_filter, wrap, out_width, out_height);
+	return LoadTextureInternal(path, min_filter, mag_filter, wrap, out_width, out_height, has_alpha);
 }
 
 ShaderProgram Opengl::LoadShader(const std::string& path) noexcept
@@ -229,7 +227,27 @@ const glm::mat4x4& Opengl::GetCamera() noexcept
 	return s_camera;
 }
 
-unsigned int Opengl::GetBufferUsage(const BufferUsage usage) noexcept
+void Opengl::Enable(State state)
+{
+	glEnable(GetState(state));
+}
+
+void Opengl::Disable(State state)
+{
+	glDisable(GetState(state));
+}
+
+void Opengl::BlendFunc(Blend src, Blend dest)
+{
+	glBlendFunc(GetBlendState(src), GetBlendState(dest));
+}
+
+void Opengl::BlendEquation(BlendOp op)
+{
+	glBlendEquation(GetBlendOp(op));
+}
+
+constexpr unsigned int Opengl::GetBufferUsage(const BufferUsage usage) noexcept
 {
 	switch (usage) {
 	case BufferUsage::DYNAMIC:
@@ -242,7 +260,7 @@ unsigned int Opengl::GetBufferUsage(const BufferUsage usage) noexcept
 	return GL_STATIC_DRAW;
 }
 
-unsigned int Opengl::GetTextureFilter(const TextureFilter filter) noexcept
+constexpr unsigned int Opengl::GetTextureFilter(const TextureFilter filter) noexcept
 {
 	switch (filter)
 	{
@@ -263,7 +281,7 @@ unsigned int Opengl::GetTextureFilter(const TextureFilter filter) noexcept
 	return GL_NEAREST;
 }
 
-unsigned int Opengl::GetTextureWrap(const TextureWrap filter) noexcept
+constexpr unsigned int Opengl::GetTextureWrap(const TextureWrap filter) noexcept
 {
 	switch (filter)
 	{
@@ -279,16 +297,67 @@ unsigned int Opengl::GetTextureWrap(const TextureWrap filter) noexcept
 	return GL_REPEAT;;
 }
 
-Texture Opengl::LoadTextureInternal(const std::string& path, const Opengl::TextureFilter min_filter, const Opengl::TextureFilter mag_filter, const Opengl::TextureWrap wrap, int* out_width, int* out_height) noexcept
+constexpr unsigned int Opengl::GetBlendState(const Blend blend) noexcept
+{
+	switch (blend)
+	{
+	case Blend::ZERO: return GL_ZERO;
+	case Blend::ONE: return GL_ONE;
+	case Blend::SRC_COLOR: return GL_SRC_COLOR;
+	case Blend::ONE_MINUS_SRC_COLOR: return GL_ONE_MINUS_SRC_COLOR;
+	case Blend::DST_COLOR: return GL_DST_COLOR;
+	case Blend::ONE_MINUS_DST_COLOR: return GL_ONE_MINUS_DST_COLOR;
+	case Blend::SRC_ALPHA: return GL_SRC_ALPHA;
+	case Blend::ONE_MINUS_SRC_ALPHA: return GL_ONE_MINUS_SRC_ALPHA;
+	case Blend::DST_ALPHA:  return GL_DST_ALPHA;
+	case Blend::ONE_MINUS_DST_ALPHA: return GL_ONE_MINUS_DST_ALPHA;
+	case Blend::CONSTANT_COLOR: return GL_CONSTANT_COLOR;
+	case Blend::ONE_MINUS_CONSTANT_COLOR: return GL_ONE_MINUS_CONSTANT_COLOR;
+	case Blend::CONSTANT_ALPHA: return GL_CONSTANT_ALPHA;
+	case Blend::ONE_MINUS_CONSTANT_ALPHA:  return GL_ONE_MINUS_CONSTANT_ALPHA;
+	case Blend::SRC_ALPHA_SATURATE: return GL_SRC_ALPHA_SATURATE;
+	case Blend::SRC1_COLOR: return GL_SRC1_COLOR;
+	case Blend::ONE_MINUS_SRC1_COLOR: return GL_ONE_MINUS_SRC1_COLOR;
+	case Blend::SRC1_ALPHA: return GL_SRC1_ALPHA;
+	case Blend::ONE_MINUS_SRC1_ALPHA: return GL_ONE_MINUS_SRC1_ALPHA;
+	}
+	return 0;
+}
+
+constexpr unsigned int Opengl::GetBlendOp(const BlendOp state) noexcept
+{
+	switch (state)
+	{
+		case BlendOp::FUNC_ADD: return GL_FUNC_ADD;
+		case BlendOp::FUNC_SUBTRACT: return GL_FUNC_SUBTRACT;
+		case BlendOp::FUNC_REVERSE_SUBTRACT: return GL_FUNC_REVERSE_SUBTRACT;
+		case BlendOp::MIN: return GL_MIN;
+		case BlendOp::MAX: return GL_MAX;
+	}
+	return 0;
+}
+
+constexpr unsigned int Opengl::GetState(const State state) noexcept
+{
+	switch (state)
+	{
+	case State::BLEND:
+		return GL_BLEND;
+	case State::CULL:
+		return GL_CULL_FACE;
+	}
+	return 0;
+}
+
+Texture Opengl::LoadTextureInternal(const std::string& path, const Opengl::TextureFilter min_filter, const Opengl::TextureFilter mag_filter, const Opengl::TextureWrap wrap, int* out_width, int* out_height, bool* has_alpha) noexcept
 {
 	Texture texture = 0;
-	int width = 0, height = 0;
+	int width = 0, height = 0, bpp = 0;
 	try
 	{
 		stbi_uc* image_data = nullptr;
-		int bpp = 0;
 		stbi_set_flip_vertically_on_load(1);
-		image_data = stbi_load(path.c_str(), &width, &height, &bpp, STBI_rgb_alpha);
+		image_data = stbi_load(path.c_str(), &width, &height, &bpp, 0);
 		if (!image_data)
 		{
 			std::stringstream ss;
@@ -297,11 +366,23 @@ Texture Opengl::LoadTextureInternal(const std::string& path, const Opengl::Textu
 
 			throw std::runtime_error(ss.str());
 		}
+
+
+		unsigned int internal_format = 0, file_format = 0;
+		if (bpp == STBI_rgb) {
+			internal_format = GL_COMPRESSED_RGB;
+			file_format = GL_RGB;
+		}
+		else if (bpp == STBI_rgb_alpha) {
+			internal_format = GL_COMPRESSED_RGBA;
+			file_format = GL_RGBA;
+		}
+		
 		glGenTextures(1, &texture);
 		glBindTexture(GL_TEXTURE_2D, texture);
 
 		glHint(GL_TEXTURE_COMPRESSION_HINT, GL_FASTEST);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
+		glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, file_format, GL_UNSIGNED_BYTE, image_data);
 		//glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RED_RGTC1, width, height, 0, width * height * bpp, image_data);
 		GLfloat value;
 		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &value);
@@ -321,42 +402,57 @@ Texture Opengl::LoadTextureInternal(const std::string& path, const Opengl::Textu
 		*out_width = width;
 	if (out_height)
 		*out_height = height;
+	if (has_alpha) {
+		*has_alpha = bpp == STBI_rgb_alpha;
+	}
 	s_textures.push_back(texture);
 	return texture;
 }
 
 uint32_t Opengl::LoadShaderInternal(const std::string& path, uint32_t type) noexcept
 {
-	std::ifstream file;
-	file.exceptions(std::ios::badbit);
+	std::function<void(std::string&, const std::filesystem::path&)> process_file;
+
+	process_file = [&](std::string& source,const std::filesystem::path& source_path) {
+		size_t pos;
+		if ((pos = source.find("#include")) != std::string::npos) {
+			std::string include_line = source.substr(pos, source.find("\n", pos) - pos);
+			size_t line_pos = include_line.find_first_of("\"") + 1;
+			std::string include_name = include_line.substr(line_pos, include_line.find_last_of("\"") - line_pos);
+
+			source.erase(pos, source.find("\n", pos) - pos);
+
+			std::ifstream file;
+			std::stringstream ss;
+			file.exceptions(std::ios::badbit);
+			file.open(source_path.string() + "\\" + include_name);
+			ss << file.rdbuf();
+			source.insert(pos, ss.str());
+			file.close();
+			process_file(source, source_path);
+		}
+	};
+
+
+	
 	try
 	{
+		std::ifstream file;
+		std::stringstream ss;
+		std::string source;
+		file.exceptions(std::ios::badbit);
 		file.open(path);
 
-		std::stringstream source;
-		std::string line;
-		std::filesystem::path parent_dir(path);
-		while (std::getline(file , line)) {
+		ss << file.rdbuf();
+		source = ss.str();
 
-			if (line.find("#include") != std::string::npos) {
-				size_t pos = line.find_first_of("\"") + 1;
-				size_t size = line.size() - pos - 1;
-				auto include_file = line.substr(pos, size);
-				std::stringstream include_dir_src = Utils::LoadFile(parent_dir.parent_path().string() +
-					 + "/" + include_file);
+		process_file(source, std::filesystem::path(path).parent_path());
 
-				source << include_dir_src.str() << "\n";
-			}
-			else {
-				source << line << "\n";
-			}
-		}
 
 		file.close();
 
-		std::string source_str = source.str();
 		uint32_t shader = glCreateShader(type);
-		const char* source_c_str = source_str.c_str();
+		const char* source_c_str = source.c_str();
 		glShaderSource(shader, 1, &source_c_str, nullptr);
 		glCompileShader(shader);
 

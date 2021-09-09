@@ -1,5 +1,8 @@
 #pragma once
 
+#include <string>
+#include <typeinfo>
+
 class Bindable {
 public:
 	virtual ~Bindable() = default;

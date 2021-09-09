@@ -1,6 +1,7 @@
 #version 460 core
 
 #include "uniform_bindings.glsl"
+#include "light.glsl"
 
 layout(std140, binding = 2) uniform Material {
 	float specular_intensity;
@@ -21,6 +22,10 @@ uniform sampler2D uNormal;
 
 void main()
 {
+	vec4 texture_color =  texture(uDiffuse, FS_UV);
+	//if(texture_color.a < 0.1) 
+		//discard;
+
 	vec3 n = normalize(FS_Normal);
 	if(enable_normal) {
 		const mat3 tanToView = mat3(normalize(FS_Tangent), normalize(FS_Bitangent), n);
@@ -37,12 +42,11 @@ void main()
 	const float distToL = length(vToL);
 	const vec3 dirToL = vToL / distToL;
 
-	const float att = 1.0f / (att_const + att_linear * distToL + att_exponent * (distToL * distToL));
-	const vec3 diffuse = diffuse_color * diffuse_intensity * att * max(0.0f, dot(dirToL, n));
+	const float att = Attenuate(att_const, att_linear, att_exponent, distToL);
+	const vec3 diffuse = CalDiffuse(diffuse_color, diffuse_intensity, dirToL, n ) * att;
+	const vec3 specular = att * CalSpecular(n, vToL, diffuse_color, diffuse_intensity, specular_intensity, specular_power, FS_FragPosCam);
 
-	const vec3 w = n * dot(vToL, n);
-	const vec3 r = -normalize(w * 2.0f - vToL);
-	const vec3 specular = att * (diffuse_color * diffuse_intensity) * specular_intensity * pow( max(0.0f, dot(r, normalize(FS_FragPosCam))), specular_power);
+	
 
-	out_Color = vec4(clamp(((diffuse + ambient_color ) * texture(uDiffuse, FS_UV).rgb + specular), 0.0f, 1.0f) , 1.0f);
+	out_Color = vec4(clamp(((diffuse + ambient_color ) * texture_color.rgb + specular), 0.0f, 1.0f) , texture_color.a);
 }

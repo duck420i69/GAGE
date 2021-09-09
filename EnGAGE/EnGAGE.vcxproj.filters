@@ -66,9 +66,6 @@
     <ClCompile Include="Globals.cpp">
       <Filter>Source\Miscs</Filter>
     </ClCompile>
-    <ClCompile Include="AssimpTest.cpp">
-      <Filter>Source\Miscs</Filter>
-    </ClCompile>
     <ClCompile Include="DynamicVertex.cpp">
       <Filter>Source\Core\Render\Bindable</Filter>
     </ClCompile>
@@ -137,9 +134,6 @@
     <ClInclude Include="PointLight.h">
       <Filter>Source\Core\Render\Light</Filter>
     </ClInclude>
-    <ClInclude Include="AssimpTest.h">
-      <Filter>Source\Miscs</Filter>
-    </ClInclude>
     <ClInclude Include="Model.h">
       <Filter>Source\Core\Render\Drawable</Filter>
     </ClInclude>
@@ -151,6 +145,12 @@
     </ClInclude>
     <ClInclude Include="Plane.h">
       <Filter>Source\Core\Render\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="TransparencyBlender.h">
+      <Filter>Source\Core\Render\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="Rasterizer.h">
+      <Filter>Source\Core\Render\Bindable</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -188,6 +188,12 @@
       <Filter>Assets\Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\uniform_bindings.glsl">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\light.glsl">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\version.glsl">
       <Filter>Assets\Shaders</Filter>
     </None>
   </ItemGroup>

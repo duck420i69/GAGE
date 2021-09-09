@@ -7,6 +7,7 @@
 #include "ShaderObject.h"
 #include "DynamicVertex.h"
 #include "Logger.h"
+#include "Rasterizer.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -168,6 +169,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* con
 	bool has_diffuse = false;
 	bool has_specular_map = false;
 	bool has_normal_map = false;
+	bool has_alpha = false;
 	float shininess = 35.0f;
 	glm::vec3 mat_color = { 1, 1, 1 };
 	const std::string path = full_path.parent_path().string() + "\\";
@@ -181,7 +183,9 @@ std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* con
 		aiString texture_file_name;
 
 		if (mat.GetTexture(aiTextureType_DIFFUSE, 0, &texture_file_name) == aiReturn_SUCCESS) {
-			bindables.push_back(BindableCodex::Resolve<TextureObject>(path + std::string(texture_file_name.C_Str()), min_filter, mag_filter, wrap, 0));
+			auto texture = BindableCodex::Resolve<TextureObject>(path + std::string(texture_file_name.C_Str()), min_filter, mag_filter, wrap, 0);
+			has_alpha = texture->HasAlpha();
+			bindables.push_back(texture);
 			has_diffuse = true;
 		}
 		else {
@@ -431,5 +435,6 @@ std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* con
 		bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, layout, ib, buf));
 
 	}
+	bindables.push_back(BindableCodex::Resolve<Rasterizer>(has_alpha));
 	return std::make_unique<Mesh>(std::move(bindables), indices.size());
 }

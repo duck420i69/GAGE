@@ -11,8 +11,6 @@
 
 #include "MenuScene.h"
 
-#include "DynamicVertex.h"
-
 
 int main()
 {

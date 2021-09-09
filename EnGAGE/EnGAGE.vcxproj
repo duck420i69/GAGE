@@ -96,7 +96,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AssimpTest.cpp" />
     <ClCompile Include="DynamicVertex.cpp" />
     <ClCompile Include="Events.cpp" />
     <ClCompile Include="Globals.cpp" />
@@ -114,7 +113,6 @@
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AssimpTest.h" />
     <ClInclude Include="Bindable.h" />
     <ClInclude Include="BindableCodex.h" />
     <ClInclude Include="Camera.h" />
@@ -129,10 +127,12 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Plane.h" />
     <ClInclude Include="PointLight.h" />
+    <ClInclude Include="Rasterizer.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ShaderObject.h" />
     <ClInclude Include="TextureObject.h" />
     <ClInclude Include="TransformUBuf.h" />
+    <ClInclude Include="TransparencyBlender.h" />
     <ClInclude Include="UniformBufferObject.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="VertexBufferObject.h" />
@@ -143,6 +143,7 @@
     <None Include="Assets\save" />
     <None Include="assets\shaders\default_FS.glsl" />
     <None Include="assets\shaders\default_VS.glsl" />
+    <None Include="Assets\Shaders\light.glsl" />
     <None Include="Assets\Shaders\phong_FS.glsl" />
     <None Include="Assets\Shaders\phong_normalmap_VS.glsl" />
     <None Include="Assets\Shaders\phong_normalspecmap_FS.glsl" />
@@ -152,6 +153,7 @@
     <None Include="Assets\Shaders\uniform_bindings.glsl" />
     <None Include="Assets\Shaders\uv_FS.glsl" />
     <None Include="Assets\Shaders\uv_VS.glsl" />
+    <None Include="Assets\Shaders\version.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Textures\ignore_this.png" />
