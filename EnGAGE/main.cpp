@@ -13,6 +13,7 @@
 
 int main()
 {
+
 	Window::Create(Globals::screen_width, Globals::screen_height, Globals::screen_title);
 	Events::Init();
 	Opengl::Init();

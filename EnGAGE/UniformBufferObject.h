@@ -2,6 +2,7 @@
 
 #include "Bindable.h"
 #include "Opengl.h"
+#include "DynamicUniform.h"
 
 template<typename C>
 class UniformBufferObject final : public Bindable {
@@ -32,6 +33,41 @@ public:
 
 	std::string GetUID() const noexcept override {
 		return GenerateUID(slot);
+	}
+
+};
+
+class UniformBufferObjectDynamic final : public Bindable {
+	UniformBuffer ub;
+	unsigned int slot;
+	const DynamicUniform::Buffer& buffer;
+public:
+
+	UniformBufferObjectDynamic(const unsigned int slot, const DynamicUniform::Buffer& buffer) noexcept :
+		ub(Opengl::CreateUniformBuffer(slot, buffer.GetRawBuffer().size(), buffer.GetRawBuffer().data())),
+		slot(slot),
+		buffer(buffer)
+	{
+
+	}
+
+
+	void Bind() const noexcept override {
+		Opengl::BindUniformBuffer(ub, slot);
+	}
+
+	void Update(const DynamicUniform::Buffer& buffer) const noexcept  {
+		Opengl::UpdateUniformBuffer(ub, buffer.GetRawBuffer().size(), buffer.GetRawBuffer().data());
+	}
+
+	static std::string GenerateUID(const unsigned int slot, const DynamicUniform::Buffer& buffer) noexcept {
+		using namespace std::string_literals;
+
+		return typeid(UniformBufferObjectDynamic).name() + "#"s + buffer.GetLayout().GenerateUID();
+	}
+
+	std::string GetUID() const noexcept override {
+		return GenerateUID(slot, buffer);
 	}
 
 };

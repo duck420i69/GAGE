@@ -75,6 +75,9 @@
     <ClCompile Include="Model.cpp">
       <Filter>Source\Core\Render\Drawable</Filter>
     </ClCompile>
+    <ClCompile Include="DynamicUniform.cpp">
+      <Filter>Source\Core\Render\Bindable</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -147,6 +150,9 @@
       <Filter>Source\Core\Render\Bindable</Filter>
     </ClInclude>
     <ClInclude Include="Rasterizer.h">
+      <Filter>Source\Core\Render\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicUniform.h">
       <Filter>Source\Core\Render\Bindable</Filter>
     </ClInclude>
   </ItemGroup>

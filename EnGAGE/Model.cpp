@@ -8,6 +8,7 @@
 #include "DynamicVertex.h"
 #include "Logger.h"
 #include "Rasterizer.h"
+#include "DynamicUniform.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -160,15 +161,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* con
 	const std::filesystem::path& full_path) noexcept
 {
 	namespace dv = DynamicVertex;
-	struct MaterialStruct {
-		alignas(16) glm::vec3 mat_color = {1, 1, 1};
-		alignas(16) glm::vec3 mat_specular_color = { 1, 1, 1 };
-		int specular_power = 128;
-		int has_diffuse = false;
-		int has_specular = false;
-		int has_normal = false;
-		float padding[3];
-	};
+	
 	std::vector<std::shared_ptr<Bindable>> bindables;
 	const aiMaterial& mat = *ppMaterial[mesh.mMaterialIndex];
 	dv::VertexLayout layout;
@@ -204,7 +197,29 @@ std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* con
 	
 
 	//Material
-	MaterialStruct mat_struct;
+	struct MaterialStruct {
+		alignas(16) glm::vec3 mat_color = { 1, 1, 1 };
+		alignas(16) glm::vec3 mat_specular_color = { 1, 1, 1 };
+		int specular_power = 128;
+		int has_diffuse = false;
+		int has_specular = false;
+		int has_normal = false;
+		float padding[3];
+	};
+	//MaterialStruct mat_struct;
+
+	namespace du = DynamicUniform;
+	du::Layout uniform_layout;
+	uniform_layout["mat_color"] = du::Type::Vec3;
+	uniform_layout["mat_specular_color"] = du::Type::Vec3;
+	uniform_layout["specular_power"] = du::Type::Float;
+	uniform_layout["has_diffuse"] = du::Type::Int;
+	uniform_layout["has_specular"] = du::Type::Int;
+	uniform_layout["has_normal"] = du::Type::Int;
+
+	du::Buffer uniform_buffer(uniform_layout);
+	
+
 	bool has_alpha = false;
 	const std::string path = full_path.parent_path().string() + "/";
 
@@ -223,35 +238,32 @@ std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* con
 			auto texture = BindableCodex::Resolve<TextureObject>(path + std::string(texture_file_name.C_Str()), min_filter, mag_filter, wrap, 0);
 			has_alpha = texture->HasAlpha();
 			bindables.push_back(texture);
-			mat_struct.has_diffuse = true;
+			uniform_buffer["has_diffuse"] = true;
 		}
 		else {
 			aiColor3D c;
 			mat.Get(AI_MATKEY_COLOR_DIFFUSE, c);
-			mat_struct.has_diffuse = false;
-			mat_struct.mat_color.x = c.r;
-			mat_struct.mat_color.y = c.g;
-			mat_struct.mat_color.z = c.b;
+			uniform_buffer["has_diffuse"] = false;
+			uniform_buffer["mat_color"] = glm::vec3{c.r, c.g, c.b};
 		}
 
 		if (mat.GetTexture(aiTextureType_SPECULAR, 0, &texture_file_name) == aiReturn_SUCCESS) {
 			bindables.push_back(BindableCodex::Resolve<TextureObject>(path + std::string(texture_file_name.C_Str()), min_filter, mag_filter, wrap, 1));
-			mat_struct.has_specular = true;
+			uniform_buffer["has_specular"] = true;
 		}
 		else {
-			mat_struct.has_specular = false;
-			mat.Get(AI_MATKEY_SHININESS, mat_struct.specular_power);
-			//mat.Get(AI_MATKEY_SHININESS_STRENGTH, mat_struct.specular_intensity);
+			uniform_buffer["has_specular"] = false;
+			ai_real specular_power;
+			mat.Get(AI_MATKEY_SHININESS, specular_power);
+			uniform_buffer["specular_power"] = (float)specular_power;
 			aiColor3D c;
 			mat.Get(AI_MATKEY_COLOR_SPECULAR, c);
-			mat_struct.mat_specular_color.x = c.r;
-			mat_struct.mat_specular_color.y = c.g;
-			mat_struct.mat_specular_color.z = c.b;
+			uniform_buffer["mat_specular_color"] = glm::vec3{c.r, c.g, c.b};
 		}
 
 		if (mat.GetTexture(aiTextureType_NORMALS, 0, &texture_file_name) == aiReturn_SUCCESS) {
 			bindables.push_back(BindableCodex::Resolve<TextureObject>(path + std::string(texture_file_name.C_Str()), min_filter, mag_filter, wrap, 2));
-			mat_struct.has_normal = true;
+			uniform_buffer["has_normal"] = true;
 		}
 	}
 	auto shader = BindableCodex::Resolve<ShaderObject>("Assets/Shaders/phong_VS.glsl", "Assets/Shaders/phong_FS.glsl");
@@ -261,8 +273,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* con
 	bindables.push_back(std::move(shader));
 	bindables.push_back(BindableCodex::Resolve<Rasterizer>(has_alpha));
 	bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, layout, Opengl::CreateIndexBuffer(indices.size(), indices.data()), vbuf));
-	auto ubuf = std::make_shared<UniformBufferObject<MaterialStruct>>(UniformBufferObject<MaterialStruct>(2));
-	ubuf->Update(mat_struct);
+	auto ubuf = std::make_shared<UniformBufferObjectDynamic>(2, uniform_buffer);
 	bindables.push_back(ubuf);
 
 

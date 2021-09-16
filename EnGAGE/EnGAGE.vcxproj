@@ -96,6 +96,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DynamicUniform.cpp" />
     <ClCompile Include="DynamicVertex.cpp" />
     <ClCompile Include="Events.cpp" />
     <ClCompile Include="Globals.cpp" />
@@ -117,6 +118,7 @@
     <ClInclude Include="BindableCodex.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Drawable.h" />
+    <ClInclude Include="DynamicUniform.h" />
     <ClInclude Include="DynamicVertex.h" />
     <ClInclude Include="Events.h" />
     <ClInclude Include="Globals.h" />
