@@ -16,11 +16,6 @@ class ShaderObject final : public Bindable
 		std::string fragment_path;
 	} path;
 public:
-	ShaderObject(const std::string& file_path) noexcept :
-		path{ file_path + "_VS.glsl", file_path + "_FS.glsl" }
-	{
-		program = Opengl::LoadShader(path.vertex_path, path.fragment_path);
-	}
 	ShaderObject(const std::string& vertex_path, const std::string& fragment_path) noexcept :
 		path{ vertex_path, fragment_path }
 	{
@@ -40,6 +35,7 @@ public:
 	std::string GetUID() const noexcept override {
 		return GenerateUID(path.vertex_path, path.fragment_path);
 	}
+
 
 	static std::string GenerateUID(const std::string& vertex_path, const std::string& fragment_path) noexcept {
 		using namespace std::string_literals;

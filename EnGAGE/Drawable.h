@@ -12,9 +12,9 @@
 class Drawable {
 	std::vector<std::shared_ptr<Bindable>> mBinds;
 protected:
-	const int mVertexCount = 0;
+	int mVertexCount = 0;
 public:
-	Drawable(const int vertex_count) noexcept : mVertexCount(vertex_count) {};
+	Drawable() = default;
 	Drawable(const Drawable&) = delete;
 	virtual ~Drawable() = default;
 
@@ -30,4 +30,6 @@ public:
 	}
 
 	virtual glm::mat4x4 GetTransform() const noexcept = 0;
+protected:
+	inline void SetVertexCount(int vertex_count) noexcept { mVertexCount = vertex_count; }
 };

@@ -29,10 +29,10 @@ public:
 		const auto& elements = dyn_layout.GetElements();
 
 		for (size_t i = 0; i < elements.size(); i++) {
-			size_t slot = i;
-			size_t size = (elements[i].Size() / sizeof(float));
-			size_t stride = (unsigned int)dyn_layout.Size();
-			size_t offset = (unsigned int)elements[i].GetOffset();
+			unsigned int slot = (unsigned int)i;
+			unsigned int size = (unsigned int)(elements[i].Size() / sizeof(float));
+			unsigned int stride = (unsigned int)dyn_layout.Size();
+			unsigned int offset = (unsigned int)elements[i].GetOffset();
 			Opengl::Layout(slot, size, stride, offset);
 		}
 

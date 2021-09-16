@@ -143,9 +143,6 @@
     <ClInclude Include="BindableCodex.h">
       <Filter>Source\Core\Render\Bindable</Filter>
     </ClInclude>
-    <ClInclude Include="Plane.h">
-      <Filter>Source\Core\Render\Drawable</Filter>
-    </ClInclude>
     <ClInclude Include="TransparencyBlender.h">
       <Filter>Source\Core\Render\Bindable</Filter>
     </ClInclude>
@@ -154,37 +151,13 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\shaders\default_FS.glsl">
-      <Filter>Assets\Shaders</Filter>
-    </None>
-    <None Include="assets\shaders\default_VS.glsl">
-      <Filter>Assets\Shaders</Filter>
-    </None>
     <None Include="Assets\save">
       <Filter>Assets</Filter>
-    </None>
-    <None Include="Assets\Shaders\uv_FS.glsl">
-      <Filter>Assets\Shaders</Filter>
-    </None>
-    <None Include="Assets\Shaders\uv_VS.glsl">
-      <Filter>Assets\Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\phong_VS.glsl">
       <Filter>Assets\Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\phong_FS.glsl">
-      <Filter>Assets\Shaders</Filter>
-    </None>
-    <None Include="Assets\Shaders\phong_specmap_FS.glsl">
-      <Filter>Assets\Shaders</Filter>
-    </None>
-    <None Include="Assets\Shaders\phong_normalmap_FS.glsl">
-      <Filter>Assets\Shaders</Filter>
-    </None>
-    <None Include="Assets\Shaders\phong_normalmap_VS.glsl">
-      <Filter>Assets\Shaders</Filter>
-    </None>
-    <None Include="Assets\Shaders\phong_normalspecmap_FS.glsl">
       <Filter>Assets\Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\uniform_bindings.glsl">
@@ -193,7 +166,10 @@
     <None Include="Assets\Shaders\light.glsl">
       <Filter>Assets\Shaders</Filter>
     </None>
-    <None Include="Assets\Shaders\version.glsl">
+    <None Include="Assets\Shaders\solid_VS.glsl">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\solid_FS.glsl">
       <Filter>Assets\Shaders</Filter>
     </None>
   </ItemGroup>

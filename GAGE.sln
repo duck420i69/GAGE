@@ -17,6 +17,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlibstatic", "zlibstatic\zl
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "assimp", "assimp\assimp.vcxproj", "{4A9CAE3C-2CA8-4C07-A365-860E15020331}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ImageLoader", "ImageLoader\ImageLoader.vcxproj", "{DC6C5B2B-17C2-4365-A114-706A684B5F8D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -69,6 +71,14 @@ Global
 		{4A9CAE3C-2CA8-4C07-A365-860E15020331}.Release|x64.Build.0 = Release|x64
 		{4A9CAE3C-2CA8-4C07-A365-860E15020331}.Release|x86.ActiveCfg = Release|Win32
 		{4A9CAE3C-2CA8-4C07-A365-860E15020331}.Release|x86.Build.0 = Release|Win32
+		{DC6C5B2B-17C2-4365-A114-706A684B5F8D}.Debug|x64.ActiveCfg = Debug|x64
+		{DC6C5B2B-17C2-4365-A114-706A684B5F8D}.Debug|x64.Build.0 = Debug|x64
+		{DC6C5B2B-17C2-4365-A114-706A684B5F8D}.Debug|x86.ActiveCfg = Debug|Win32
+		{DC6C5B2B-17C2-4365-A114-706A684B5F8D}.Debug|x86.Build.0 = Debug|Win32
+		{DC6C5B2B-17C2-4365-A114-706A684B5F8D}.Release|x64.ActiveCfg = Release|x64
+		{DC6C5B2B-17C2-4365-A114-706A684B5F8D}.Release|x64.Build.0 = Release|x64
+		{DC6C5B2B-17C2-4365-A114-706A684B5F8D}.Release|x86.ActiveCfg = Release|Win32
+		{DC6C5B2B-17C2-4365-A114-706A684B5F8D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

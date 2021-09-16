@@ -6,21 +6,21 @@
 #include "PointLight.h"
 #include "Model.h"
 #include "window.h"
-#include "Plane.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <imgui.h>
 
 class MenuScene final : public Scene{
-	Model mNano,  mSponza;
+	Model mMuro,  mSponza, mBrickWall;
 	Camera mCam;
 	PointLight mLight;
 public:
 	MenuScene() noexcept :
 		mCam(),
-		mNano("Assets/Models/nano_textured/nanosuit.obj"),
-		mSponza("Assets/Models/Sponza/sponza.obj")
+		mMuro("Assets/Models/muro/muro.obj"),
+		mSponza("Assets/Models/Sponza/sponza.obj"),
+		mBrickWall("Assets/Models/brick_wall/brick_wall.obj")
 	{		
 		Opengl::SetProjection(glm::perspective(glm::radians(75.0f), 16.0f / 9.0f, 0.5f, 400.0f));
 	}
@@ -49,8 +49,9 @@ public:
 	void Render() noexcept override {
 		Opengl::Clear();
 		mLight.Bind(mCam.GetMatrix());	
-		mNano.Draw();
 		mSponza.Draw();
+		mBrickWall.Draw();
+		mMuro.Draw();
 	};
 	void ImGui() noexcept override {
 		mCam.SpawnControlWindow();

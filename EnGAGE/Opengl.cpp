@@ -44,14 +44,13 @@ void Opengl::Init() noexcept
 	Logger::info("Max uniform buffer block size: {}", uniform_block_size);
 
 	//Enable n stuffs
-	glEnable(GL_DEPTH_TEST);
 	glCullFace(GL_BACK);
 }
 
 void Opengl::Clear() noexcept
 {
 	glViewport(0, 0, Window::GetWidth(), Window::GetHeight());
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 }
 
@@ -202,7 +201,7 @@ void Opengl::UpdateUniformBuffer(const UniformBuffer ub, const uint64_t size, co
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
-void Opengl::DrawIndexed(const uint64_t count) noexcept
+void Opengl::DrawIndexed(const int count) noexcept
 {
 	glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
 }
@@ -369,13 +368,19 @@ Texture Opengl::LoadTextureInternal(const std::string& path, const Opengl::Textu
 
 
 		unsigned int internal_format = 0, file_format = 0;
-		if (bpp == STBI_rgb) {
+		
+		if (bpp == STBI_rgb_alpha) {
+			internal_format = GL_COMPRESSED_RGBA;
+			file_format = GL_RGBA;
+		}
+		else if (bpp == STBI_rgb) {
 			internal_format = GL_COMPRESSED_RGB;
 			file_format = GL_RGB;
 		}
-		else if (bpp == STBI_rgb_alpha) {
-			internal_format = GL_COMPRESSED_RGBA;
-			file_format = GL_RGBA;
+		else if (bpp == STBI_grey) {
+
+			internal_format = GL_COMPRESSED_RED;
+			file_format = GL_RED;
 		}
 		
 		glGenTextures(1, &texture);
@@ -383,7 +388,7 @@ Texture Opengl::LoadTextureInternal(const std::string& path, const Opengl::Textu
 
 		glHint(GL_TEXTURE_COMPRESSION_HINT, GL_FASTEST);
 		glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, file_format, GL_UNSIGNED_BYTE, image_data);
-		//glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RED_RGTC1, width, height, 0, width * height * bpp, image_data);
+		
 		GLfloat value;
 		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &value);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, value);
@@ -403,7 +408,7 @@ Texture Opengl::LoadTextureInternal(const std::string& path, const Opengl::Textu
 	if (out_height)
 		*out_height = height;
 	if (has_alpha) {
-		*has_alpha = bpp == STBI_rgb_alpha;
+		*has_alpha = (bpp == STBI_rgb_alpha);
 	}
 	s_textures.push_back(texture);
 	return texture;

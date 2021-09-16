@@ -125,7 +125,6 @@
     <ClInclude Include="Model.h" />
     <ClInclude Include="Opengl.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Plane.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Rasterizer.h" />
     <ClInclude Include="Scene.h" />
@@ -141,19 +140,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\save" />
-    <None Include="assets\shaders\default_FS.glsl" />
-    <None Include="assets\shaders\default_VS.glsl" />
     <None Include="Assets\Shaders\light.glsl" />
     <None Include="Assets\Shaders\phong_FS.glsl" />
-    <None Include="Assets\Shaders\phong_normalmap_VS.glsl" />
-    <None Include="Assets\Shaders\phong_normalspecmap_FS.glsl" />
-    <None Include="Assets\Shaders\phong_specmap_FS.glsl" />
     <None Include="Assets\Shaders\phong_VS.glsl" />
-    <None Include="Assets\Shaders\phong_normalmap_FS.glsl" />
+    <None Include="Assets\Shaders\solid_FS.glsl" />
+    <None Include="Assets\Shaders\solid_VS.glsl" />
     <None Include="Assets\Shaders\uniform_bindings.glsl" />
-    <None Include="Assets\Shaders\uv_FS.glsl" />
-    <None Include="Assets\Shaders\uv_VS.glsl" />
-    <None Include="Assets\Shaders\version.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\Textures\ignore_this.png" />

@@ -20,6 +20,8 @@ void Window::Create(uint32_t width, uint32_t height, const std::string& title) n
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_DEPTH_BITS, 24);
+	glfwWindowHint(GLFW_STENCIL_BITS, 8);
 #ifndef NDEBUG
 	glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 #else
@@ -31,7 +33,7 @@ void Window::Create(uint32_t width, uint32_t height, const std::string& title) n
 		assert(!"That bai khoi tao window !");
 	}
 	glfwMakeContextCurrent(sWindow);
-	glfwSwapInterval(0);
+	glfwSwapInterval(1);
 	gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
 
 	glfwSetInputMode(sWindow, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);

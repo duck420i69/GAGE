@@ -53,7 +53,7 @@ public:
 		ImGui::DragFloat3("Position", &mPos.x, 0.1f);
 		ImGui::DragFloat("Pitch", &mPitch);
 		ImGui::DragFloat("Yaw", &mYaw);
-		ImGui::DragFloat("Fly Speed", &mSpeed, 0.1f, 1.0f, 10.0f);
+		ImGui::DragFloat("Fly Speed", &mSpeed, 0.1f, 1.0f, 100.0f);
 
 		if (ImGui::Button("Reset")) {
 			Reset();

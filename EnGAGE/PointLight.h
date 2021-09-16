@@ -38,7 +38,7 @@ public:
 	inline void SpawnControlWindow() noexcept {
 		ImGui::Begin("Light");
 
-		ImGui::DragFloat3("Position", &buf.light_pos.x, 0.1f);
+		ImGui::DragFloat3("Position", &buf.light_pos.x, 0.3f);
 		ImGui::ColorEdit3("Ambient Color", &buf.ambient_color.x);
 		ImGui::ColorEdit3("Diffuse Color", &buf.diffuse_color.x);
 		ImGui::SliderFloat("Diffuse Intensity", &buf.diffuse_intensity, 0, 1);

@@ -16,14 +16,14 @@
 #include <assimp/postprocess.h>     // Post processing flags
 #include <imgui.h>
 
-Mesh::Mesh(std::vector<std::shared_ptr<Bindable>> bindptrs, const int vertex_count) noexcept :
-	Drawable(vertex_count)
+Mesh::Mesh(std::vector<std::shared_ptr<Bindable>> bindptrs, const int vertex_count) noexcept
 {
 
 	for (auto& pb : bindptrs) {
 		AddBind(std::move(pb));
 	}
 	AddBind(std::make_shared<TransformUBuf>(*this));
+	this->SetVertexCount(vertex_count);
 }
 
 void Mesh::Draw(glm::mat4x4 accumulated_transform) const noexcept
@@ -160,19 +160,56 @@ std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* con
 	const std::filesystem::path& full_path) noexcept
 {
 	namespace dv = DynamicVertex;
-
+	struct MaterialStruct {
+		alignas(16) glm::vec3 mat_color = {1, 1, 1};
+		alignas(16) glm::vec3 mat_specular_color = { 1, 1, 1 };
+		int specular_power = 128;
+		int has_diffuse = false;
+		int has_specular = false;
+		int has_normal = false;
+		float padding[3];
+	};
 	std::vector<std::shared_ptr<Bindable>> bindables;
-
 	const aiMaterial& mat = *ppMaterial[mesh.mMaterialIndex];
+	dv::VertexLayout layout;
+
+	layout.Append(dv::VertexLayout::Type::Position3D).
+		Append(dv::VertexLayout::Type::Normal).
+		Append(dv::VertexLayout::Type::Texture2D).
+		Append(dv::VertexLayout::Type::Tangent).
+		Append(dv::VertexLayout::Type::BiTangent);
+
+	dv::VertexBuffer vbuf(layout);
+	for (size_t i = 0; i < mesh.mNumVertices; i++) {
+		aiVector3D& v = mesh.mVertices[i];
+		aiVector3D& n = mesh.mNormals[i];
+		aiVector3D& t = mesh.mTextureCoords[0][i];
+		aiVector3D& ta = mesh.mBitangents[i];
+		aiVector3D& bta = mesh.mBitangents[i];
+		vbuf.EmplaceBack(glm::vec3{ v.x, v.y, v.z }, glm::vec3{ n.x, n.y, n.z }, glm::vec2{ t.x, t.y }, glm::vec3{ ta.x, ta.y, ta.z }, glm::vec3{bta.x, bta.y, bta.z});
+
+	}
+	
+
+	//Indices
+	std::vector<unsigned int> indices;
+	indices.reserve((size_t)mesh.mNumFaces * 3);
+	for (unsigned int i = 0; i < mesh.mNumFaces; i++) {
+		const auto& face = mesh.mFaces[i];
+		indices.push_back(face.mIndices[0]);
+		indices.push_back(face.mIndices[1]);
+		indices.push_back(face.mIndices[2]);
+	}
+
+	
 
 	//Material
-	bool has_diffuse = false;
-	bool has_specular_map = false;
-	bool has_normal_map = false;
+	MaterialStruct mat_struct;
 	bool has_alpha = false;
-	float shininess = 35.0f;
-	glm::vec3 mat_color = { 1, 1, 1 };
-	const std::string path = full_path.parent_path().string() + "\\";
+	const std::string path = full_path.parent_path().string() + "/";
+
+	const auto mesh_tag = path + "#" + mesh.mName.C_Str();
+
 	if (mesh.mMaterialIndex >= 0) {
 
 		auto min_filter = Opengl::TextureFilter::LINEAR_MIPMAP_NEAREST;
@@ -186,255 +223,48 @@ std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* con
 			auto texture = BindableCodex::Resolve<TextureObject>(path + std::string(texture_file_name.C_Str()), min_filter, mag_filter, wrap, 0);
 			has_alpha = texture->HasAlpha();
 			bindables.push_back(texture);
-			has_diffuse = true;
+			mat_struct.has_diffuse = true;
 		}
 		else {
 			aiColor3D c;
 			mat.Get(AI_MATKEY_COLOR_DIFFUSE, c);
-			mat_color.r = c.r;
-			mat_color.g = c.g;
-			mat_color.b = c.b;
+			mat_struct.has_diffuse = false;
+			mat_struct.mat_color.x = c.r;
+			mat_struct.mat_color.y = c.g;
+			mat_struct.mat_color.z = c.b;
 		}
 
 		if (mat.GetTexture(aiTextureType_SPECULAR, 0, &texture_file_name) == aiReturn_SUCCESS) {
 			bindables.push_back(BindableCodex::Resolve<TextureObject>(path + std::string(texture_file_name.C_Str()), min_filter, mag_filter, wrap, 1));
-			has_specular_map = true;
+			mat_struct.has_specular = true;
 		}
 		else {
-			mat.Get(AI_MATKEY_SHININESS, shininess);
+			mat_struct.has_specular = false;
+			mat.Get(AI_MATKEY_SHININESS, mat_struct.specular_power);
+			//mat.Get(AI_MATKEY_SHININESS_STRENGTH, mat_struct.specular_intensity);
+			aiColor3D c;
+			mat.Get(AI_MATKEY_COLOR_SPECULAR, c);
+			mat_struct.mat_specular_color.x = c.r;
+			mat_struct.mat_specular_color.y = c.g;
+			mat_struct.mat_specular_color.z = c.b;
 		}
 
 		if (mat.GetTexture(aiTextureType_NORMALS, 0, &texture_file_name) == aiReturn_SUCCESS) {
 			bindables.push_back(BindableCodex::Resolve<TextureObject>(path + std::string(texture_file_name.C_Str()), min_filter, mag_filter, wrap, 2));
-			has_normal_map = true;
+			mat_struct.has_normal = true;
 		}
 	}
-
-
-	const auto mesh_tag = path + "#" + mesh.mName.C_Str();
-	//Indices
-	std::vector<unsigned int> indices;
-	indices.reserve((size_t)mesh.mNumFaces * 3);
-	for (unsigned int i = 0; i < mesh.mNumFaces; i++) {
-		const auto& face = mesh.mFaces[i];
-		indices.push_back(face.mIndices[0]);
-		indices.push_back(face.mIndices[1]);
-		indices.push_back(face.mIndices[2]);
-	}
-
-
-	if (has_diffuse && has_specular_map && has_normal_map) {
-		dv::VertexLayout layout;
-		layout.
-			Append(dv::VertexLayout::Type::Position3D).
-			Append(dv::VertexLayout::Type::Normal).
-			Append(dv::VertexLayout::Type::Texture2D).
-			Append(dv::VertexLayout::Type::Tangent).
-			Append(dv::VertexLayout::Type::BiTangent);
-		dv::VertexBuffer buf(layout);
-
-		//Vertices
-		for (unsigned int i = 0; i < mesh.mNumVertices; i++) {
-			buf.EmplaceBack(
-				glm::vec3{ mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z },
-				glm::vec3{ mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z },
-				glm::vec2{ mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y },
-				glm::vec3{ mesh.mTangents[i].x, mesh.mTangents[i].y, mesh.mTangents[i].z },
-				glm::vec3{ mesh.mBitangents[i].x, mesh.mBitangents[i].y, mesh.mBitangents[i].z });
-
-		}
-
-		//Load shader
-
-		auto shader = BindableCodex::Resolve < ShaderObject>("Assets/Shaders/phong_normalmap_VS.glsl", "Assets/Shaders/phong_normalspecmap_FS.glsl");
-		shader->LoadTextureSlot("uDiffuse", 0);
-		shader->LoadTextureSlot("uSpecular", 1);
-		shader->LoadTextureSlot("uNormal", 2);
-
-
-		//Load bindables
-		bindables.push_back(std::move(shader));
-		VertexBuffer ib = Opengl::CreateIndexBuffer(indices.size(), indices.data());
-		bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, layout, ib, buf));
-
-
-	}
-	else if (has_diffuse && has_normal_map) {
-		dv::VertexLayout layout;
-		layout.
-			Append(dv::VertexLayout::Type::Position3D).
-			Append(dv::VertexLayout::Type::Normal).
-			Append(dv::VertexLayout::Type::Texture2D).
-			Append(dv::VertexLayout::Type::Tangent).
-			Append(dv::VertexLayout::Type::BiTangent);
-		dv::VertexBuffer buf(layout);
-
-		//Vertices
-		for (unsigned int i = 0; i < mesh.mNumVertices; i++) {
-			buf.EmplaceBack(
-				glm::vec3{ mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z },
-				glm::vec3{ mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z },
-				glm::vec2{ mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y },
-				glm::vec3{ mesh.mTangents[i].x, mesh.mTangents[i].y, mesh.mTangents[i].z },
-				glm::vec3{ mesh.mBitangents[i].x, mesh.mBitangents[i].y, mesh.mBitangents[i].z });
-
-		}
-		//Load shader
-
-		auto shader = BindableCodex::Resolve < ShaderObject>("Assets/Shaders/phong_normalmap_VS.glsl", "Assets/Shaders/phong_normalmap_FS.glsl");
-		shader->LoadTextureSlot("uDiffuse", 0);
-		shader->LoadTextureSlot("uNormal", 2);
-
-
-		//Uniform buffer
-		struct MaterialUBuf {
-			float specular_intensity;
-			float specular_power;
-			int enable_normal;
-			float padding;
-		} material;
-		material.specular_intensity = 15.8f;
-		material.specular_power = shininess;
-		material.enable_normal = true;
-
-		auto mat_ubuf = std::make_shared<UniformBufferObject<MaterialUBuf>>(UniformBufferObject<MaterialUBuf>(2));
-		mat_ubuf->Update(material);
-
-		//Load bindables
-		bindables.push_back(mat_ubuf);
-		bindables.push_back(std::move(shader));
-		VertexBuffer ib = Opengl::CreateIndexBuffer(indices.size(), indices.data());
-		bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, layout, ib, buf));
-	}
-	else if (has_diffuse && has_specular_map) {
-		dv::VertexLayout layout;
-		layout.
-			Append(dv::VertexLayout::Type::Position3D).
-			Append(dv::VertexLayout::Type::Normal).
-			Append(dv::VertexLayout::Type::Texture2D);
-		dv::VertexBuffer buf(layout);
-
-		//Vertices
-		for (unsigned int i = 0; i < mesh.mNumVertices; i++) {
-			buf.EmplaceBack(
-				glm::vec3{ mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z },
-				glm::vec3{ mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z },
-				glm::vec2{ mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y });
-
-		}
-		//Load shader
-
-		auto shader = BindableCodex::Resolve < ShaderObject>("Assets/Shaders/phong_VS.glsl", "Assets/Shaders/phong_specmap_FS.glsl");
-		shader->LoadTextureSlot("uDiffuse", 0);
-		shader->LoadTextureSlot("uSpecular", 1);
-
-
-		//Uniform buffer
-		struct MaterialUBuf {
-			float specular_intensity;
-			float specular_power;
-			float padding[2];
-		} material;
-		material.specular_intensity = 15.8f;
-		material.specular_power = shininess;
-
-		auto mat_ubuf = std::make_shared<UniformBufferObject<MaterialUBuf>>(UniformBufferObject<MaterialUBuf>(2));
-		mat_ubuf->Update(material);
-
-		//Load bindables
-		bindables.push_back(mat_ubuf);
-		bindables.push_back(std::move(shader));
-		VertexBuffer ib = Opengl::CreateIndexBuffer(indices.size(), indices.data());
-		bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, layout, ib, buf));
-	}
-	else if (has_diffuse && !has_normal_map && !has_specular_map) {
-		dv::VertexLayout layout;
-		layout.
-			Append(dv::VertexLayout::Type::Position3D).
-			Append(dv::VertexLayout::Type::Normal).Append(dv::VertexLayout::Type::Texture2D);
-		dv::VertexBuffer buf(layout);
-
-		//Vertices
-		for (unsigned int i = 0; i < mesh.mNumVertices; i++) {
-			buf.EmplaceBack(
-				glm::vec3{ mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z },
-				glm::vec3{ mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z },
-				glm::vec2{ mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y });
-
-		}
-
-		//Load shader
-
-		auto shader = BindableCodex::Resolve < ShaderObject>("Assets/Shaders/phong_VS.glsl", "Assets/Shaders/phong_FS.glsl");
-
-
-		//Uniform buffer
-		struct MaterialUBuf {
-			glm::vec3 mat_color;
-			float specular_intensity;
-			float specular_power;
-			int has_texture;
-
-			float padding[2];
-		} material;
-		material.mat_color = mat_color;
-		material.specular_intensity = 15.8f;
-		material.specular_power = shininess;
-		material.has_texture = true;
-
-		auto mat_ubuf = std::make_shared<UniformBufferObject<MaterialUBuf>>(UniformBufferObject<MaterialUBuf>(2));
-		mat_ubuf->Update(material);
-
-		//Load bindables
-		bindables.push_back(mat_ubuf);
-		bindables.push_back(std::move(shader));
-		VertexBuffer ib = Opengl::CreateIndexBuffer(indices.size(), indices.data());
-		bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, layout, ib, buf));
-	}
-	else if (!has_diffuse && !has_normal_map && !has_specular_map) {
-		dv::VertexLayout layout;
-		layout.
-			Append(dv::VertexLayout::Type::Position3D).
-			Append(dv::VertexLayout::Type::Normal).Append(dv::VertexLayout::Type::Texture2D);
-		dv::VertexBuffer buf(layout);
-
-		//Vertices
-		for (unsigned int i = 0; i < mesh.mNumVertices; i++) {
-			buf.EmplaceBack(
-				glm::vec3{ mesh.mVertices[i].x, mesh.mVertices[i].y, mesh.mVertices[i].z },
-				glm::vec3{ mesh.mNormals[i].x, mesh.mNormals[i].y, mesh.mNormals[i].z },
-				glm::vec2{ mesh.mTextureCoords[0][i].x, mesh.mTextureCoords[0][i].y });
-
-		}
-		//Load shader
-
-		auto shader = BindableCodex::Resolve < ShaderObject>("Assets/Shaders/phong_VS.glsl", "Assets/Shaders/phong_FS.glsl");
-
-
-		//Uniform buffer
-		struct MaterialUBuf {
-			glm::vec3 mat_color;
-			float specular_intensity;
-			float specular_power;
-			int has_texture;
-
-			float padding[2];
-		} material;
-		material.mat_color = mat_color;
-		material.specular_intensity = 15.8f;
-		material.specular_power = shininess;
-		material.has_texture = false;
-
-		auto mat_ubuf = std::make_shared<UniformBufferObject<MaterialUBuf>>(UniformBufferObject<MaterialUBuf>(2));
-		mat_ubuf->Update(material);
-
-		//Load bindables
-		bindables.push_back(mat_ubuf);
-		bindables.push_back(std::move(shader));
-		VertexBuffer ib = Opengl::CreateIndexBuffer(indices.size(), indices.data());
-		bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, layout, ib, buf));
-
-	}
+	auto shader = BindableCodex::Resolve<ShaderObject>("Assets/Shaders/phong_VS.glsl", "Assets/Shaders/phong_FS.glsl");
+	shader->LoadTextureSlot("uDiffuse", 0);
+	shader->LoadTextureSlot("uSpecular", 1);
+	shader->LoadTextureSlot("uNormal", 2);
+	bindables.push_back(std::move(shader));
 	bindables.push_back(BindableCodex::Resolve<Rasterizer>(has_alpha));
-	return std::make_unique<Mesh>(std::move(bindables), indices.size());
+	bindables.push_back(BindableCodex::Resolve<VertexBufferObject>(mesh_tag, layout, Opengl::CreateIndexBuffer(indices.size(), indices.data()), vbuf));
+	auto ubuf = std::make_shared<UniformBufferObject<MaterialStruct>>(UniformBufferObject<MaterialStruct>(2));
+	ubuf->Update(mat_struct);
+	bindables.push_back(ubuf);
+
+
+	return std::make_unique<Mesh>(std::move(bindables), (unsigned int)indices.size());
 }

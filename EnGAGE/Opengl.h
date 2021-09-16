@@ -94,7 +94,7 @@ public:
 	static void UpdateUniformBuffer(const UniformBuffer ub, const uint64_t size, const void* data) noexcept;
 
 
-	static void DrawIndexed(const uint64_t count) noexcept;
+	static void DrawIndexed(const int count) noexcept;
 
 	static void SetProjection(const glm::mat4x4& proj) noexcept;
 	static const glm::mat4x4& GetProjection() noexcept;
