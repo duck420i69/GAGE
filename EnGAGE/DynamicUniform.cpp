@@ -51,9 +51,8 @@ namespace DynamicUniform {
 
 	Buffer::ElementRef Buffer::operator[](const std::string& name) noexcept
 	{
-		assert(mBakedElements.count(name) != 0 && "Element not exited");
 		Element& ele = mBakedElements[name];
-		return { &mBuffer[ele.offset], Element::GetSize(ele.type) };
+		return { ele.type, &mBuffer[ele.offset], Element::GetSize(ele.type), mBuffer.data(),  mBuffer.data() + mBuffer.size() };
 	}
 
 

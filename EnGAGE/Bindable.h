@@ -12,4 +12,6 @@ public:
 		assert(false);
 		return "";
 	}
+	virtual void InitParent(const class Drawable&) noexcept {};
+	virtual void Accept(class TechniqueProbe&) noexcept {};
 };

@@ -5,19 +5,26 @@
 #include <vector>
 #include <cassert>
 
+#include <assimp/mesh.h>
+
+#define ASSIMP_ELEMENT_EXTRACTOR(member) static SysType Extract(const aiMesh& mesh, size_t i) noexcept { return *reinterpret_cast<const SysType*>(&mesh.member[i]); }
+
+#define VERTEX_LAYOUT_TYPE \
+	X(Position2D) \
+	X(Position3D) \
+	X(Texture2D) \
+	X(Normal) \
+	X(Tangent) \
+	X(BiTangent) \
+
 namespace DynamicVertex {
 	
 	class VertexLayout {
 	public :
 		enum class Type {
-			Position2D,
-			Position3D,
-			Texture2D,
-			Normal,
-			Color3,
-			Color4,
-			Tangent,
-			BiTangent
+#define X(el) el,
+		VERTEX_LAYOUT_TYPE
+#undef X
 		};
 
 		template<Type> struct Map;
@@ -26,43 +33,50 @@ namespace DynamicVertex {
 		{
 			using SysType = glm::vec2;
 			static constexpr const char* code = "P2";
+			ASSIMP_ELEMENT_EXTRACTOR(mVertices)
 		};
 
 		template<> struct Map<Type::Position3D>
 		{
 			using SysType = glm::vec3;
 			static constexpr const char* code = "P3";
+			ASSIMP_ELEMENT_EXTRACTOR(mVertices)
 		};
 		template<> struct Map<Type::Texture2D>
 		{
 			using SysType = glm::vec2;
 			static constexpr const char* code = "T2";
+			ASSIMP_ELEMENT_EXTRACTOR(mTextureCoords[0])
 		};
 		template<> struct Map<Type::Normal>
 		{
 			using SysType = glm::vec3;
 			static constexpr const char* code = "N";
-		};
-		template<> struct Map<Type::Color3>
-		{
-			using SysType = glm::vec3;
-			static constexpr const char* code = "C3";
-		};
-		template<> struct Map<Type::Color4>
-		{
-			using SysType = glm::vec4;
-			static constexpr const char* code = "C4";
+			ASSIMP_ELEMENT_EXTRACTOR(mNormals)
 		};
 		template<> struct Map<Type::Tangent>
 		{
 			using SysType = glm::vec3;
 			static constexpr const char* code = "TA";
+			ASSIMP_ELEMENT_EXTRACTOR(mTangents)
 		};
 		template<> struct Map<Type::BiTangent>
 		{
 			using SysType = glm::vec3;
 			static constexpr const char* code = "BTA";
+			ASSIMP_ELEMENT_EXTRACTOR(mBitangents)
 		};
+
+		template<template<VertexLayout::Type> class F, typename... Args>
+		static constexpr auto Bridge(VertexLayout::Type type, Args&&... args) noexcept {
+			switch (type) {
+				#define X(el) case VertexLayout::Type::el: return F<VertexLayout::Type::el>::Exec(std::forward<Args>(args)...);
+							VERTEX_LAYOUT_TYPE
+				#undef X
+
+			}
+			assert(!"Invalid element type");
+		} 
 
 		class Element {
 		public:
@@ -78,45 +92,18 @@ namespace DynamicVertex {
 			static constexpr size_t SizeOf(Type type) noexcept {
 				switch (type)
 				{
-				case Type::Position2D:
-					return sizeof(Map<Type::Position2D>::SysType);
-				case Type::Position3D:
-					return sizeof(Map<Type::Position3D>::SysType);
-				case Type::Texture2D:
-					return sizeof(Map<Type::Texture2D>::SysType);
-				case Type::Normal:
-					return sizeof(Map<Type::Normal>::SysType);
-				case Type::Color3:
-					return sizeof(Map<Type::Color3>::SysType);
-				case Type::Color4:
-					return sizeof(Map<Type::Color4>::SysType);
-				case Type::Tangent:
-					return sizeof(Map<Type::Tangent>::SysType);
-				case Type::BiTangent:
-					return sizeof(Map<Type::BiTangent>::SysType);
+#define X(el) case Type::el: return sizeof(Map<Type::el>::SysType); 
+				VERTEX_LAYOUT_TYPE
+#undef X
 				}
 				return 0u;
 			}
-
 			constexpr const char* GetCode() const noexcept {
 				switch (type)
 				{
-				case Type::Position2D:
-					return Map<Type::Position2D>::code;
-				case Type::Position3D:
-					return Map<Type::Position3D>::code;
-				case Type::Texture2D:
-					return Map<Type::Texture2D>::code;
-				case Type::Normal:
-					return Map<Type::Normal>::code;
-				case Type::Color3:
-					return Map<Type::Color3>::code;
-				case Type::Color4:
-					return Map<Type::Color4>::code;
-				case Type::Tangent:
-					return Map<Type::Tangent>::code;
-				case Type::BiTangent:
-					return Map<Type::BiTangent>::code;
+#define X(el) case Type::el: return Map<Type::BiTangent>::code; 
+				VERTEX_LAYOUT_TYPE
+#undef X
 				}
 				return "";
 			}
@@ -137,7 +124,7 @@ namespace DynamicVertex {
 		VertexLayout& Append(Type T) noexcept;
 		size_t Size() const noexcept;
 		std::string GetCode() const noexcept;
-
+		bool Has(Type type) noexcept;
 
 		inline size_t GetElementCount() const noexcept { return elements.size(); }
 		inline const std::vector<Element>& GetElements() const noexcept { return elements; }
@@ -150,6 +137,14 @@ namespace DynamicVertex {
 
 		char* pData = nullptr;
 		const VertexLayout& layout;
+	private:
+		template<VertexLayout::Type Type>
+		struct AttributeSettings {
+			template<typename T>
+			static const auto Exec(Vertex* pVertex, char* pAttribute, T&& val) noexcept {
+				return pVertex->SetAttribute<Type>(pAttribute, std::forward<T>(val));
+			}
+		};
 		
 	public:
 		explicit Vertex(char* pData, const VertexLayout& layout) noexcept;
@@ -183,35 +178,7 @@ namespace DynamicVertex {
 		void SetAttributeByIndex(size_t i, T&& val) noexcept{
 			const VertexLayout::Element& element = layout.ResolveByIndex(i);
 			char* pAttribute = pData + element.GetOffset();
-			switch (element.type) {
-			case VertexLayout::Type::Position2D:
-				SetAttribute<VertexLayout::Type::Position2D>(pAttribute, std::forward<T>(val));
-				break;
-			case VertexLayout::Type::Position3D:
-				SetAttribute<VertexLayout::Type::Position3D>(pAttribute, std::forward<T>(val));
-				break;
-			case VertexLayout::Type::Texture2D:
-				SetAttribute<VertexLayout::Type::Texture2D>(pAttribute, std::forward<T>(val));
-				break;
-			case VertexLayout::Type::Normal:
-				SetAttribute<VertexLayout::Type::Normal>(pAttribute, std::forward<T>(val));
-				break;
-			case VertexLayout::Type::Color3:
-				SetAttribute<VertexLayout::Type::Color3>(pAttribute, std::forward<T>(val));
-				break;
-			case VertexLayout::Type::Color4:
-				SetAttribute<VertexLayout::Type::Color4>(pAttribute, std::forward<T>(val));
-				break;
-			case VertexLayout::Type::Tangent:
-				SetAttribute<VertexLayout::Type::Tangent>(pAttribute, std::forward<T>(val));
-				break;
-			case VertexLayout::Type::BiTangent:
-				SetAttribute<VertexLayout::Type::BiTangent>(pAttribute, std::forward<T>(val));
-				break;
-			default:
-				assert(!"Bad element type");
-				break;
-			}
+			VertexLayout::Bridge<AttributeSettings>(element.type, this, pAttribute, std::forward<T>(val));
 		}
 	};
 
@@ -232,6 +199,8 @@ namespace DynamicVertex {
 		VertexLayout layout;
 	public:
 		VertexBuffer(VertexLayout layout) noexcept;
+		VertexBuffer(VertexLayout layout, const aiMesh& mesh) noexcept;
+		void Resize(size_t new_size) noexcept;
 		inline const VertexLayout& GetLayout() const noexcept { return layout; }
 		inline size_t Size() const noexcept { return buffer.size() / layout.Size(); }
 		inline size_t SizeBytes() const noexcept { return buffer.size(); }
@@ -271,3 +240,6 @@ namespace DynamicVertex {
 		}
 	};
 }
+
+#undef VERTEX_LAYOUT_TYPE
+#undef ASSIMP_ELEMENT_EXTRACTOR

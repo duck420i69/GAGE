@@ -50,7 +50,7 @@ void Opengl::Init() noexcept
 void Opengl::Clear() noexcept
 {
 	glViewport(0, 0, Window::GetWidth(), Window::GetHeight());
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 }
 
@@ -383,15 +383,15 @@ Texture Opengl::LoadTextureInternal(const std::string& path, const Opengl::Textu
 			file_format = GL_RED;
 		}
 		
+		glHint(GL_TEXTURE_COMPRESSION_HINT, GL_NICEST);
 		glGenTextures(1, &texture);
 		glBindTexture(GL_TEXTURE_2D, texture);
 
-		glHint(GL_TEXTURE_COMPRESSION_HINT, GL_FASTEST);
 		glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, file_format, GL_UNSIGNED_BYTE, image_data);
 		
-		GLfloat value;
-		glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &value);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, value);
+		//GLfloat value;
+		//glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY, &value);
+		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY, value);
 
 		TextureParameters(min_filter, mag_filter, wrap);
 

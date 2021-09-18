@@ -9,6 +9,7 @@
 #include "Logger.h"
 #include "Rasterizer.h"
 #include "DynamicUniform.h"
+#include "StencilObject.h"
 
 #include <glm/gtc/type_ptr.hpp>
 
@@ -137,6 +138,7 @@ void Model::Draw() const noexcept
 	}
 	root->Draw(glm::mat4(1.0f));
 }
+
 
 std::unique_ptr<Node> Model::ParseNode(const aiNode& node) noexcept
 {
@@ -276,6 +278,6 @@ std::unique_ptr<Mesh> Model::ParseMesh(const aiMesh& mesh, const aiMaterial* con
 	auto ubuf = std::make_shared<UniformBufferObjectDynamic>(2, uniform_buffer);
 	bindables.push_back(ubuf);
 
-
+	bindables.push_back(std::make_shared<StencilObject>(StencilObject::Off));
 	return std::make_unique<Mesh>(std::move(bindables), (unsigned int)indices.size());
 }

@@ -37,6 +37,9 @@
     <Filter Include="Source\Core\Render\Light">
       <UniqueIdentifier>{44f75690-5a0e-42cb-8676-ba4f188146b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\Core\Render\Drawable\RenderQueue">
+      <UniqueIdentifier>{84a70053-79ca-4fdf-ace9-b0d3b3f5f2b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -77,6 +80,30 @@
     </ClCompile>
     <ClCompile Include="DynamicUniform.cpp">
       <Filter>Source\Core\Render\Bindable</Filter>
+    </ClCompile>
+    <ClCompile Include="TestPlane.cpp">
+      <Filter>Source\Core\Render\Drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="StencilObject.cpp">
+      <Filter>Source\Core\Render\Bindable</Filter>
+    </ClCompile>
+    <ClCompile Include="Drawable.cpp">
+      <Filter>Source\Core\Render\Drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="Technique.cpp">
+      <Filter>Source\Core\Render\Drawable\RenderQueue</Filter>
+    </ClCompile>
+    <ClCompile Include="Step.cpp">
+      <Filter>Source\Core\Render\Drawable\RenderQueue</Filter>
+    </ClCompile>
+    <ClCompile Include="Job.cpp">
+      <Filter>Source\Core\Render\Drawable\RenderQueue</Filter>
+    </ClCompile>
+    <ClCompile Include="Pass.cpp">
+      <Filter>Source\Core\Render\Drawable\RenderQueue</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderQueue.cpp">
+      <Filter>Source\Core\Render\Drawable\RenderQueue</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +182,30 @@
     <ClInclude Include="DynamicUniform.h">
       <Filter>Source\Core\Render\Bindable</Filter>
     </ClInclude>
+    <ClInclude Include="TestPlane.h">
+      <Filter>Source\Core\Render\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="StencilObject.h">
+      <Filter>Source\Core\Render\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="Technique.h">
+      <Filter>Source\Core\Render\Drawable\RenderQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderQueue.h">
+      <Filter>Source\Core\Render\Drawable\RenderQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="Step.h">
+      <Filter>Source\Core\Render\Drawable\RenderQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="Job.h">
+      <Filter>Source\Core\Render\Drawable\RenderQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="Pass.h">
+      <Filter>Source\Core\Render\Drawable\RenderQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="TechniqueProbe.h">
+      <Filter>Source\Core\Render\Drawable\RenderQueue</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\save">
@@ -176,6 +227,15 @@
       <Filter>Assets\Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\solid_FS.glsl">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\texture_VS.glsl">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\texture_FS.glsl">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\null_FS.glsl">
       <Filter>Assets\Shaders</Filter>
     </None>
   </ItemGroup>

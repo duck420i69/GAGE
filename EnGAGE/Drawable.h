@@ -5,31 +5,27 @@
 #include <vector>
 #include <memory>
 
-#include "Bindable.h"
-#include "Opengl.h"
-
+#include "VertexBufferObject.h"
+#include "Technique.h"
 
 class Drawable {
-	std::vector<std::shared_ptr<Bindable>> mBinds;
 protected:
 	int mVertexCount = 0;
+	std::vector<Technique> mTechniques;
+	std::shared_ptr<VertexBufferObject> mVertexData;
 public:
 	Drawable() = default;
 	Drawable(const Drawable&) = delete;
-	virtual ~Drawable() = default;
+	virtual ~Drawable();
 
-	void Draw() const noexcept {
-		for (auto& b : mBinds) {
-			b->Bind();
-		}
-		Opengl::DrawIndexed(mVertexCount);
-	}
-
-	void AddBind(std::shared_ptr<Bindable> bind) noexcept {
-		mBinds.push_back(std::move(bind));
-	}
+	void Submit(class RenderQueue& queue) const noexcept;
+	void Bind() const noexcept;
+	void Accept(class TechniqueProbe& probe) noexcept;
 
 	virtual glm::mat4x4 GetTransform() const noexcept = 0;
+	inline const int& GetVertexCount() const noexcept { return mVertexCount; }
 protected:
 	inline void SetVertexCount(int vertex_count) noexcept { mVertexCount = vertex_count; }
+
+	void AddTechnique(Technique technique) noexcept;
 };

@@ -5,7 +5,13 @@ std::unique_ptr< UniformBufferObject<TransformUBuf::TransformBuf>> TransformUBuf
 
 void TransformUBuf::Bind() const noexcept
 {
-	glm::mat4 model_view = Opengl::GetCamera() * mParent.GetTransform();
+	assert(mParent != nullptr && "Parent is null!");
+	glm::mat4 model_view = Opengl::GetCamera() * mParent->GetTransform();
 	s_buff->Update({ model_view, Opengl::GetProjection() * model_view });
 	s_buff->Bind();
+}
+
+void TransformUBuf::InitParent(const Drawable& drawable) noexcept
+{
+	mParent = &drawable;
 }

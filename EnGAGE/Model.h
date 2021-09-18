@@ -51,7 +51,7 @@ class Model {
 	std::unique_ptr<Node> root;
 	std::vector<std::unique_ptr<Mesh>> meshes;
 	std::unique_ptr<ModelWindow> model_window;
-
+	std::vector<std::shared_ptr<Bindable>> outline_bindables;
 public:
 	Model(const std::string& file_path) noexcept;
 	void RenderTree(const char* window_name = "Model") noexcept;

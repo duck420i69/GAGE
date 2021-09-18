@@ -3,6 +3,7 @@
 #include "Bindable.h"
 #include "Opengl.h"
 #include "DynamicUniform.h"
+#include "TechniqueProbe.h"
 
 template<typename C>
 class UniformBufferObject final : public Bindable {
@@ -40,7 +41,8 @@ public:
 class UniformBufferObjectDynamic final : public Bindable {
 	UniformBuffer ub;
 	unsigned int slot;
-	const DynamicUniform::Buffer& buffer;
+	DynamicUniform::Buffer buffer;
+	mutable bool dirty = false;
 public:
 
 	UniformBufferObjectDynamic(const unsigned int slot, const DynamicUniform::Buffer& buffer) noexcept :
@@ -51,8 +53,16 @@ public:
 
 	}
 
-
+	void Accept(class TechniqueProbe& probe) noexcept override {
+		if (probe.VisitBuffer(buffer)) {
+			dirty = true;
+		}
+	};
 	void Bind() const noexcept override {
+		if (dirty) {
+			Update(buffer);
+			dirty = false;
+		}
 		Opengl::BindUniformBuffer(ub, slot);
 	}
 

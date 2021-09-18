@@ -87,13 +87,11 @@ namespace DynamicUniform {
 			switch (type)
 			{
 			case DynamicUniform::Type::Empty:
-				assert(!"Element type is empty");
-				break;
+				return 0;
 #define X(name) case DynamicUniform::Type::name: return sizeof(TypeMap<Type::name>::SysType);
 				TYPE_MACRO
 #undef X
 			}
-			assert(!"Unknown element type");
 			return 0;
 		}
 		static constexpr const char* GetTypeUID(Type type) noexcept
@@ -130,12 +128,20 @@ namespace DynamicUniform {
 		const Layout& mLayout;
 	public:
 		struct ElementRef {
-			char* mLocation;
-			size_t mSize;
+			Type type = Type::Empty;
+			char* location;
+			size_t size;
+			char* buffer_begin;
+			char* buffer_end;
+
+			bool Exist() const noexcept {
+				return type != Type::Empty;
+			}
 
 			template<typename T>
 			void operator=(const T& t) noexcept {
-				memcpy(mLocation, &t, mSize);
+				assert(location >= buffer_begin && (location + size) <= buffer_end && "buffer assignment out of range !");
+				memcpy(location, &t, size);
 			}
 		};
 
