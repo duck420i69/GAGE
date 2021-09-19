@@ -117,6 +117,7 @@ namespace DynamicUniform {
 	public:
 		Layout() = default;
 		Layout& PushBack(const std::string& name, const Type& type) noexcept;
+		void Reset();
 
 		Type& operator[](const std::string& name) noexcept;
 		std::string GenerateUID() const noexcept;
@@ -145,9 +146,22 @@ namespace DynamicUniform {
 			}
 		};
 
+		struct ConstElementRef {
+			Type type = Type::Empty;
+			const char* location;
+			size_t size;
+			const char* buffer_begin;
+			const char* buffer_end;
+
+			bool Exist() const noexcept {
+				return type != Type::Empty;
+			}
+		};
+
 		Buffer(const Layout& layout) noexcept;
 
 		ElementRef operator[](const std::string& name) noexcept;
+		ConstElementRef At(const std::string& name) const noexcept;
 
 		inline const std::vector<char>& GetRawBuffer() const noexcept { return mBuffer; }
 		inline const Layout& GetLayout() const noexcept { return mLayout; }

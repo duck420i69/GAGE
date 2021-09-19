@@ -26,5 +26,5 @@ public:
 protected:
 	virtual void OnSetTechnique(class  Technique*) noexcept  {};
 	virtual void OnSetStep(class  Step*) noexcept  {};
-	virtual bool OnVisitBuffer(class DynamicUniform::Buffer&) noexcept = 0;
+	virtual bool OnVisitBuffer(class DynamicUniform::Buffer&) noexcept { return false; };
 };

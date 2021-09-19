@@ -11,6 +11,11 @@ namespace DynamicUniform {
 		return *this;
 	}
 
+	void Layout::Reset()
+	{
+		mElements.clear();
+	}
+
 	Type& Layout::operator[](const std::string& name) noexcept
 	{
 		assert(mElements.count(name) == 0 && "Element already exited !");
@@ -34,7 +39,7 @@ namespace DynamicUniform {
 		size_t offset = 0;
 		size_t prev_offset = 0;
 		for (const auto& [name, element] : layout.mElements) {
-			mBakedElements[name] = Element{ element.type, offset == 0 ? offset : offset - 1};
+			mBakedElements[name] = Element{ element.type, offset};
 			size_t size = Element::GetSize(element.type);
 			for (size_t i = 0; i < size; i++) {
 
@@ -46,6 +51,11 @@ namespace DynamicUniform {
 			}
 			prev_offset = offset;
 		}
+
+		auto remains = offset % 16;
+		if (remains != 0) {
+			offset += 16 - remains;
+		}
 		mBuffer.resize(offset);
 	}
 
@@ -54,7 +64,10 @@ namespace DynamicUniform {
 		Element& ele = mBakedElements[name];
 		return { ele.type, &mBuffer[ele.offset], Element::GetSize(ele.type), mBuffer.data(),  mBuffer.data() + mBuffer.size() };
 	}
-
+	Buffer::ConstElementRef Buffer::At(const std::string& name) const noexcept {
+		const Element& ele = mBakedElements.at(name);
+		return { ele.type, &mBuffer[ele.offset], Element::GetSize(ele.type), mBuffer.data(),  mBuffer.data() + mBuffer.size() };
+	}
 
 
 }

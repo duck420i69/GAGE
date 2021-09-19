@@ -104,10 +104,11 @@
     <ClCompile Include="Job.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Model.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="MenuScene.cpp" />
+    <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Node.cpp" />
     <ClCompile Include="Opengl.cpp" />
     <ClCompile Include="Pass.cpp" />
     <ClCompile Include="pch.cpp">
@@ -135,11 +136,12 @@
     <ClInclude Include="Globals.h" />
     <ClInclude Include="Job.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="Material.h" />
     <ClInclude Include="MenuScene.h" />
-    <ClInclude Include="Model.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="Mesh.h" />
+    <ClInclude Include="Model.h" />
+    <ClInclude Include="ModelProbe.h" />
+    <ClInclude Include="Node.h" />
     <ClInclude Include="Opengl.h" />
     <ClInclude Include="Pass.h" />
     <ClInclude Include="pch.h" />
@@ -166,6 +168,7 @@
     <None Include="Assets\save" />
     <None Include="Assets\Shaders\light.glsl" />
     <None Include="Assets\Shaders\null_FS.glsl" />
+    <None Include="Assets\Shaders\offset_VS.glsl" />
     <None Include="Assets\Shaders\phong_FS.glsl" />
     <None Include="Assets\Shaders\phong_VS.glsl" />
     <None Include="Assets\Shaders\solid_FS.glsl" />

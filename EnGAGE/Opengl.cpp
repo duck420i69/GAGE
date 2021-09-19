@@ -488,23 +488,42 @@ uint32_t Opengl::LoadShaderInternal(const std::string& path, uint32_t type) noex
 
 ShaderProgram Opengl::LoadShaderProgramInternal(const std::string& vertex_path, const std::string& fragment_path) noexcept
 {
-	ShaderProgram program = glCreateProgram();
-	std::vector<uint32_t> shaders;
-	shaders.push_back(LoadShaderInternal(vertex_path, GL_VERTEX_SHADER));
-	shaders.push_back(LoadShaderInternal(fragment_path, GL_FRAGMENT_SHADER));
+	try
+	{
+		ShaderProgram program = glCreateProgram();
+		std::vector<uint32_t> shaders;
+		shaders.push_back(LoadShaderInternal(vertex_path, GL_VERTEX_SHADER));
+		shaders.push_back(LoadShaderInternal(fragment_path, GL_FRAGMENT_SHADER));
 
 
-	for (const auto& shader : shaders) {
-		glAttachShader(program, shader);
+		for (const auto& shader : shaders) {
+			glAttachShader(program, shader);
+		}
+		glLinkProgram(program);
+
+		int link_status;
+		glGetProgramiv(program, GL_LINK_STATUS, &link_status);
+		if (link_status == GL_FALSE)
+		{
+			//Throw glsl error
+			int log_length;
+			glGetProgramiv(program, GL_INFO_LOG_LENGTH, &log_length);
+
+			std::vector<char> message(log_length);
+			glGetProgramInfoLog(program, log_length, &log_length, message.data());
+			glDeleteProgram(program);
+			throw std::string(message.data());
+		}
+		glValidateProgram(program);
+
+		for (const auto& shader : shaders) {
+			glDeleteShader(shader);
+		}
+		return program;
 	}
-	glLinkProgram(program);
-	glValidateProgram(program);
-
-	for (const auto& shader : shaders) {
-		glDeleteShader(shader);
+	catch (std::string& glsl_error) {
+		Logger::error("Shader compiling shader: vertex: {}, fragment: {}, linker error: {}", vertex_path, fragment_path, glsl_error);
 	}
-
-
-	return program;
+	return 0;
 }
 

@@ -3,8 +3,6 @@
 #include "uniform_bindings.glsl"
 #include "light.glsl"
 
-
-
 in vec3 FS_FragPosCam;
 in vec3 FS_Normal;
 in vec2 FS_UV;
@@ -54,14 +52,12 @@ void main()
 
 
 	vec3 specular_map_color = mat_specular_color;
-	int specular_map_power = specular_power;
 	if(has_specular) {
 		const vec4 specular_sample = texture(uSpecular, FS_UV);
 		specular_map_color = specular_sample.rrr;
-		specular_map_power = int(pow(2.0f, specular_sample.a * 13.0f));
 	}
 
-	const vec3 specular = att * CalSpecular(n, vToL, light_diffuse, light_intensity, specular_map_power, FS_FragPosCam) * specular_map_color;
+	const vec3 specular = att * CalSpecular(n, vToL, light_diffuse, light_intensity, specular_power, FS_FragPosCam) * specular_map_color ;
 	
 	const vec3 final_color = (diffuse + light_ambient) * diffuse_color.rgb + specular;
 

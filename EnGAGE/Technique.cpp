@@ -3,8 +3,8 @@
 
 #include "TechniqueProbe.h"
 
-Technique::Technique(const std::string& name) noexcept :
-	mName(name)
+Technique::Technique(const std::string& name, bool start_state) noexcept :
+	mName(name), mActivated(start_state)
 {
 }
 

@@ -105,6 +105,18 @@
     <ClCompile Include="RenderQueue.cpp">
       <Filter>Source\Core\Render\Drawable\RenderQueue</Filter>
     </ClCompile>
+    <ClCompile Include="Node.cpp">
+      <Filter>Source\Core\Render\Drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Source\Core\Render\Drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source\Core\Render\Drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="MenuScene.cpp">
+      <Filter>Source\Core\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
@@ -206,6 +218,18 @@
     <ClInclude Include="TechniqueProbe.h">
       <Filter>Source\Core\Render\Drawable\RenderQueue</Filter>
     </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Source\Core\Render\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="Node.h">
+      <Filter>Source\Core\Render\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Source\Core\Render\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelProbe.h">
+      <Filter>Source\Core\Render\Drawable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\save">
@@ -236,6 +260,9 @@
       <Filter>Assets\Shaders</Filter>
     </None>
     <None Include="Assets\Shaders\null_FS.glsl">
+      <Filter>Assets\Shaders</Filter>
+    </None>
+    <None Include="Assets\Shaders\offset_VS.glsl">
       <Filter>Assets\Shaders</Filter>
     </None>
   </ItemGroup>
